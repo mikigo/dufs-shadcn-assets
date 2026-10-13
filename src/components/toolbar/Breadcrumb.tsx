@@ -46,7 +46,7 @@ export function Breadcrumb() {
               {i > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{i === 0 ? <Home data-icon /> : name}</BreadcrumbPage>
+                  <BreadcrumbPage>{i === 0 ? <Home data-icon className="size-4" /> : name}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink
                     href={targetPath}
@@ -55,7 +55,7 @@ export function Breadcrumb() {
                       handleClick(targetPath)
                     }}
                   >
-                    {i === 0 ? <Home data-icon /> : name}
+                    {i === 0 ? <Home data-icon className="size-4" /> : name}
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

@@ -19,7 +19,7 @@ export function SearchBar() {
 
   return (
     <form onSubmit={handleSubmit} className="relative">
-      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground shrink-0" data-icon />
+      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground shrink-0 size-4" data-icon />
       <Input
         name="q"
         value={q}

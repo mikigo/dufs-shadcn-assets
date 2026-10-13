@@ -6,14 +6,16 @@ import { ActionButtons } from "./ActionButtons"
 
 export function Toolbar() {
   return (
-    <>
+    <div className="flex items-center w-full gap-3">
       <Breadcrumb />
-      <SearchBar />
-      <div className="flex items-center gap-1">
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <SearchBar />
+      </div>
+      <div className="flex items-center gap-1 ml-auto">
+        <ActionButtons />
         <ThemeToggle />
         <AuthButton />
       </div>
-      <ActionButtons />
-    </>
+    </div>
   )
 }
