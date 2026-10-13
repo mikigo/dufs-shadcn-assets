@@ -12,7 +12,7 @@ export function MainPanel({ toolbar, content }: Props) {
         style={{ boxShadow: '0 1px 0 0 rgba(0,0,0,0.06)' }}>
         {toolbar}
       </div>
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 min-h-0 overflow-auto">
         {content}
       </div>
     </div>
