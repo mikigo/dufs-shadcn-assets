@@ -4,7 +4,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, formatMtime, encodedStr } from "@/lib/utils"
+import { formatFileSize, formatDirSize, formatMtime } from "@/lib/utils"
 import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
@@ -135,7 +135,7 @@ export function DirTable() {
                 <TableCell>{getIcon(item.path_type)}</TableCell>
                 <TableCell className="font-medium">
                   <span className="text-primary hover:underline" onClick={(e) => { e.stopPropagation(); handleRowClick(item) }}>
-                    {encodedStr(item.name)}
+                    {item.name}
                   </span>
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground tabular-nums">

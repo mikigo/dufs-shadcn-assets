@@ -8,7 +8,6 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb"
 import { Home } from "lucide-react"
-import { encodedStr } from "@/lib/utils"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
 
 export function Breadcrumb() {
@@ -43,7 +42,7 @@ export function Breadcrumb() {
               {i > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{i === 0 ? <Home data-icon /> : encodedStr(name)}</BreadcrumbPage>
+                  <BreadcrumbPage>{i === 0 ? <Home data-icon /> : name}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink
                     href={targetPath}
@@ -52,7 +51,7 @@ export function Breadcrumb() {
                       handleClick(targetPath)
                     }}
                   >
-                    {i === 0 ? <Home data-icon /> : encodedStr(name)}
+                    {i === 0 ? <Home data-icon /> : name}
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

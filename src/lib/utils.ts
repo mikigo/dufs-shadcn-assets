@@ -41,10 +41,6 @@ export function formatPercent(percent: number): string {
   return percent > 10 ? percent.toFixed(1) + "%" : percent.toFixed(2) + "%"
 }
 
-export function encodedStr(rawStr: string): string {
-  return rawStr.replace(/[\u00A0-\u9999<>\&]/g, (i) => '&#' + i.charCodeAt(0) + ';')
-}
-
 export function newUrl(base: string, name: string): string {
   let url = base
   if (!url.endsWith("/")) url += "/"

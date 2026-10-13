@@ -1,6 +1,6 @@
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, encodedStr } from "@/lib/utils"
+import { formatFileSize, formatDirSize } from "@/lib/utils"
 import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
@@ -173,7 +173,7 @@ export function IconView() {
                 className="text-sm text-center leading-tight break-all line-clamp-2 text-primary hover:underline"
                 onClick={(e) => { e.stopPropagation(); handleClick(item) }}
               >
-                {encodedStr(item.name)}
+                {item.name}
               </span>
 
               {/* Meta info */}
