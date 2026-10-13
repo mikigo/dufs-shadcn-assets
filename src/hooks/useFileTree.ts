@@ -1,12 +1,19 @@
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
 import type { TreeNode } from "@/types/dufs"
 
 export function useFileTree() {
   const { state, dispatch } = useAppState()
+  const treeNavRef = useRef(false)
 
+  // 仅在页面初始加载或面板导航（双击表格/面包屑）时重建树
+  // 从文件树点击目录导航时，跳过树重建（只更新右侧面板）
   useEffect(() => {
+    if (treeNavRef.current) {
+      treeNavRef.current = false
+      return
+    }
     if (state.currentData) {
       const nodes: TreeNode[] = state.currentData.paths
         .sort((a, b) => {
@@ -86,6 +93,7 @@ export function useFileTree() {
     try {
       const dirPath = path.endsWith("/") ? path : path + "/"
       const data = await fetchIndexData(dirPath)
+      treeNavRef.current = true
       pushHistory(dirPath)
       dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } catch (err) {
