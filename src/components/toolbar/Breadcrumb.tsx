@@ -9,17 +9,23 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Home } from "lucide-react"
 import { encodedStr } from "@/lib/utils"
+import { fetchIndexData } from "@/api/dufs"
 
 export function Breadcrumb() {
   const { state, dispatch } = useAppState()
 
-  const parts = state.currentPath === "/" ? [""] : state.currentPath.split("/")
+  // Split path, filter empty segments from leading/trailing slashes
+  const rawParts = state.currentPath === "/" ? [""] : state.currentPath.split("/").filter(p => p !== "")
+  const parts = rawParts.length === 0 ? [""] : rawParts
   const prefix = state.currentData?.uri_prefix ?? ""
 
   const handleClick = async (path: string) => {
-    const { fetchIndexData } = await import("@/api/dufs")
-    const data = await fetchIndexData(path)
-    dispatch({ type: "SET_CURRENT", path, data })
+    try {
+      const data = await fetchIndexData(path)
+      dispatch({ type: "SET_CURRENT", path, data })
+    } catch (err) {
+      console.error("Breadcrumb navigation failed:", err)
+    }
   }
 
   let accumulatedPath = prefix
@@ -30,21 +36,22 @@ export function Breadcrumb() {
         {parts.map((name, i) => {
           if (i > 0) accumulatedPath += "/" + encodeURIComponent(name)
           const isLast = i === parts.length - 1
+          const targetPath = i === 0 ? (prefix || "/") : accumulatedPath
           return (
             <div key={i} className="flex items-center gap-1">
               {i > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{encodedStr(name || "/")}</BreadcrumbPage>
+                  <BreadcrumbPage>{i === 0 ? <Home data-icon /> : encodedStr(name)}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink
-                    href={accumulatedPath || "/"}
+                    href={targetPath}
                     onClick={(e) => {
                       e.preventDefault()
-                      handleClick(accumulatedPath || "/")
+                      handleClick(targetPath)
                     }}
                   >
-                    {i === 0 ? <Home className="size-4" /> : encodedStr(name)}
+                    {i === 0 ? <Home data-icon /> : encodedStr(name)}
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

@@ -65,8 +65,15 @@ export function useFileTree() {
     }
   }, [state.tree, dispatch])
 
-  const handleSelect = useCallback((path: string) => {
-    dispatch({ type: "SELECT", path })
+  // Click a tree folder → navigate to it (update right panel directory listing)
+  const handleSelect = useCallback(async (path: string) => {
+    try {
+      const dirPath = path + "/"
+      const data = await fetchIndexData(dirPath)
+      dispatch({ type: "SET_CURRENT", path: dirPath, data })
+    } catch (err) {
+      console.error("Tree navigation failed:", err)
+    }
   }, [dispatch])
 
   return { tree: state.tree, treeLoading: state.treeLoading, handleToggle, handleSelect }
