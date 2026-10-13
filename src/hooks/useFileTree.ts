@@ -85,7 +85,8 @@ export function useFileTree() {
 
   // Click a tree node → dir toggles expand, file selects for preview
   const handleSelect = useCallback(async (path: string) => {
-    // File node: select it for preview
+    // File node: select it for preview, update URL for back/forward
+    pushHistory(path + "?view")
     dispatch({ type: "SELECT", path })
   }, [dispatch])
 

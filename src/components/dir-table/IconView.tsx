@@ -63,6 +63,7 @@ export function IconView() {
       dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } else {
       const filePath = newUrl(state.currentPath, item.name)
+      pushHistory(filePath + "?view")
       dispatch({ type: "SELECT", path: filePath })
     }
   }
