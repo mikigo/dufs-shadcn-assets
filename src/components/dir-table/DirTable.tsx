@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
 import { formatFileSize, formatDirSize, formatMtime, getFileIconType } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive } from "lucide-react"
+import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive, FileSpreadsheet, FileTerminal, FileJson, FileCog, FilePen, Presentation } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
@@ -24,7 +24,13 @@ function getIcon(pathType: string, filename?: string) {
         case "video": return <FileVideo className={cls} />
         case "audio": return <FileAudio className={cls} />
         case "code": return <FileCode className={cls} />
+        case "terminal": return <FileTerminal className={cls} />
+        case "json": return <FileJson className={cls} />
+        case "cog": return <FileCog className={cls} />
         case "text": return <FileText className={cls} />
+        case "pen": return <FilePen className={cls} />
+        case "presentation": return <Presentation className={cls} />
+        case "spreadsheet": return <FileSpreadsheet className={cls} />
         case "archive": return <FileArchive className={cls} />
         default: return <File className={cls} />
       }

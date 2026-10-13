@@ -1,4 +1,4 @@
-import { ChevronRight, Folder, FolderOpen, File, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive } from "lucide-react"
+import { ChevronRight, Folder, FolderOpen, File, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive, FileSpreadsheet, FileTerminal, FileJson, FileCog, FilePen, Presentation } from "lucide-react"
 import { cn, getFileIconType } from "@/lib/utils"
 import type { TreeNode as TreeNodeType } from "@/types/dufs"
 
@@ -24,7 +24,13 @@ function getIcon(isDir: boolean, expanded: boolean, filename?: string) {
     case "video": return <FileVideo className={cls} />
     case "audio": return <FileAudio className={cls} />
     case "code": return <FileCode className={cls} />
+    case "terminal": return <FileTerminal className={cls} />
+    case "json": return <FileJson className={cls} />
+    case "cog": return <FileCog className={cls} />
     case "text": return <FileText className={cls} />
+    case "pen": return <FilePen className={cls} />
+    case "presentation": return <Presentation className={cls} />
+    case "spreadsheet": return <FileSpreadsheet className={cls} />
     case "archive": return <FileArchive className={cls} />
     default: return <File className={cls} />
   }

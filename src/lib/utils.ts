@@ -59,27 +59,38 @@ const EXT_ICON_MAP: Record<string, string> = {
   // 音频
   mp3: "audio", wav: "audio", ogg: "audio", flac: "audio", m4a: "audio",
   aac: "audio", wma: "audio",
+  // 脚本（终端可执行）
+  py: "terminal", sh: "terminal", bash: "terminal", zsh: "terminal",
+  rb: "terminal", ps1: "terminal", bat: "terminal", cmd: "terminal",
   // 代码
-  js: "code", ts: "code", jsx: "code", tsx: "code", json: "code",
+  js: "code", ts: "code", jsx: "code", tsx: "code",
   css: "code", scss: "code", less: "code", html: "code", htm: "code",
-  xml: "code", py: "code", rb: "code", go: "code", rs: "code",
-  java: "code", c: "code", cpp: "code", h: "code", sh: "code",
-  bash: "code", zsh: "code", sql: "code", php: "code", swift: "code",
-  kt: "code", scala: "code", dart: "code", lua: "code", r: "code",
-  yaml: "code", yml: "code", toml: "code", ini: "code", cfg: "code",
-  conf: "code", env: "code", vue: "code", svelte: "code",
-  // 文档
-  pdf: "text", txt: "text", md: "text", mdx: "text", doc: "text",
-  docx: "text", log: "text",
+  xml: "code", go: "code", rs: "code", java: "code", c: "code",
+  cpp: "code", h: "code", php: "code", swift: "code", kt: "code",
+  scala: "code", dart: "code", lua: "code", r: "code", sql: "code",
+  vue: "code", svelte: "code",
+  // 配置（JSON样式）
+  json: "json", yaml: "json", yml: "json", toml: "json",
+  // 系统配置
+  ini: "cog", cfg: "cog", conf: "cog", env: "cog",
+  // Markdown / 纯文本
+  md: "text", mdx: "text", txt: "text", log: "text", pdf: "text",
+  // Word 文档
+  doc: "pen", docx: "pen", pages: "pen", odt: "pen", rtf: "pen",
+  // 演示文稿
+  ppt: "presentation", pptx: "presentation", odp: "presentation", key: "presentation",
+  // 表格
+  xls: "spreadsheet", xlsx: "spreadsheet", csv: "spreadsheet",
+  tsv: "spreadsheet", ods: "spreadsheet", numbers: "spreadsheet",
   // 压缩包
   zip: "archive", tar: "archive", gz: "archive", rar: "archive",
   "7z": "archive", bz2: "archive", xz: "archive",
-  // 表格
-  csv: "spreadsheet", xls: "spreadsheet", xlsx: "spreadsheet",
-  tsv: "spreadsheet",
 }
 
-export type FileIconType = "default" | "image" | "video" | "audio" | "code" | "text" | "archive" | "spreadsheet"
+export type FileIconType =
+  | "default" | "image" | "video" | "audio"
+  | "code" | "terminal" | "json" | "cog"
+  | "text" | "pen" | "presentation" | "spreadsheet" | "archive"
 
 export function getFileIconType(filename: string): FileIconType {
   const ext = filename.split(".").pop()?.toLowerCase() || ""
