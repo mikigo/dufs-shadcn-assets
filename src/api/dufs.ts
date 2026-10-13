@@ -11,12 +11,6 @@ function baseName(url: string): string {
 
 export const baseNameFromUrl = baseName
 
-function extName(filename: string): string {
-  const dotIndex = filename.lastIndexOf('.')
-  if (dotIndex === -1 || dotIndex === 0 || dotIndex === filename.length - 1) return ''
-  return filename.substring(dotIndex)
-}
-
 /** 智能解码二进制内容：优先 UTF-8，若出现乱码则回退 GBK */
 function decodeContent(buffer: ArrayBuffer): string {
   const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buffer)
@@ -165,14 +159,4 @@ export function newUrl(base: string, name: string): string {
   if (!url.endsWith("/")) url += "/"
   url += name.split("/").map(encodeURIComponent).join("/")
   return url
-}
-
-export const IFRAME_FORMATS = [
-  ".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg",
-  ".mp4", ".mov", ".avi", ".wmv", ".flv", ".webm",
-  ".mp3", ".ogg", ".wav", ".m4a",
-]
-
-export function canIframePreview(filename: string): boolean {
-  return IFRAME_FORMATS.includes(extName(baseName(filename)))
 }

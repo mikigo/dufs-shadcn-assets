@@ -1,9 +1,7 @@
 import { useAppState } from "@/context/AppContext"
-import { canIframePreview, baseNameFromUrl } from "@/api/dufs"
+import { baseNameFromUrl } from "@/api/dufs"
 import { TextPreview } from "./TextPreview"
-import { MediaPreview } from "./MediaPreview"
-import { FileWarning } from "lucide-react"
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
+import { OfvPreview } from "./OfvPreview"
 
 export function FilePreview() {
   const { state } = useAppState()
@@ -11,7 +9,6 @@ export function FilePreview() {
   if (!state.selectedPath) return null
 
   const fileName = baseNameFromUrl(state.selectedPath)
-  const isMedia = canIframePreview(state.selectedPath)
   const isTextLike = [".txt", ".md", ".json", ".xml", ".yml", ".yaml", ".toml", ".ini", ".cfg",
     ".conf", ".log", ".csv", ".tsv", ".html", ".htm", ".css", ".js", ".ts", ".tsx", ".jsx",
     ".rs", ".py", ".rb", ".go", ".java", ".c", ".cpp", ".h", ".sh", ".bash", ".zsh",
@@ -27,18 +24,8 @@ export function FilePreview() {
       <div className="flex-1 overflow-hidden bg-muted/30">
         {isTextLike ? (
           <TextPreview filePath={state.selectedPath} />
-        ) : isMedia ? (
-          <MediaPreview filePath={state.selectedPath} />
         ) : (
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <FileWarning />
-              </EmptyMedia>
-              <EmptyTitle>Preview not available</EmptyTitle>
-              <EmptyDescription>File format not supported for preview</EmptyDescription>
-            </EmptyHeader>
-          </Empty>
+          <OfvPreview filePath={state.selectedPath} />
         )}
       </div>
     </div>
