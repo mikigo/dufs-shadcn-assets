@@ -21,6 +21,11 @@ function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "SET_TREE": {
       const { path, nodes } = action
+      // Initial load or navigation: replace entire tree with current directory nodes
+      if (state.currentPath === path || state.tree.length === 0) {
+        return { ...state, tree: nodes }
+      }
+      // Lazy load: update children of an existing expanded node
       const updateChildren = (items: typeof state.tree): typeof state.tree =>
         items.map(item => {
           if (item.path === path) return { ...item, children: nodes, loaded: true }
