@@ -9,7 +9,7 @@ export function FilePreview() {
   if (!state.selectedPath) return null
 
   const fileName = baseNameFromUrl(state.selectedPath)
-  const isTextLike = [".txt", ".md", ".json", ".xml", ".yml", ".yaml", ".toml", ".ini", ".cfg",
+  const isTextLike = [".txt", ".json", ".xml", ".yml", ".yaml", ".toml", ".ini", ".cfg",
     ".conf", ".log", ".csv", ".tsv", ".html", ".htm", ".css", ".js", ".ts", ".tsx", ".jsx",
     ".rs", ".py", ".rb", ".go", ".java", ".c", ".cpp", ".h", ".sh", ".bash", ".zsh",
     ".sql", ".r", ".lua", ".php", ".swift", ".kt", ".scala", ".elm", ".ex", ".exs", ".erl",
