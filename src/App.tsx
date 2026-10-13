@@ -21,40 +21,48 @@ function AppContent() {
   const dropRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const el = document.getElementById("index-data")
-    if (!el) return
-    const raw = el.textContent || el.innerHTML
-    // 注意: 不能使用 raw === "__INDEX_DATA__" 来检测占位符
-    // 因为 dufs 在服务 HTML 时会全局替换 __INDEX_DATA__，
-    // JS 代码中的字面量字符串也会被替换成 base64 数据，导致比较永远为 true
-    // 改用长度判断: 占位符只有 15 个字符，真实数据至少几百个字符
-    if (!raw || raw.length < 100) return
-    const data = JSON.parse(decodeBase64(raw))
-    // 文件预览页（kind: "View"）：设置 selectedPath 让 FilePreview 显示，
-    // 同时提取父目录作为 currentPath 以提供上下文
-    if (data.kind === "View") {
-      const parentDir = data.href.substring(0, data.href.lastIndexOf("/") + 1) || "/"
-      dispatch({ type: "SET_CURRENT", path: parentDir, data: {
-        href: parentDir,
-        uri_prefix: data.uri_prefix,
-        kind: "Index" as const,
-        paths: [],
-        allow_upload: data.allow_upload,
-        allow_delete: data.allow_delete,
-        allow_search: false,
-        allow_archive: false,
-        auth: data.auth,
-        user: data.user || "",
-        dir_exists: true,
-        editable: "",
-      }})
-      dispatch({ type: "SELECT", path: data.href })
-      return
+    async function init() {
+      const el = document.getElementById("index-data")
+      if (!el) return
+      const raw = el.textContent || el.innerHTML
+      // 注意: 不能使用 raw === "__INDEX_DATA__" 来检测占位符
+      // 因为 dufs 在服务 HTML 时会全局替换 __INDEX_DATA__，
+      // JS 代码中的字面量字符串也会被替换成 base64 数据，导致比较永远为 true
+      // 改用长度判断: 占位符只有 15 个字符，真实数据至少几百个字符
+      if (!raw || raw.length < 100) return
+      const data = JSON.parse(decodeBase64(raw))
+
+      // 文件预览页（kind: "View"）：拉取父目录数据填充文件树
+      if (data.kind === "View") {
+        const parentDir = data.href.substring(0, data.href.lastIndexOf("/") + 1) || "/"
+        let dirData
+        try {
+          dirData = await fetchIndexData(parentDir)
+        } catch {
+          // 父目录拉取失败，至少显示 FilePreview
+        }
+        if (dirData) {
+          dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
+        } else {
+          dispatch({ type: "SET_CURRENT", path: parentDir, data: {
+            href: parentDir, uri_prefix: data.uri_prefix,
+            kind: "Index" as const, paths: [],
+            allow_upload: data.allow_upload, allow_delete: data.allow_delete,
+            allow_search: false, allow_archive: false,
+            auth: data.auth, user: data.user || "",
+            dir_exists: true, editable: "",
+          }})
+        }
+        dispatch({ type: "SELECT", path: data.href })
+        return
+      }
+
+      dispatch({ type: "SET_CURRENT", path: data.href, data })
+      if (data.auth) {
+        dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
+      }
     }
-    dispatch({ type: "SET_CURRENT", path: data.href, data })
-    if (data.auth) {
-      dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
-    }
+    init()
   }, [dispatch])
 
   // 监听浏览器前进/后退，同步导航
