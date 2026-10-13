@@ -18,10 +18,10 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect }: 
     <div>
       <button
         className={cn(
-          "flex items-center gap-1 w-full px-2 py-1 text-sm hover:bg-accent rounded-sm text-left",
-          "transition-colors"
+          "flex items-center gap-1.5 w-full py-1 text-[13px] hover:bg-muted rounded-md text-left",
+          "transition-colors duration-100 leading-tight"
         )}
-        style={{ paddingLeft: depth * 16 + 8 }}
+        style={{ paddingLeft: depth * 16 + 8, paddingRight: 8 }}
         onClick={() => {
           if (hasChildren) {
             onToggle(node.path, node.loaded)

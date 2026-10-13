@@ -1,3 +1,143 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Vercel color palette */
+    --background: #ffffff;
+    --foreground: #171717;
+    --card: #ffffff;
+    --card-foreground: #171717;
+    --popover: #ffffff;
+    --popover-foreground: #171717;
+    --primary: #171717;
+    --primary-foreground: #ffffff;
+    --secondary: #fafafa;
+    --secondary-foreground: #171717;
+    --muted: #fafafa;
+    --muted-foreground: #4d4d4d;
+    --accent: #fafafa;
+    --accent-foreground: #171717;
+    --destructive: #ff5b4f;
+    --destructive-foreground: #ffffff;
+    --border: #ebebeb;
+    --input: #ebebeb;
+    --ring: hsl(212 100% 48%);
+    --radius: 0.5rem;
+
+    /* Vercel-specific: shadow-as-border technique */
+    --shadow-border: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.04);
+
+    /* Sidebar specific */
+    --sidebar-background: #fafafa;
+    --sidebar-foreground: #4d4d4d;
+    --sidebar-primary: #171717;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #ebebeb;
+    --sidebar-accent-foreground: #171717;
+    --sidebar-border: #ebebeb;
+    --sidebar-ring: hsl(212 100% 48%);
+  }
+
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --card: #0a0a0a;
+    --card-foreground: #ededed;
+    --popover: #0a0a0a;
+    --popover-foreground: #ededed;
+    --primary: #ededed;
+    --primary-foreground: #0a0a0a;
+    --secondary: #171717;
+    --secondary-foreground: #ededed;
+    --muted: #171717;
+    --muted-foreground: #a1a1a1;
+    --accent: #171717;
+    --accent-foreground: #ededed;
+    --destructive: #ff5b4f;
+    --destructive-foreground: #ffffff;
+    --border: rgba(255, 255, 255, 0.1);
+    --input: rgba(255, 255, 255, 0.1);
+    --ring: hsl(212 100% 48%);
+
+    --shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
+    --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 2px 2px rgba(0, 0, 0, 0.2);
+
+    --sidebar-background: #0a0a0a;
+    --sidebar-foreground: #a1a1a1;
+    --sidebar-primary: #ededed;
+    --sidebar-primary-foreground: #0a0a0a;
+    --sidebar-accent: #171717;
+    --sidebar-accent-foreground: #ededed;
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --sidebar-ring: hsl(212 100% 48%);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Vercel-style headings with negative letter-spacing */
+  h1 { letter-spacing: -0.05em; }
+  h2 { letter-spacing: -0.03em; }
+  h3 { letter-spacing: -0.02em; }
+
+  /* Geist Mono for code elements */
+  code, pre, kbd {
+    font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+@layer components {
+  /* Vercel shadow-as-border card */
+  .card-vercel {
+    box-shadow: var(--shadow-card);
+    border-radius: var(--radius);
+    background: var(--card);
+  }
+
+  /* Vercel shadow-bordered input/button */
+  .border-shadow {
+    box-shadow: var(--shadow-border);
+    border: none;
+  }
+
+  /* Vercel pill badge */
+  .badge-pill {
+    border-radius: 9999px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* Vercel button — dark primary */
+  .btn-vercel-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Vercel ghost button — shadow-bordered */
+  .btn-vercel-ghost {
+    background: transparent;
+    color: var(--foreground);
+    box-shadow: var(--shadow-border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}

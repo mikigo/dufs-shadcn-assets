@@ -6,7 +6,7 @@ interface Props {
 
 export function Sidebar({ children }: Props) {
   return (
-    <div className="h-full flex flex-col border-r bg-background">
+    <div className="h-full flex flex-col bg-sidebar">
       {children}
     </div>
   )

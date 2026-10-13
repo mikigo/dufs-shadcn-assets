@@ -21,10 +21,10 @@ export function FilePreview() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="px-4 py-2 border-b bg-muted/30 text-sm font-medium flex items-center gap-2">
+      <div className="px-4 py-2.5 border-b border-border/40 text-sm font-medium flex items-center gap-2 bg-background">
         {fileName}
       </div>
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden bg-muted/30">
         {isTextLike ? (
           <TextPreview filePath={state.selectedPath} />
         ) : isMedia ? (
