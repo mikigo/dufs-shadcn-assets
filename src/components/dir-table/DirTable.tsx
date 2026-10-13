@@ -57,6 +57,34 @@ export function DirTable() {
     }
   }
 
+  const handleDownload = async (e: React.MouseEvent, item: PathItem) => {
+    e.stopPropagation()
+    const fileUrl = newUrl(state.currentPath, item.name)
+    const isDir = item.path_type.endsWith("Dir")
+    const url = fileUrl + (isDir ? "?zip" : "")
+    if (state.auth.user) {
+      try {
+        const tokengenUrl = new URL(url)
+        tokengenUrl.searchParams.set("tokengen", "")
+        const res = await fetch(tokengenUrl)
+        if (res.ok) {
+          const token = await res.text()
+          const dlUrl = new URL(url)
+          dlUrl.searchParams.set("token", token)
+          const a = document.createElement("a")
+          a.href = dlUrl.toString()
+          a.download = ""
+          a.click()
+          return
+        }
+      } catch {}
+    }
+    const a = document.createElement("a")
+    a.href = url
+    a.download = ""
+    a.click()
+  }
+
   const handleDelete = async () => {
     if (!deleteTarget) return
     const url = newUrl(state.currentPath, deleteTarget.name)
@@ -117,75 +145,33 @@ export function DirTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-0.5">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-7"
-                      onClick={async (e) => {
-                        e.stopPropagation()
-                        const url = fileUrl + (isDir ? "?zip" : "")
-                        if (state.auth.user) {
-                          try {
-                            const tokengenUrl = new URL(url)
-                            tokengenUrl.searchParams.set("tokengen", "")
-                            const res = await fetch(tokengenUrl)
-                            if (res.ok) {
-                              const token = await res.text()
-                              const dlUrl = new URL(url)
-                              dlUrl.searchParams.set("token", token)
-                              const a = document.createElement("a")
-                              a.href = dlUrl.toString()
-                              a.download = ""
-                              a.click()
-                              return
-                            }
-                          } catch {}
-                        }
-                        const a = document.createElement("a")
-                        a.href = url
-                        a.download = ""
-                        a.click()
-                      }}
-                      title="Download"
-                    >
-                      <Download className="size-3.5" />
+                    <Button variant="ghost" size="icon" onClick={(e) => handleDownload(e, item)} title="Download">
+                      <Download data-icon />
                     </Button>
                     {!isDir && (
                       <a href={fileUrl + "?view"} target="_blank" title="View">
-                        <Button variant="ghost" size="icon" className="size-7">
-                          <FileText className="size-3.5" />
+                        <Button variant="ghost" size="icon">
+                          <FileText data-icon />
                         </Button>
                       </a>
                     )}
                     {state.currentData?.allow_upload && (
                       <>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-7"
-                          onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }}
-                          title="Move / Rename"
-                        >
-                          <ArrowRightLeft className="size-3.5" />
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
+                          <ArrowRightLeft data-icon />
                         </Button>
                         {!isDir && (
                           <a href={fileUrl + "?edit"} target="_blank" title="Edit">
-                            <Button variant="ghost" size="icon" className="size-7">
-                              <Pencil className="size-3.5" />
+                            <Button variant="ghost" size="icon">
+                              <Pencil data-icon />
                             </Button>
                           </a>
                         )}
                       </>
                     )}
                     {state.currentData?.allow_delete && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-7 text-destructive hover:text-destructive"
-                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }}
-                        title="Delete"
-                      >
-                        <Trash2 className="size-3.5" />
+                      <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }} title="Delete">
+                        <Trash2 data-icon />
                       </Button>
                     )}
                   </div>

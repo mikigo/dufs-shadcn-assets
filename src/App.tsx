@@ -9,6 +9,8 @@ import { Toolbar } from "@/components/toolbar/Toolbar"
 import { DirTable } from "@/components/dir-table/DirTable"
 import { FilePreview } from "@/components/file-preview/FilePreview"
 import { UploadProgressSheet } from "@/components/dialogs/UploadProgressSheet"
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
+import { FolderOpen } from "lucide-react"
 
 let uploadIdCounter = 0
 
@@ -93,11 +95,23 @@ function AppContent() {
           showPreview ? (
             <FilePreview />
           ) : (
-            <div className="p-4">
+            <div className="p-4 h-full">
               {!state.currentData?.paths?.length ? (
-                <div className="text-muted-foreground italic py-8 text-center">
-                  {state.currentData?.dir_exists ? "Empty folder" : "Folder will be created when a file is uploaded"}
-                </div>
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <FolderOpen />
+                    </EmptyMedia>
+                    <EmptyTitle>
+                      {state.currentData?.dir_exists ? "Empty folder" : "No folder"}
+                    </EmptyTitle>
+                    <EmptyDescription>
+                      {state.currentData?.dir_exists
+                        ? "This folder has no files or subdirectories yet."
+                        : "Folder will be created when a file is uploaded."}
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
               ) : (
                 <DirTable />
               )}

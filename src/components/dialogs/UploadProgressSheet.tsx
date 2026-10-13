@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -36,30 +37,32 @@ export function UploadProgressSheet() {
 
   return (
     <Sheet>
-      <SheetTrigger className="relative size-8 inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none hover:bg-muted hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-        <Upload className="size-4" />
+      <SheetTrigger>
+        <Button variant="ghost" size="icon" className="relative">
+          <Upload data-icon />
           {activeUploads.length > 0 && (
             <Badge className="absolute -top-1 -right-1 size-4 p-0 flex items-center justify-center text-[10px]">
               {activeUploads.length}
             </Badge>
           )}
+        </Button>
       </SheetTrigger>
       <SheetContent className="w-80">
         <SheetHeader>
           <SheetTitle>Uploads</SheetTitle>
         </SheetHeader>
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 flex flex-col gap-3">
           {[...activeUploads, ...failedUploads].map(u => (
-            <div key={u.id} className="space-y-1">
+            <div key={u.id} className="flex flex-col gap-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="truncate flex-1">{u.name}</span>
                 <span className="ml-2 text-muted-foreground text-xs">
                   {u.status === "pending" && "Waiting..."}
                   {u.status === "uploading" && `${Math.round(u.file.size ? u.uploaded / u.file.size * 100 : 0)}%`}
                   {u.status === "error" && (
-                    <button onClick={() => handleRetry(u.id)} className="text-primary hover:underline">
-                      <RefreshCw className="size-3 inline" /> Retry
-                    </button>
+                    <Button variant="link" size="sm" className="h-auto p-0 text-xs" onClick={() => handleRetry(u.id)}>
+                      <RefreshCw data-icon="inline-start" /> Retry
+                    </Button>
                   )}
                 </span>
               </div>
@@ -73,8 +76,8 @@ export function UploadProgressSheet() {
           ))}
           {completeUploads.length > 0 && (
             <div className="text-sm text-muted-foreground flex items-center gap-1">
-              <Check className="size-3 text-green-500" />
-              {completeUploads.length} completed
+              <Check data-icon />
+              <Badge variant="secondary">{completeUploads.length} completed</Badge>
             </div>
           )}
         </div>

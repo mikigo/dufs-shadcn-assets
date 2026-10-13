@@ -66,14 +66,14 @@ export function ActionButtons() {
   return (
     <div className="flex items-center gap-1 ml-auto">
       {state.currentData?.allow_archive && (
-        <Button variant="ghost" size="icon" onClick={handleDownload} className="size-8">
-          <Download className="size-4" />
+        <Button variant="ghost" size="icon" onClick={handleDownload}>
+          <Download data-icon />
         </Button>
       )}
       {state.currentData?.allow_upload && (
         <>
-          <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} className="size-8">
-            <Upload className="size-4" />
+          <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
+            <Upload data-icon />
           </Button>
           <input
             ref={fileInputRef}
@@ -82,21 +82,16 @@ export function ActionButtons() {
             className="hidden"
             onChange={(e) => e.target.files && handleUpload(e.target.files)}
           />
-          <Button variant="ghost" size="icon" onClick={handleNewFolder} className="size-8">
-            <FolderPlus className="size-4" />
+          <Button variant="ghost" size="icon" onClick={handleNewFolder}>
+            <FolderPlus data-icon />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleNewFile} className="size-8">
-            <FilePlus className="size-4" />
+          <Button variant="ghost" size="icon" onClick={handleNewFile}>
+            <FilePlus data-icon />
           </Button>
         </>
       )}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}
-        className="size-8"
-      >
-        <PanelLeft className="size-4" />
+      <Button variant="ghost" size="icon" onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}>
+        <PanelLeft data-icon />
       </Button>
     </div>
   )

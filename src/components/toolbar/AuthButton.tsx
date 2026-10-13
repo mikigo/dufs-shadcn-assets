@@ -29,8 +29,8 @@ export function AuthButton() {
     return (
       <div className="flex items-center gap-1 text-sm">
         <span className="text-muted-foreground">{state.auth.user}</span>
-        <Button variant="ghost" size="icon" onClick={handleLogout} className="size-8">
-          <LogOut className="size-4" />
+        <Button variant="ghost" size="icon" onClick={handleLogout}>
+          <LogOut data-icon />
         </Button>
       </div>
     )
@@ -42,9 +42,8 @@ export function AuthButton() {
       size="icon"
       onClick={handleLogin}
       disabled={state.auth.loading}
-      className="size-8"
     >
-      <LogIn className="size-4" />
+      <LogIn data-icon />
     </Button>
   )
 }

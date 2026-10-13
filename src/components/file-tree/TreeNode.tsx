@@ -32,16 +32,16 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect }: 
         {hasChildren && (
           <ChevronRight
             className={cn(
-              "size-4 shrink-0 text-muted-foreground transition-transform",
+              "shrink-0 text-muted-foreground transition-transform",
               expanded && "rotate-90"
             )}
           />
         )}
         {!hasChildren && <div className="w-4 shrink-0" />}
         {expanded && hasChildren ? (
-          <FolderOpen className="size-4 shrink-0 text-primary" />
+          <FolderOpen className="shrink-0 text-primary" />
         ) : (
-          <Folder className="size-4 shrink-0 text-muted-foreground" />
+          <Folder className="shrink-0 text-muted-foreground" />
         )}
         <span className="truncate">{node.name}</span>
         {loading && (

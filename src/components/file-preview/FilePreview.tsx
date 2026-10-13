@@ -3,6 +3,7 @@ import { canIframePreview, baseNameFromUrl } from "@/api/dufs"
 import { TextPreview } from "./TextPreview"
 import { MediaPreview } from "./MediaPreview"
 import { FileWarning } from "lucide-react"
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 
 export function FilePreview() {
   const { state } = useAppState()
@@ -29,10 +30,15 @@ export function FilePreview() {
         ) : isMedia ? (
           <MediaPreview filePath={state.selectedPath} />
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-2">
-            <FileWarning className="size-12" />
-            <p className="text-sm">File format not supported for preview</p>
-          </div>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <FileWarning />
+              </EmptyMedia>
+              <EmptyTitle>Preview not available</EmptyTitle>
+              <EmptyDescription>File format not supported for preview</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         )}
       </div>
     </div>
