@@ -143,6 +143,13 @@
   }
 }
 
+/* prose 内 hljs 代码块：背景透明，使用 prose-pre:bg-muted 适配深浅色主题 */
+.prose pre code.hljs,
+.prose pre code[class*="language-"] {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
 /* 始终显示滚动条，避免 Windows 自动隐藏 */
 @layer base {
   /* Firefox */

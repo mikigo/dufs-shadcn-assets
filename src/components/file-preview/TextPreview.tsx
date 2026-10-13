@@ -61,8 +61,8 @@ export function TextPreview({ filePath }: Props) {
 
   return (
     <ScrollArea className="h-full">
-      <pre className="p-4 text-[13px] font-mono leading-relaxed">
-        <code dangerouslySetInnerHTML={{ __html: highlighted || "" }} />
+      <pre className="p-4 text-[13px] font-mono leading-relaxed bg-muted rounded-lg border border-border">
+        <code dangerouslySetInnerHTML={{ __html: highlighted || "" }} className="!bg-transparent block" />
       </pre>
     </ScrollArea>
   )
