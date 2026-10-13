@@ -100,3 +100,25 @@ export function getFileIconType(filename: string): FileIconType {
 export function baseNameFromUrl(url: string): string {
   return decodeURIComponent(url.split("/").filter(v => v.length > 0).slice(-1)[0])
 }
+
+/** 可在线编辑的纯文本文件扩展名 */
+const EDITABLE_EXTS = new Set([
+  "md", "mdx", "txt", "log",
+  "py", "pyw",
+  "js", "jsx", "mjs", "cjs",
+  "ts", "tsx",
+  "css", "scss", "less",
+  "html", "htm", "xml", "svg",
+  "json", "yaml", "yml", "toml",
+  "ini", "cfg", "conf", "env",
+  "sh", "bash", "zsh", "bat", "cmd", "ps1",
+  "go", "rs", "java", "c", "cpp", "h", "hpp",
+  "php", "rb", "swift", "kt", "scala", "dart", "lua", "r",
+  "sql", "vue", "svelte",
+  "gitignore", "dockerfile", "makefile", "editorconfig",
+])
+
+export function isEditable(filename: string): boolean {
+  const ext = filename.includes(".") ? filename.split(".").pop()?.toLowerCase() || "" : filename.toLowerCase()
+  return EDITABLE_EXTS.has(ext)
+}

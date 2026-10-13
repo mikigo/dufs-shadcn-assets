@@ -4,7 +4,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, formatMtime, getFileIconType } from "@/lib/utils"
+import { formatFileSize, formatDirSize, formatMtime, getFileIconType, isEditable } from "@/lib/utils"
 import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive, FileSpreadsheet, FileTerminal, FileJson, FileCog, FilePen, Presentation } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
@@ -180,7 +180,7 @@ export function DirTable() {
                         <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
                           <ArrowRightLeft data-icon />
                         </Button>
-                        {!isDir && (
+                        {!isDir && isEditable(item.name) && (
                           <a href={fileUrl + "?edit"} target="_blank" title="Edit">
                             <Button variant="ghost" size="icon">
                               <Pencil data-icon />

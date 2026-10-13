@@ -1,6 +1,6 @@
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, getFileIconType } from "@/lib/utils"
+import { formatFileSize, formatDirSize, getFileIconType, isEditable } from "@/lib/utils"
 import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive, FileSpreadsheet, FileTerminal, FileJson, FileCog, FilePen, Presentation } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
@@ -165,7 +165,7 @@ export function IconView() {
                       onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
                       <ArrowRightLeft className="size-3" />
                     </Button>
-                    {!isDir && (
+                    {!isDir && isEditable(item.name) && (
                       <a href={fileUrl + "?edit"} target="_blank" title="Edit">
                         <Button variant="ghost" size="icon" className="size-6">
                           <Pencil className="size-3" />

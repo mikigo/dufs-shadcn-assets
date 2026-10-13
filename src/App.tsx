@@ -42,6 +42,11 @@ function AppContent() {
   useEffect(() => {
     const handlePopState = async () => {
       const path = location.pathname + location.search
+      // ?view URL → 文件预览，直接 SELECT 而不是 fetch directory data
+      if (location.search === "?view") {
+        dispatch({ type: "SELECT", path: location.pathname })
+        return
+      }
       try {
         const data = await fetchIndexData(path || "/")
         dispatch({ type: "SET_CURRENT", path: data.href, data })

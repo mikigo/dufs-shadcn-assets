@@ -92,10 +92,10 @@ export function ActionButtons() {
       )}
       <Button
         variant="ghost" size="icon"
-        title={state.viewMode === "list" ? "Show as icons" : "Show as list"}
-        onClick={() => dispatch({ type: "SET_VIEW_MODE", mode: state.viewMode === "list" ? "icons" : "list" })}
+        title={state.viewMode === "icons" ? "Show as list" : "Show as icons"}
+        onClick={() => dispatch({ type: "SET_VIEW_MODE", mode: state.viewMode === "icons" ? "list" : "icons" })}
       >
-        {state.viewMode === "list" ? <LayoutGrid data-icon /> : <List data-icon />}
+        {state.viewMode === "icons" ? <LayoutGrid data-icon /> : <List data-icon />}
       </Button>
       <Button variant="ghost" size="icon" onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}>
         <PanelLeft data-icon />
