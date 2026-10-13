@@ -14,10 +14,10 @@ interface Props {
 function getIcon(isDir: boolean, expanded: boolean) {
   if (isDir) {
     return expanded
-      ? <FolderOpen className="shrink-0 size-4 text-primary" />
-      : <Folder className="shrink-0 size-4 text-muted-foreground" />
+      ? <FolderOpen className="shrink-0 size-4 text-primary group-hover:text-accent-foreground" />
+      : <Folder className="shrink-0 size-4 text-muted-foreground group-hover:text-accent-foreground" />
   }
-  return <File className="shrink-0 size-4 text-muted-foreground" />
+  return <File className="shrink-0 size-4 text-muted-foreground group-hover:text-accent-foreground" />
 }
 
 export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect, onNavigate }: Props) {
@@ -27,8 +27,8 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect, on
     <div>
       <div
         className={cn(
-          "flex items-center gap-1.5 w-full py-1 text-[13px] hover:bg-muted rounded-md text-left",
-          "transition-colors duration-100 leading-tight cursor-pointer"
+          "flex items-center gap-1.5 w-full py-1 text-[13px] hover:bg-accent hover:text-accent-foreground rounded-md text-left",
+          "transition-colors duration-100 leading-tight cursor-pointer group"
         )}
         style={{ paddingLeft: depth * 16 + 8, paddingRight: 8 }}
       >
