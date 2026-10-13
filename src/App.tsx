@@ -105,12 +105,14 @@ function AppContent() {
 
   const showPreview = state.selectedPath && !state.selectedPath.endsWith("/")
 
+  const sidebarDefaultWidth = Math.floor(window.innerWidth * 0.3)
+
   return (
     <div ref={dropRef} className="h-screen flex overflow-hidden">
       <ResizablePanel
-        defaultWidth={240}
-        minWidth={160}
-        maxWidth={480}
+        defaultWidth={sidebarDefaultWidth}
+        minWidth={200}
+        maxWidth={Math.floor(window.innerWidth * 0.5)}
         collapsed={!state.sidebarOpen}
       >
         <Sidebar>
