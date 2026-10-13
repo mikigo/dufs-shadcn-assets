@@ -30,6 +30,11 @@ function AppContent() {
     }
   }, [dispatch])
 
+  // Debug: expose state globally
+  useEffect(() => {
+    (window as any).__appState = state
+  }, [state])
+
   const startUpload = useCallback((files: FileList | File[]) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
