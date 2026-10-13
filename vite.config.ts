@@ -1,15 +1,17 @@
-import { dirname, resolve } from "path"
-import { fileURLToPath } from "url"
-import react from '@vitejs/plugin-react'
+import path from "path"
 import { defineConfig } from 'vite'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import react from '@vitejs/plugin-react'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), viteSingleFile()],
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./src"),
     },
+  },
+  build: {
+    outDir: 'dist',
+    assetsInlineLimit: 0,
   },
 })
