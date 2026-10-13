@@ -14,9 +14,9 @@ import { fetchIndexData } from "@/api/dufs"
 export function Breadcrumb() {
   const { state, dispatch } = useAppState()
 
-  // Split path, filter empty segments from leading/trailing slashes
-  const rawParts = state.currentPath === "/" ? [""] : state.currentPath.split("/").filter(p => p !== "")
-  const parts = rawParts.length === 0 ? [""] : rawParts
+  // Split path, filter empty segments. Always prepend root "" so Home button appears at all depths.
+  const segments = state.currentPath.split("/").filter(p => p !== "")
+  const parts = state.currentPath === "/" ? [""] : ["", ...segments]
   const prefix = state.currentData?.uri_prefix ?? ""
 
   const handleClick = async (path: string) => {
