@@ -1,20 +1,32 @@
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText } from "lucide-react"
+import { formatFileSize, formatDirSize, getFileIconType } from "@/lib/utils"
+import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
 import { Button } from "@/components/ui/button"
 import type { PathItem } from "@/types/dufs"
 
-function getLargeIcon(pathType: string) {
+function getLargeIcon(pathType: string, filename?: string) {
   const cls = "size-10"
   switch (pathType) {
     case "Dir": return <Folder className={cls} />
     case "SymlinkDir": return <FolderSymlink className={cls} />
     case "SymlinkFile": return <FileSymlink className={cls} />
-    default: return <File className={cls} />
+    default: {
+      const type = filename ? getFileIconType(filename) : "default"
+      const c = "size-10"
+      switch (type) {
+        case "image": return <FileImage className={c} />
+        case "video": return <FileVideo className={c} />
+        case "audio": return <FileAudio className={c} />
+        case "code": return <FileCode className={c} />
+        case "text": return <FileText className={c} />
+        case "archive": return <FileArchive className={c} />
+        default: return <File className={c} />
+      }
+    }
   }
 }
 
@@ -165,7 +177,7 @@ export function IconView() {
 
               {/* Icon */}
               <div className="mt-3 text-muted-foreground">
-                {getLargeIcon(item.path_type)}
+                {getLargeIcon(item.path_type, item.name)}
               </div>
 
               {/* Name */}

@@ -48,6 +48,44 @@ export function newUrl(base: string, name: string): string {
   return url
 }
 
+/** 根据文件扩展名返回对应的图标名称 */
+const EXT_ICON_MAP: Record<string, string> = {
+  // 图片
+  jpg: "image", jpeg: "image", png: "image", gif: "image", svg: "image",
+  webp: "image", bmp: "image", ico: "image", tiff: "image",
+  // 视频
+  mp4: "video", mov: "video", avi: "video", wmv: "video", flv: "video",
+  webm: "video", mkv: "video",
+  // 音频
+  mp3: "audio", wav: "audio", ogg: "audio", flac: "audio", m4a: "audio",
+  aac: "audio", wma: "audio",
+  // 代码
+  js: "code", ts: "code", jsx: "code", tsx: "code", json: "code",
+  css: "code", scss: "code", less: "code", html: "code", htm: "code",
+  xml: "code", py: "code", rb: "code", go: "code", rs: "code",
+  java: "code", c: "code", cpp: "code", h: "code", sh: "code",
+  bash: "code", zsh: "code", sql: "code", php: "code", swift: "code",
+  kt: "code", scala: "code", dart: "code", lua: "code", r: "code",
+  yaml: "code", yml: "code", toml: "code", ini: "code", cfg: "code",
+  conf: "code", env: "code", vue: "code", svelte: "code",
+  // 文档
+  pdf: "text", txt: "text", md: "text", mdx: "text", doc: "text",
+  docx: "text", log: "text",
+  // 压缩包
+  zip: "archive", tar: "archive", gz: "archive", rar: "archive",
+  "7z": "archive", bz2: "archive", xz: "archive",
+  // 表格
+  csv: "spreadsheet", xls: "spreadsheet", xlsx: "spreadsheet",
+  tsv: "spreadsheet",
+}
+
+export type FileIconType = "default" | "image" | "video" | "audio" | "code" | "text" | "archive" | "spreadsheet"
+
+export function getFileIconType(filename: string): FileIconType {
+  const ext = filename.split(".").pop()?.toLowerCase() || ""
+  return (EXT_ICON_MAP[ext] as FileIconType) || "default"
+}
+
 export function baseNameFromUrl(url: string): string {
   return decodeURIComponent(url.split("/").filter(v => v.length > 0).slice(-1)[0])
 }

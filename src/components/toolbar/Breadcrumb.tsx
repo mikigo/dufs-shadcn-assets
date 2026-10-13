@@ -14,7 +14,11 @@ export function Breadcrumb() {
   const { state, dispatch } = useAppState()
 
   // Split path, filter empty segments. Always prepend root "" so Home button appears at all depths.
-  const segments = state.currentPath.split("/").filter(p => p !== "")
+  const rawSegments = state.currentPath.split("/").filter(p => p !== "")
+  // decodeURIComponent: currentPath is URL-encoded (e.g. %E7%AA%97 → 窗)
+  const segments = rawSegments.map(s => {
+    try { return decodeURIComponent(s) } catch { return s }
+  })
   const parts = state.currentPath === "/" ? [""] : ["", ...segments]
   const prefix = (state.currentData?.uri_prefix ?? "").replace(/\/+$/, "")
 

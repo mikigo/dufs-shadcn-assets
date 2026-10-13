@@ -4,19 +4,31 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, formatMtime } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText } from "lucide-react"
+import { formatFileSize, formatDirSize, formatMtime, getFileIconType } from "@/lib/utils"
+import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive } from "lucide-react"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
 import type { PathItem } from "@/types/dufs"
 
-function getIcon(pathType: string) {
+function getIcon(pathType: string, filename?: string) {
   switch (pathType) {
-    case "Dir": return <Folder className="size-4 text-muted-foreground" />
-    case "SymlinkDir": return <FolderSymlink className="size-4 text-muted-foreground" />
-    case "SymlinkFile": return <FileSymlink className="size-4 text-muted-foreground" />
-    default: return <File className="size-4 text-muted-foreground" />
+    case "Dir": return <Folder className="size-4 text-muted-foreground shrink-0" />
+    case "SymlinkDir": return <FolderSymlink className="size-4 text-muted-foreground shrink-0" />
+    case "SymlinkFile": return <FileSymlink className="size-4 text-muted-foreground shrink-0" />
+    default: {
+      const type = filename ? getFileIconType(filename) : "default"
+      const cls = "size-4 text-muted-foreground shrink-0"
+      switch (type) {
+        case "image": return <FileImage className={cls} />
+        case "video": return <FileVideo className={cls} />
+        case "audio": return <FileAudio className={cls} />
+        case "code": return <FileCode className={cls} />
+        case "text": return <FileText className={cls} />
+        case "archive": return <FileArchive className={cls} />
+        default: return <File className={cls} />
+      }
+    }
   }
 }
 
@@ -132,7 +144,7 @@ export function DirTable() {
                 className="cursor-pointer hover:bg-muted/50"
                 onDoubleClick={() => handleRowClick(item)}
               >
-                <TableCell>{getIcon(item.path_type)}</TableCell>
+                <TableCell>{getIcon(item.path_type, item.name)}</TableCell>
                 <TableCell className="font-medium">
                   <span className="text-primary hover:underline" onClick={(e) => { e.stopPropagation(); handleRowClick(item) }}>
                     {item.name}
