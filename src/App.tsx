@@ -105,7 +105,7 @@ function AppContent() {
 
   const showPreview = state.selectedPath && !state.selectedPath.endsWith("/")
 
-  const sidebarDefaultWidth = Math.floor(window.innerWidth * 0.3)
+  const sidebarDefaultWidth = Math.floor(window.innerWidth * 0.2)
 
   return (
     <div ref={dropRef} className="h-screen flex overflow-hidden">

@@ -56,10 +56,25 @@ export async function fetchIndexData(dirPath: string): Promise<DufsData> {
   return data
 }
 
+/** 智能解码二进制内容：优先 UTF-8，若出现乱码则回退 GBK */
+function decodeContent(buffer: ArrayBuffer): string {
+  const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buffer)
+  // \uFFFD 是 Unicode 替换字符，UTF-8 解码失败时会插入它
+  if (/\uFFFD/.test(utf8)) {
+    try {
+      return new TextDecoder("gbk", { fatal: false }).decode(buffer)
+    } catch {
+      // 部分浏览器不支持 GBK，回退到 UTF-8
+    }
+  }
+  return utf8
+}
+
 export async function fetchFileContent(filePath: string): Promise<string> {
   const res = await fetch(filePath)
   await assertResOK(res)
-  return res.text()
+  const buffer = await res.arrayBuffer()
+  return decodeContent(buffer)
 }
 
 export async function deletePath(url: string): Promise<void> {
