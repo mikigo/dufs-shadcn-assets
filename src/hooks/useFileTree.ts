@@ -9,12 +9,16 @@ export function useFileTree() {
   useEffect(() => {
     if (state.currentData) {
       const nodes: TreeNode[] = state.currentData.paths
-        .filter(p => p.path_type.endsWith("Dir"))
-        .sort((a, b) => a.name.localeCompare(b.name))
+        .sort((a, b) => {
+          const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+          const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+          if (aIsDir !== bIsDir) return bIsDir - aIsDir
+          return a.name.localeCompare(b.name)
+        })
         .map(p => ({
           name: p.name,
           path: state.currentPath.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
-          isDir: true,
+          isDir: p.path_type.endsWith("Dir"),
           children: null,
           loaded: false,
         }))
@@ -26,15 +30,21 @@ export function useFileTree() {
     const loadingPaths = Array.from(state.treeLoading)
     if (loadingPaths.length === 0) return
     const path = loadingPaths[0]
-    fetchIndexData(path)
+    // 目录请求必须带尾部斜杠
+    const dirPath = path.endsWith("/") ? path : path + "/"
+    fetchIndexData(dirPath)
       .then(data => {
         const nodes: TreeNode[] = data.paths
-          .filter(p => p.path_type.endsWith("Dir"))
-          .sort((a, b) => a.name.localeCompare(b.name))
+          .sort((a, b) => {
+            const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+            const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+            if (aIsDir !== bIsDir) return bIsDir - aIsDir
+            return a.name.localeCompare(b.name)
+          })
           .map(p => ({
             name: p.name,
             path: path.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
-            isDir: true,
+            isDir: p.path_type.endsWith("Dir"),
             children: null,
             loaded: false,
           }))
@@ -65,15 +75,10 @@ export function useFileTree() {
     }
   }, [state.tree, dispatch])
 
-  // Click a tree folder → navigate to it (update right panel directory listing)
+  // Click a tree node → dir toggles expand, file selects for preview
   const handleSelect = useCallback(async (path: string) => {
-    try {
-      const dirPath = path + "/"
-      const data = await fetchIndexData(dirPath)
-      dispatch({ type: "SET_CURRENT", path: dirPath, data })
-    } catch (err) {
-      console.error("Tree navigation failed:", err)
-    }
+    // File node: select it for preview
+    dispatch({ type: "SELECT", path })
   }, [dispatch])
 
   return { tree: state.tree, treeLoading: state.treeLoading, handleToggle, handleSelect }

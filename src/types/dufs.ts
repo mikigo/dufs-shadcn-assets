@@ -21,6 +21,8 @@ export interface DufsData {
   editable: string
 }
 
+export type ViewMode = "list" | "icons"
+
 export interface AppState {
   tree: TreeNode[]
   treeLoading: Set<string>
@@ -28,6 +30,7 @@ export interface AppState {
   currentData: DufsData | null
   selectedPath: string | null
   sidebarOpen: boolean
+  viewMode: ViewMode
   auth: {
     required: boolean
     user: string | null
@@ -66,3 +69,4 @@ export type AppAction =
   | { type: "UPDATE_UPLOAD"; id: number; updates: Partial<UploadItem> }
   | { type: "REMOVE_UPLOAD"; id: number }
   | { type: "TOGGLE_SIDEBAR" }
+  | { type: "SET_VIEW_MODE"; mode: ViewMode }

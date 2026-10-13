@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Home } from "lucide-react"
 import { encodedStr } from "@/lib/utils"
-import { fetchIndexData } from "@/api/dufs"
+import { fetchIndexData, pushHistory } from "@/api/dufs"
 
 export function Breadcrumb() {
   const { state, dispatch } = useAppState()
@@ -22,6 +22,7 @@ export function Breadcrumb() {
   const handleClick = async (path: string) => {
     try {
       const data = await fetchIndexData(path)
+      pushHistory(path)
       dispatch({ type: "SET_CURRENT", path, data })
     } catch (err) {
       console.error("Breadcrumb navigation failed:", err)

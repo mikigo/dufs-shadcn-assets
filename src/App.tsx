@@ -1,12 +1,13 @@
 import { useEffect, useRef, useCallback } from "react"
 import { AppProvider, useAppState } from "@/context/AppContext"
-import { uploadFile, newUrl, decodeBase64 } from "@/api/dufs"
+import { uploadFile, newUrl, decodeBase64, fetchIndexData } from "@/api/dufs"
 import { ResizablePanel } from "@/components/layout/ResizablePanel"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { MainPanel } from "@/components/layout/MainPanel"
 import { FileTree } from "@/components/file-tree/FileTree"
 import { Toolbar } from "@/components/toolbar/Toolbar"
 import { DirTable } from "@/components/dir-table/DirTable"
+import { IconView } from "@/components/dir-table/IconView"
 import { FilePreview } from "@/components/file-preview/FilePreview"
 import { UploadProgressSheet } from "@/components/dialogs/UploadProgressSheet"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
@@ -22,12 +23,31 @@ function AppContent() {
     const el = document.getElementById("index-data")
     if (!el) return
     const raw = el.textContent || el.innerHTML
-    if (!raw || raw === "__INDEX_DATA__") return
+    // 注意: 不能使用 raw === "__INDEX_DATA__" 来检测占位符
+    // 因为 dufs 在服务 HTML 时会全局替换 __INDEX_DATA__，
+    // JS 代码中的字面量字符串也会被替换成 base64 数据，导致比较永远为 true
+    // 改用长度判断: 占位符只有 15 个字符，真实数据至少几百个字符
+    if (!raw || raw.length < 100) return
     const data = JSON.parse(decodeBase64(raw))
     dispatch({ type: "SET_CURRENT", path: data.href, data })
     if (data.auth) {
       dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
     }
+  }, [dispatch])
+
+  // 监听浏览器前进/后退，同步导航
+  useEffect(() => {
+    const handlePopState = async () => {
+      const path = location.pathname + location.search
+      try {
+        const data = await fetchIndexData(path || "/")
+        dispatch({ type: "SET_CURRENT", path: data.href, data })
+      } catch (err) {
+        console.error("PopState navigation failed:", err)
+      }
+    }
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
   }, [dispatch])
 
   // Debug: expose state globally
@@ -102,7 +122,7 @@ function AppContent() {
           showPreview ? (
             <FilePreview />
           ) : (
-            <div className="p-4 h-full">
+            <div className="p-4">
               {!state.currentData?.paths?.length ? (
                 <Empty>
                   <EmptyHeader>
@@ -119,6 +139,8 @@ function AppContent() {
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
+              ) : state.viewMode === "icons" ? (
+                <IconView />
               ) : (
                 <DirTable />
               )}

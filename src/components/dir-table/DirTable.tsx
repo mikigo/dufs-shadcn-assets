@@ -3,7 +3,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
-import { fetchIndexData, deletePath, newUrl } from "@/api/dufs"
+import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
 import { formatFileSize, formatDirSize, formatMtime, encodedStr } from "@/lib/utils"
 import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText } from "lucide-react"
 import { useState } from "react"
@@ -50,6 +50,7 @@ export function DirTable() {
     if (item.path_type.endsWith("Dir")) {
       const dirPath = newUrl(state.currentPath, item.name) + "/"
       const data = await fetchIndexData(dirPath)
+      pushHistory(dirPath)
       dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } else {
       const filePath = newUrl(state.currentPath, item.name)

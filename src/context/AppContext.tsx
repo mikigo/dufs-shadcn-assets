@@ -9,6 +9,7 @@ const initialState: AppState = {
   currentData: null,
   selectedPath: null,
   sidebarOpen: true,
+  viewMode: "list",
   auth: {
     required: false,
     user: null,
@@ -25,14 +26,16 @@ function reducer(state: AppState, action: AppAction): AppState {
       if (state.currentPath === path || state.tree.length === 0) {
         return { ...state, tree: nodes }
       }
-      // Lazy load: update children of an existing expanded node
+      // Lazy load: update children of an existing expanded node, clear loading
       const updateChildren = (items: typeof state.tree): typeof state.tree =>
         items.map(item => {
           if (item.path === path) return { ...item, children: nodes, loaded: true }
           if (item.children) return { ...item, children: updateChildren(item.children) }
           return item
         })
-      return { ...state, tree: updateChildren(state.tree) }
+      const nextLoading = new Set(state.treeLoading)
+      nextLoading.delete(path)
+      return { ...state, tree: updateChildren(state.tree), treeLoading: nextLoading }
     }
     case "EXPAND_TREE": {
       const loading = new Set(state.treeLoading)
@@ -69,6 +72,8 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, uploads: state.uploads.filter(u => u.id !== action.id) }
     case "TOGGLE_SIDEBAR":
       return { ...state, sidebarOpen: !state.sidebarOpen }
+    case "SET_VIEW_MODE":
+      return { ...state, viewMode: action.mode }
     default:
       return state
   }

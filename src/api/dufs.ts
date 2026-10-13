@@ -29,8 +29,14 @@ function decodeBase64(b64: string): string {
 
 export { decodeBase64 }
 
+/** 更新浏览器地址栏，支持后退/前进导航 */
+export function pushHistory(url: string) {
+  history.pushState(null, "", url)
+}
+
 function parseIndexData(html: string): DufsData | null {
-  const match = html.match(/<template\s+id="index-data"[^>]*>([^<]+)<\/template>/)
+  // dufs injects data into <script id="index-data"> tag (not <template>)
+  const match = html.match(/<script\s+id="index-data"[^>]*>([^<]+)<\/script>/)
   if (!match) return null
   return JSON.parse(decodeBase64(match[1]))
 }

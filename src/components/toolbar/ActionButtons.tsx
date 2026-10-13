@@ -1,6 +1,6 @@
 import { useAppState } from "@/context/AppContext"
 import { Button } from "@/components/ui/button"
-import { Upload, FolderPlus, FilePlus, Download, PanelLeft } from "lucide-react"
+import { Upload, FolderPlus, FilePlus, Download, PanelLeft, LayoutGrid, List } from "lucide-react"
 import { uploadFile, createFolder, createFile } from "@/api/dufs"
 import { newUrl } from "@/lib/utils"
 import { useRef } from "react"
@@ -90,6 +90,13 @@ export function ActionButtons() {
           </Button>
         </>
       )}
+      <Button
+        variant="ghost" size="icon"
+        title={state.viewMode === "list" ? "Show as icons" : "Show as list"}
+        onClick={() => dispatch({ type: "SET_VIEW_MODE", mode: state.viewMode === "list" ? "icons" : "list" })}
+      >
+        {state.viewMode === "list" ? <LayoutGrid data-icon /> : <List data-icon />}
+      </Button>
       <Button variant="ghost" size="icon" onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}>
         <PanelLeft data-icon />
       </Button>
