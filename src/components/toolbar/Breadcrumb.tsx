@@ -40,14 +40,15 @@ export function Breadcrumb() {
         {parts.map((name, i) => {
           if (i > 0) accumulatedPath += "/" + encodeURIComponent(name)
           const isLast = i === parts.length - 1
-          const targetPath = i === 0 ? (prefix || "/") : accumulatedPath
+          const isHome = i === 0
+          const targetPath = isHome ? (prefix || "/") : accumulatedPath
+          // 主页图标始终可点击
+          const showAsLink = isHome || !isLast
           return (
             <div key={i} className="flex items-center gap-1">
               {i > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>{i === 0 ? <Home data-icon className="size-4" /> : name}</BreadcrumbPage>
-                ) : (
+                {showAsLink ? (
                   <BreadcrumbLink
                     href={targetPath}
                     onClick={(e) => {
@@ -55,8 +56,10 @@ export function Breadcrumb() {
                       handleClick(targetPath)
                     }}
                   >
-                    {i === 0 ? <Home data-icon className="size-4" /> : name}
+                    {isHome ? <Home data-icon className="size-4" /> : name}
                   </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{name}</BreadcrumbPage>
                 )}
               </BreadcrumbItem>
             </div>
