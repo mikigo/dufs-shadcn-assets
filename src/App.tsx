@@ -9,6 +9,7 @@ import { Toolbar } from "@/components/toolbar/Toolbar"
 import { DirTable } from "@/components/dir-table/DirTable"
 import { IconView } from "@/components/dir-table/IconView"
 import { FilePreview } from "@/components/file-preview/FilePreview"
+import { ReadmePreview } from "@/components/file-preview/ReadmePreview"
 import { UploadProgressSheet } from "@/components/dialogs/UploadProgressSheet"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { FolderOpen } from "lucide-react"
@@ -139,10 +140,18 @@ function AppContent() {
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
-              ) : state.viewMode === "icons" ? (
-                <IconView />
               ) : (
-                <DirTable />
+                <>
+                  {state.viewMode === "icons" ? <IconView /> : <DirTable />}
+                  <ReadmePreview
+                    currentPath={state.currentPath}
+                    hasReadme={
+                      !!state.currentData?.paths?.some(
+                        p => p.name.toLowerCase() === "readme.md"
+                      )
+                    }
+                  />
+                </>
               )}
             </div>
           )

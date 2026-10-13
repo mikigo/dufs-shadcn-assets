@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react"
 import { useAppState } from "@/context/AppContext"
-import { fetchIndexData } from "@/api/dufs"
+import { fetchIndexData, pushHistory } from "@/api/dufs"
 import type { TreeNode } from "@/types/dufs"
 
 export function useFileTree() {
@@ -81,5 +81,17 @@ export function useFileTree() {
     dispatch({ type: "SELECT", path })
   }, [dispatch])
 
-  return { tree: state.tree, treeLoading: state.treeLoading, handleToggle, handleSelect }
+  // Click a directory node → navigate right panel to this directory
+  const handleNavigate = useCallback(async (path: string) => {
+    try {
+      const dirPath = path.endsWith("/") ? path : path + "/"
+      const data = await fetchIndexData(dirPath)
+      pushHistory(dirPath)
+      dispatch({ type: "SET_CURRENT", path: dirPath, data })
+    } catch (err) {
+      console.error("Tree navigation failed:", err)
+    }
+  }, [dispatch])
+
+  return { tree: state.tree, treeLoading: state.treeLoading, handleToggle, handleSelect, handleNavigate }
 }

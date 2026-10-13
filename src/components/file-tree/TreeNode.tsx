@@ -8,6 +8,7 @@ interface Props {
   loading: boolean
   onToggle: (path: string, loaded: boolean) => void
   onSelect: (path: string) => void
+  onNavigate: (path: string) => void
 }
 
 function getIcon(isDir: boolean, expanded: boolean) {
@@ -19,7 +20,7 @@ function getIcon(isDir: boolean, expanded: boolean) {
   return <File className="shrink-0 size-4 text-muted-foreground" />
 }
 
-export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect }: Props) {
+export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect, onNavigate }: Props) {
   const expanded = node.children !== null
 
   return (
@@ -56,6 +57,7 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect }: 
           onClick={() => {
             if (node.isDir) {
               onToggle(node.path, node.loaded)
+              onNavigate(node.path)
             } else {
               onSelect(node.path)
             }
@@ -79,6 +81,7 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect }: 
               loading={false}
               onToggle={onToggle}
               onSelect={onSelect}
+              onNavigate={onNavigate}
             />
           ))}
         </div>

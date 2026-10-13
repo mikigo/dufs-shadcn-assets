@@ -46,7 +46,7 @@ function reducer(state: AppState, action: AppAction): AppState {
     case "COLLAPSE_TREE": {
       const collapse = (items: typeof state.tree): typeof state.tree =>
         items.map(item => {
-          if (item.path === action.path) return { ...item, children: null }
+          if (item.path === action.path) return { ...item, children: null, loaded: false }
           if (item.children) return { ...item, children: collapse(item.children) }
           return item
         })

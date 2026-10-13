@@ -3,7 +3,7 @@ import { TreeNodeComponent } from "./TreeNode"
 import { useFileTree } from "@/hooks/useFileTree"
 
 export function FileTree() {
-  const { tree, treeLoading, handleToggle, handleSelect } = useFileTree()
+  const { tree, treeLoading, handleToggle, handleSelect, handleNavigate } = useFileTree()
 
   // Debug: log tree state
   if (typeof window !== "undefined") {
@@ -25,6 +25,7 @@ export function FileTree() {
               loading={treeLoading.has(node.path)}
               onToggle={handleToggle}
               onSelect={handleSelect}
+              onNavigate={handleNavigate}
             />
           ))}
         </div>
