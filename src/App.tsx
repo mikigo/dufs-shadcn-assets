@@ -21,7 +21,9 @@ function AppContent() {
   useEffect(() => {
     const el = document.getElementById("index-data")
     if (!el) return
-    const data = JSON.parse(decodeBase64(el.innerHTML))
+    const raw = el.textContent || el.innerHTML
+    if (!raw || raw === "__INDEX_DATA__") return
+    const data = JSON.parse(decodeBase64(raw))
     dispatch({ type: "SET_CURRENT", path: data.href, data })
     if (data.auth) {
       dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
