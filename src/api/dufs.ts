@@ -9,6 +9,8 @@ function baseName(url: string): string {
   return decodeURIComponent(url.split("/").filter(v => v.length > 0).slice(-1)[0])
 }
 
+export const baseNameFromUrl = baseName
+
 function extName(filename: string): string {
   const dotIndex = filename.lastIndexOf('.')
   if (dotIndex === -1 || dotIndex === 0 || dotIndex === filename.length - 1) return ''
@@ -133,6 +135,10 @@ export function uploadFile(
   xhr.addEventListener("abort", () => callbacks.onError(id, "Aborted"))
   xhr.open("PUT", uploadUrl)
   xhr.send(file)
+}
+
+export function newUrl(base: string, name: string): string {
+  return base.replace(/\/?$/, "/") + name
 }
 
 export const IFRAME_FORMATS = [
