@@ -140,7 +140,10 @@ export function uploadFile(
 }
 
 export function newUrl(base: string, name: string): string {
-  return base.replace(/\/?$/, "/") + name
+  let url = base
+  if (!url.endsWith("/")) url += "/"
+  url += name.split("/").map(encodeURIComponent).join("/")
+  return url
 }
 
 export const IFRAME_FORMATS = [
