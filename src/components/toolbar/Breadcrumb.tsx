@@ -17,7 +17,7 @@ export function Breadcrumb() {
   // Split path, filter empty segments. Always prepend root "" so Home button appears at all depths.
   const segments = state.currentPath.split("/").filter(p => p !== "")
   const parts = state.currentPath === "/" ? [""] : ["", ...segments]
-  const prefix = state.currentData?.uri_prefix ?? ""
+  const prefix = (state.currentData?.uri_prefix ?? "").replace(/\/+$/, "")
 
   const handleClick = async (path: string) => {
     try {
