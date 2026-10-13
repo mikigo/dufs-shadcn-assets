@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
-import { Markify } from "@glitchoff/markify"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { fetchFileContent, newUrl } from "@/api/dufs"
+import hljs from "highlight.js"
+import { injectHljsTheme } from "@glitchoff/markify"
 
 interface Props {
   currentPath: string
@@ -24,6 +27,11 @@ export function ReadmePreview({ currentPath, hasReadme }: Props) {
       .finally(() => setLoading(false))
   }, [currentPath, hasReadme])
 
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains("dark")
+    injectHljsTheme(isDark ? "dark" : "light")
+  }, [])
+
   if (!hasReadme) return null
   if (loading) return (
     <div className="mt-6 border-t pt-4">
@@ -37,17 +45,52 @@ export function ReadmePreview({ currentPath, hasReadme }: Props) {
   )
   if (!content) return null
 
-  const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark")
-
   return (
     <div className="mt-6 border-t pt-4">
       <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
         README.md
       </div>
-      <div className="max-w-none">
-        <Markify hljsTheme={isDark ? "dark" : "light"} codeBlockWorker={false}>
+      <div className="prose prose-sm max-w-none dark:prose-invert
+        prose-headings:text-foreground
+        prose-p:text-foreground/80 prose-p:leading-relaxed
+        prose-code:text-foreground/80 prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
+        prose-pre:bg-muted prose-pre:border prose-pre:border-border
+        prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-foreground
+        prose-li:text-foreground/80
+        prose-img:rounded-lg prose-img:border prose-img:border-border
+        prose-hr:border-border
+        prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:bg-muted/50 prose-blockquote:py-0.5 prose-blockquote:px-4 prose-blockquote:rounded-r-md
+      ">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            pre: ({ children }) => <pre>{children}</pre>,
+            code({ className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || "")
+              const codeStr = String(children).replace(/\n$/, "")
+              if (match && codeStr) {
+                try {
+                  const result = hljs.highlight(codeStr, { language: match[1] })
+                  if (result.value) {
+                    return (
+                      <code
+                        dangerouslySetInnerHTML={{ __html: result.value }}
+                        className={className}
+                        {...props}
+                      />
+                    )
+                  }
+                } catch {
+                  // fall through to plain text
+                }
+              }
+              return <code className={className} {...props}>{children}</code>
+            },
+          }}
+        >
           {content}
-        </Markify>
+        </ReactMarkdown>
       </div>
     </div>
   )
