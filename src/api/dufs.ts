@@ -17,6 +17,20 @@ function extName(filename: string): string {
   return filename.substring(dotIndex)
 }
 
+/** 智能解码二进制内容：优先 UTF-8，若出现乱码则回退 GBK */
+function decodeContent(buffer: ArrayBuffer): string {
+  const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buffer)
+  // \uFFFD 是 Unicode 替换字符，UTF-8 解码失败时会插入它
+  if (/\uFFFD/.test(utf8)) {
+    try {
+      return new TextDecoder("gbk", { fatal: false }).decode(buffer)
+    } catch {
+      // 部分浏览器不支持 GBK，回退到 UTF-8
+    }
+  }
+  return utf8
+}
+
 function decodeBase64(b64: string): string {
   const binString = atob(b64)
   const len = binString.length
@@ -24,7 +38,7 @@ function decodeBase64(b64: string): string {
   for (let i = 0; i < len; i++) {
     bytes[i] = binString.charCodeAt(i)
   }
-  return new TextDecoder().decode(bytes)
+  return decodeContent(bytes.buffer)
 }
 
 export { decodeBase64 }
@@ -54,20 +68,6 @@ export async function fetchIndexData(dirPath: string): Promise<DufsData> {
   const data = parseIndexData(html)
   if (!data) throw new Error("Failed to parse index data")
   return data
-}
-
-/** 智能解码二进制内容：优先 UTF-8，若出现乱码则回退 GBK */
-function decodeContent(buffer: ArrayBuffer): string {
-  const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buffer)
-  // \uFFFD 是 Unicode 替换字符，UTF-8 解码失败时会插入它
-  if (/\uFFFD/.test(utf8)) {
-    try {
-      return new TextDecoder("gbk", { fatal: false }).decode(buffer)
-    } catch {
-      // 部分浏览器不支持 GBK，回退到 UTF-8
-    }
-  }
-  return utf8
 }
 
 export async function fetchFileContent(filePath: string): Promise<string> {
