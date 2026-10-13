@@ -142,3 +142,32 @@
     font-weight: 500;
   }
 }
+
+/* 始终显示滚动条，避免 Windows 自动隐藏 */
+@layer base {
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  /* Chrome / Edge / Safari */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.4);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+}
