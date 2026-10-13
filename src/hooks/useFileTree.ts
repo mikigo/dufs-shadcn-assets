@@ -14,7 +14,7 @@ export function useFileTree() {
       treeNavRef.current = false
       return
     }
-    if (state.currentData) {
+    if (state.currentData?.paths) {
       const nodes: TreeNode[] = state.currentData.paths
         .sort((a, b) => {
           const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
@@ -41,6 +41,7 @@ export function useFileTree() {
     const dirPath = path.endsWith("/") ? path : path + "/"
     fetchIndexData(dirPath)
       .then(data => {
+        if (!data.paths) return
         const nodes: TreeNode[] = data.paths
           .sort((a, b) => {
             const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0

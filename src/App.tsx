@@ -30,6 +30,8 @@ function AppContent() {
     // 改用长度判断: 占位符只有 15 个字符，真实数据至少几百个字符
     if (!raw || raw.length < 100) return
     const data = JSON.parse(decodeBase64(raw))
+    // 跳过文件预览页（kind: "View"），其数据不含 paths 字段
+    if (data.kind === "View") return
     dispatch({ type: "SET_CURRENT", path: data.href, data })
     if (data.auth) {
       dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
