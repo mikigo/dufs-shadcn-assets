@@ -1,32 +1,36 @@
-# React + TypeScript + Vite
+# dufs-shadcn-assets
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern React + shadcn/ui theme for [dufs](https://github.com/sigoden/dufs) file server.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Dual-pane file manager layout (tree + detail)
+- File tree with lazy-loading directories
+- File preview (text files, images, video/audio, PDF)
+- Drag-and-drop upload with progress
+- Delete, move/rename, new folder/file
+- Search, sorting, breadcrumb navigation
+- Dark/light mode
+- Auth support (login/logout)
 
-## React Compiler
+## Usage
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Build
+pnpm install
+pnpm build
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# Use with dufs
+dufs ./serve-path --assets ./dist
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Development
+
+```bash
+pnpm install
+pnpm dev
+```
+
+## License
+
+MIT
