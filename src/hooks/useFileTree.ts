@@ -87,6 +87,18 @@ export function useFileTree() {
   const handleSelect = useCallback(async (path: string) => {
     // File node: select it for preview, update URL for back/forward
     pushHistory(path + "?view")
+
+    // 先同步更新 currentPath 为父目录，使面包屑正确显示
+    const parentDir = path.substring(0, path.lastIndexOf("/") + 1) || "/"
+    try {
+      const data = await fetchIndexData(parentDir)
+      treeNavRef.current = true  // 防止触发树重建
+      dispatch({ type: "SET_CURRENT", path: parentDir, data })
+    } catch {
+      // 静默失败 — 面包屑可能不更新，FilePreview 仍正常
+    }
+
+    // 后 SELECT，确保 selectedPath 不被 SET_CURRENT 覆盖
     dispatch({ type: "SELECT", path })
   }, [dispatch])
 
