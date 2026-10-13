@@ -27,6 +27,8 @@ function decodeBase64(b64: string): string {
   return new TextDecoder().decode(bytes)
 }
 
+export { decodeBase64 }
+
 function parseIndexData(html: string): DufsData | null {
   const match = html.match(/<template\s+id="index-data"[^>]*>([^<]+)<\/template>/)
   if (!match) return null

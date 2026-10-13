@@ -157,7 +157,7 @@ export function DirTable() {
                         </Button>
                       </a>
                     )}
-                    {state.currentData.allow_upload && (
+                    {state.currentData?.allow_upload && (
                       <>
                         <Button
                           variant="ghost"
@@ -177,7 +177,7 @@ export function DirTable() {
                         )}
                       </>
                     )}
-                    {state.currentData.allow_delete && (
+                    {state.currentData?.allow_delete && (
                       <Button
                         variant="ghost"
                         size="icon"
