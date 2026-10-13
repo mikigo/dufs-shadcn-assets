@@ -9,7 +9,7 @@ const initialState: AppState = {
   currentData: null,
   selectedPath: null,
   sidebarOpen: true,
-  viewMode: "list",
+  viewMode: "icons",
   auth: {
     required: false,
     user: null,
