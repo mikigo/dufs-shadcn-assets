@@ -5,13 +5,15 @@ import type { TreeNode } from "@/types/dufs"
 
 export function useFileTree() {
   const { state, dispatch } = useAppState()
-  const treeNavRef = useRef(false)
+  // HandleSELECT/HandleNavigate 设置后跳过一条树重建
+  // 用计数器而非布尔值，避免链路失效时后续导航也被跳过
+  const skipTreeRebuild = useRef(0)
 
   // 仅在页面初始加载或面板导航（双击表格/面包屑）时重建树
   // 从文件树点击目录导航时，跳过树重建（只更新右侧面板）
   useEffect(() => {
-    if (treeNavRef.current) {
-      treeNavRef.current = false
+    if (skipTreeRebuild.current > 0) {
+      skipTreeRebuild.current -= 1
       return
     }
     if (state.currentData?.paths) {
@@ -92,7 +94,7 @@ export function useFileTree() {
     const parentDir = path.substring(0, path.lastIndexOf("/") + 1) || "/"
     try {
       const data = await fetchIndexData(parentDir)
-      treeNavRef.current = true  // 防止触发树重建
+      skipTreeRebuild.current += 1  // 防止触发树重建
       dispatch({ type: "SET_CURRENT", path: parentDir, data })
     } catch {
       // 静默失败 — 面包屑可能不更新，FilePreview 仍正常
@@ -107,7 +109,7 @@ export function useFileTree() {
     try {
       const dirPath = path.endsWith("/") ? path : path + "/"
       const data = await fetchIndexData(dirPath)
-      treeNavRef.current = true
+      skipTreeRebuild.current += 1
       pushHistory(dirPath)
       dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } catch (err) {
