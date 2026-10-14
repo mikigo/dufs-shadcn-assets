@@ -3,17 +3,14 @@ import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
 import type { TreeNode } from "@/types/dufs"
 
-let initialTreeBuilt = false
-
 export function useFileTree() {
   const { state, dispatch } = useAppState()
 
-  // 仅首次初始化时从 __INDEX_DATA__ 构建树，之后永不重建
-  // 后续所有导航（树点击、popstate、表格双击）通过懒加载更新树的子节点
+  // 仅在树为空时重建（初始加载或整页刷新如搜索）。
+  // SPA 导航（树点击/popstate/表格双击）不重建，只更新右侧面板。
   useEffect(() => {
-    if (initialTreeBuilt) return
+    if (state.tree.length > 0) return
     if (state.currentData?.paths) {
-      initialTreeBuilt = true
       const nodes: TreeNode[] = state.currentData.paths
         .sort((a, b) => {
           const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
@@ -30,7 +27,7 @@ export function useFileTree() {
         }))
       dispatch({ type: "SET_TREE", path: state.currentPath || "/", nodes })
     }
-  }, [state.currentPath, state.currentData, dispatch])
+  }, [state.currentPath, state.currentData, state.tree.length, dispatch])
 
   useEffect(() => {
     const loadingPaths = Array.from(state.treeLoading)
