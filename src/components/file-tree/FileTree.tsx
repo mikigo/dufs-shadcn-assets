@@ -40,7 +40,7 @@ export function FileTree() {
       <div className="px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-widest select-none shrink-0">
         Explorer
       </div>
-      <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto">
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
         <div className="px-2 pt-1 pb-3 relative" style={{ height: virtualizer.getTotalSize() + 16 }}>
           {virtualizer.getVirtualItems().map((virtualItem) => {
             const node = flatNodes[virtualItem.index]

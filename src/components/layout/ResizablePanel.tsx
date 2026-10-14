@@ -48,7 +48,7 @@ export function ResizablePanel({ defaultWidth, minWidth, maxWidth, collapsed, ch
   return (
     <>
       <div
-        className="overflow-hidden flex-shrink-0"
+        className="overflow-x-hidden flex-shrink-0"
         style={{
           width: collapsed ? 0 : width,
           transition: isResizing.current ? "none" : "width 0.2s ease-in-out",

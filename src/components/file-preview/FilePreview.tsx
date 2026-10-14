@@ -64,7 +64,7 @@ export function FilePreview() {
           </button>
         </div>
       </div>
-      <div className="flex-1 overflow-auto bg-muted/30">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden bg-muted/30">
         {isTextLike ? (
           editing ? (
             <EditPreview
