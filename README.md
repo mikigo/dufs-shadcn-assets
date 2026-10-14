@@ -21,18 +21,25 @@
 
 ## 快速开始
 
+### 方式一：直接下载（推荐）
+
+从 [Releases](../../releases) 页面下载最新的 `dufs-shadcn-assets.zip`，解压后直接使用：
+
 ```bash
-# 1. 克隆项目
+# 解压到任意目录，例如 ./assets
+unzip dufs-shadcn-assets.zip -d ./assets
+
+# 启动 dufs，指定 assets 目录
+./dufs ./serve-path -A --assets ./assets
+```
+
+### 方式二：从源码构建
+
+```bash
 git clone https://github.com/your-org/dufs-shadcn-assets.git
 cd dufs-shadcn-assets
-
-# 2. 安装依赖
 pnpm install
-
-# 3. 构建（自动生成 vscode-icons 映射表 + 打包为单文件）
 pnpm build
-
-# 4. 启动 dufs，使用自定义主题
 ./dufs ./serve-path -A --assets ./dist
 ```
 
