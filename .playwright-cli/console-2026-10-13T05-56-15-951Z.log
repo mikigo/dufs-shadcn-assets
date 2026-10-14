@@ -1,0 +1,3 @@
+[      79ms] [LOG] [App] index-data element: found @ http://127.0.0.1:5000/:20
+[      79ms] [LOG] [App] raw data length: 2424 isPlaceholder: true @ http://127.0.0.1:5000/:20
+[      82ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5000/favicon.ico:0

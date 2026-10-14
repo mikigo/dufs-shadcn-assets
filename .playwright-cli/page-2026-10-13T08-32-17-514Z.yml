@@ -1,0 +1,35 @@
+- generic [ref=f4e3]:
+  - generic [ref=f4e5]:
+    - generic [ref=f4e6]: Dufs
+    - generic [ref=f4e11]: Explorer (0)
+  - generic [ref=f4e16]:
+    - generic [ref=f4e18]:
+      - navigation "breadcrumb" [ref=f4e19]:
+        - list [ref=f4e20]:
+          - listitem [ref=f4e22]:
+            - link [ref=f4e23] [cursor=pointer]:
+              - /url: /
+          - generic [ref=f4e27]:
+            - listitem [aria-hidden] [ref=f4e28]
+            - listitem [ref=f4e31]:
+              - link "窗" [disabled] [ref=f4e32]
+      - textbox "Search..." [ref=f4e38]
+      - generic [ref=f4e39]:
+        - generic [ref=f4e40]:
+          - button "Show as list" [ref=f4e41] [cursor=pointer]
+          - button [ref=f4e42] [cursor=pointer]
+        - button [ref=f4e43] [cursor=pointer]
+    - generic [ref=f4e45]:
+      - generic [ref=f4e46]:
+        - generic [ref=f4e47]: 1 item
+        - generic [ref=f4e48]:
+          - button "Name ↑" [ref=f4e49] [cursor=pointer]
+          - button "Date" [ref=f4e50] [cursor=pointer]
+      - generic [ref=f4e52] [cursor=pointer]:
+        - generic [ref=f4e53]:
+          - button "Download" [ref=f4e54]
+          - link "View" [ref=f4e55]:
+            - /url: /窗/%E6%B5%8B%E8%AF%95.png?view
+            - button [ref=f4e56]
+        - generic [ref=f4e63]: 测试.png
+        - generic [ref=f4e64]: 6 B

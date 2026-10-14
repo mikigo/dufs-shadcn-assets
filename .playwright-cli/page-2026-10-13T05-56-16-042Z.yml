@@ -1,0 +1,14 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: Explorer (0)
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - navigation "breadcrumb" [ref=e13]:
+        - list [ref=e14]:
+          - listitem [ref=e16]:
+            - link [disabled] [ref=e17]
+      - textbox "Search..." [ref=e25]
+      - button [ref=e27] [cursor=pointer]
+      - button [ref=e29] [cursor=pointer]
+    - generic [ref=e33]:
+      - generic [ref=e35]: No folder
+      - generic [ref=e36]: Folder will be created when a file is uploaded.

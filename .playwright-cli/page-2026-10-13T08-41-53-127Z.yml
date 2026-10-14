@@ -1,0 +1,35 @@
+- generic [ref=f12e3]:
+  - generic [ref=f12e5]:
+    - generic [ref=f12e6]: Dufs
+    - generic [ref=f12e11]: Explorer (0)
+  - generic [ref=f12e16]:
+    - generic [ref=f12e18]:
+      - navigation "breadcrumb" [ref=f12e19]:
+        - list [ref=f12e20]:
+          - listitem [ref=f12e22]:
+            - link [ref=f12e23] [cursor=pointer]:
+              - /url: /
+          - generic [ref=f12e27]:
+            - listitem [aria-hidden] [ref=f12e28]
+            - listitem [ref=f12e31]:
+              - link "窗" [disabled] [ref=f12e32]
+      - textbox "Search..." [ref=f12e38]
+      - generic [ref=f12e39]:
+        - generic [ref=f12e40]:
+          - button "Show as list" [ref=f12e41] [cursor=pointer]
+          - button [ref=f12e42] [cursor=pointer]
+        - button [ref=f12e43] [cursor=pointer]
+    - generic [ref=f12e45]:
+      - generic [ref=f12e46]:
+        - generic [ref=f12e47]: 1 item
+        - generic [ref=f12e48]:
+          - button "Name ↑" [ref=f12e49] [cursor=pointer]
+          - button "Date" [ref=f12e50] [cursor=pointer]
+      - generic [ref=f12e52] [cursor=pointer]:
+        - generic [ref=f12e53]:
+          - button "Download" [ref=f12e54]
+          - link "View" [ref=f12e55]:
+            - /url: /窗/%E5%8E%A8%E6%88%BF-%E5%8F%8C%E8%81%94%E5%8A%A8.png?view
+            - button [ref=f12e56]
+        - generic [ref=f12e63]: 厨房-双联动.png
+        - generic [ref=f12e64]: 12 B

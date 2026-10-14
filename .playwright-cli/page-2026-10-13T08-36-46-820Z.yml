@@ -1,0 +1,88 @@
+- generic [ref=f5e3]:
+  - generic [ref=f5e5]:
+    - generic [ref=f5e6]: Dufs
+    - generic [ref=f5e11]: Explorer (0)
+  - generic [ref=f5e16]:
+    - generic [ref=f5e18]:
+      - navigation "breadcrumb" [ref=f5e19]:
+        - list [ref=f5e20]:
+          - listitem [ref=f5e22]:
+            - link [ref=f5e23] [cursor=pointer]:
+              - /url: /
+          - generic [ref=f5e27]:
+            - listitem [aria-hidden] [ref=f5e28]
+            - listitem [ref=f5e31]:
+              - link "src" [disabled] [ref=f5e32]
+      - textbox "Search..." [ref=f5e38]
+      - generic [ref=f5e39]:
+        - generic [ref=f5e40]:
+          - button "Show as list" [ref=f5e41] [cursor=pointer]
+          - button [ref=f5e42] [cursor=pointer]
+        - button [ref=f5e43] [cursor=pointer]
+    - generic [ref=f5e45]:
+      - generic [ref=f5e46]:
+        - generic [ref=f5e47]: 11 items
+        - generic [ref=f5e48]:
+          - button "Name ↑" [ref=f5e49] [cursor=pointer]
+          - button "Date" [ref=f5e50] [cursor=pointer]
+      - generic [ref=f5e51]:
+        - generic [ref=f5e52] [cursor=pointer]:
+          - button "Download" [ref=f5e54]
+          - generic [ref=f5e58]: api
+          - generic [ref=f5e59]: 1 item
+        - generic [ref=f5e60] [cursor=pointer]:
+          - button "Download" [ref=f5e62]
+          - generic [ref=f5e66]: assets
+          - generic [ref=f5e67]: 3 items
+        - generic [ref=f5e68] [cursor=pointer]:
+          - button "Download" [ref=f5e70]
+          - generic [ref=f5e74]: components
+          - generic [ref=f5e75]: 7 items
+        - generic [ref=f5e76] [cursor=pointer]:
+          - button "Download" [ref=f5e78]
+          - generic [ref=f5e82]: context
+          - generic [ref=f5e83]: 1 item
+        - generic [ref=f5e84] [cursor=pointer]:
+          - button "Download" [ref=f5e86]
+          - generic [ref=f5e90]: hooks
+          - generic [ref=f5e91]: 1 item
+        - generic [ref=f5e92] [cursor=pointer]:
+          - button "Download" [ref=f5e94]
+          - generic [ref=f5e98]: lib
+          - generic [ref=f5e99]: 1 item
+        - generic [ref=f5e100] [cursor=pointer]:
+          - button "Download" [ref=f5e102]
+          - generic [ref=f5e106]: types
+          - generic [ref=f5e107]: 1 item
+        - generic [ref=f5e108] [cursor=pointer]:
+          - generic [ref=f5e109]:
+            - button "Download" [ref=f5e110]
+            - link "View" [ref=f5e111]:
+              - /url: /src/App.css?view
+              - button [ref=f5e112]
+          - generic [ref=f5e119]: App.css
+          - generic [ref=f5e120]: 2.8 KB
+        - generic [ref=f5e121] [cursor=pointer]:
+          - generic [ref=f5e122]:
+            - button "Download" [ref=f5e123]
+            - link "View" [ref=f5e124]:
+              - /url: /src/App.tsx?view
+              - button [ref=f5e125]
+          - generic [ref=f5e132]: App.tsx
+          - generic [ref=f5e133]: 6.1 KB
+        - generic [ref=f5e134] [cursor=pointer]:
+          - generic [ref=f5e135]:
+            - button "Download" [ref=f5e136]
+            - link "View" [ref=f5e137]:
+              - /url: /src/index.css?view
+              - button [ref=f5e138]
+          - generic [ref=f5e145]: index.css
+          - generic [ref=f5e146]: 4.3 KB
+        - generic [ref=f5e147] [cursor=pointer]:
+          - generic [ref=f5e148]:
+            - button "Download" [ref=f5e149]
+            - link "View" [ref=f5e150]:
+              - /url: /src/main.tsx?view
+              - button [ref=f5e151]
+          - generic [ref=f5e158]: main.tsx
+          - generic [ref=f5e159]: 229 B

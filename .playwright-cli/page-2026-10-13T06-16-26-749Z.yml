@@ -1,0 +1,190 @@
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: Explorer (8)
+    - generic [ref=e9]:
+      - generic [ref=e310] [cursor=pointer]:
+        - button "Expand" [ref=e311]
+        - button ".git" [ref=e314]
+      - generic [ref=e319] [cursor=pointer]:
+        - button "Expand" [ref=e320]
+        - button ".playwright-cli" [ref=e323]
+      - generic [ref=e328] [cursor=pointer]:
+        - button "Expand" [ref=e329]
+        - button "dist" [ref=e332]
+      - generic [ref=e337] [cursor=pointer]:
+        - button "Expand" [ref=e338]
+        - button "docs" [ref=e341]
+      - generic [ref=e346] [cursor=pointer]:
+        - button "Expand" [ref=e347]
+        - button "node_modules" [ref=e350]
+      - generic [ref=e355] [cursor=pointer]:
+        - button "Expand" [ref=e356]
+        - button "public" [ref=e359]
+      - generic [ref=e364] [cursor=pointer]:
+        - button "Expand" [ref=e365]
+        - button "scripts" [ref=e368]
+      - generic [ref=e373] [cursor=pointer]:
+        - button "Expand" [ref=e374]
+        - button "src" [ref=e377]
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - navigation "breadcrumb" [ref=e13]:
+        - list [ref=e14]:
+          - listitem [ref=e16]:
+            - link [disabled] [ref=e17]
+      - textbox "Search..." [ref=e25]
+      - button [ref=e27] [cursor=pointer]
+      - generic [ref=e28]:
+        - button "Show as list" [active] [ref=e381] [cursor=pointer]
+        - button [ref=e30] [cursor=pointer]
+    - generic [ref=e32]:
+      - generic [ref=e382]:
+        - generic [ref=e383]: 22 items
+        - generic [ref=e384]:
+          - button "Name ↑" [ref=e385] [cursor=pointer]
+          - button "Date" [ref=e386] [cursor=pointer]
+      - generic [ref=e387]:
+        - generic [ref=e388] [cursor=pointer]:
+          - button "Download" [ref=e390]
+          - generic [ref=e394]: .git
+          - generic [ref=e395]: 11 items
+        - generic [ref=e396] [cursor=pointer]:
+          - button "Download" [ref=e398]
+          - generic [ref=e402]: .playwright-cli
+          - generic [ref=e403]: 9 items
+        - generic [ref=e404] [cursor=pointer]:
+          - button "Download" [ref=e406]
+          - generic [ref=e410]: dist
+          - generic [ref=e411]: 4 items
+        - generic [ref=e412] [cursor=pointer]:
+          - button "Download" [ref=e414]
+          - generic [ref=e418]: docs
+          - generic [ref=e419]: 1 item
+        - generic [ref=e420] [cursor=pointer]:
+          - button "Download" [ref=e422]
+          - generic [ref=e426]: node_modules
+          - generic [ref=e427]: 24 items
+        - generic [ref=e428] [cursor=pointer]:
+          - button "Download" [ref=e430]
+          - generic [ref=e434]: public
+          - generic [ref=e435]: 3 items
+        - generic [ref=e436] [cursor=pointer]:
+          - button "Download" [ref=e438]
+          - generic [ref=e442]: scripts
+          - generic [ref=e443]: 1 item
+        - generic [ref=e444] [cursor=pointer]:
+          - button "Download" [ref=e446]
+          - generic [ref=e450]: src
+          - generic [ref=e451]: 11 items
+        - generic [ref=e452] [cursor=pointer]:
+          - generic [ref=e453]:
+            - button "Download" [ref=e454]
+            - link "View" [ref=e455]:
+              - /url: /.gitignore?view
+              - button [ref=e456]
+          - generic [ref=e461]: .gitignore
+          - generic [ref=e462]: 41 B
+        - generic [ref=e463] [cursor=pointer]:
+          - generic [ref=e464]:
+            - button "Download" [ref=e465]
+            - link "View" [ref=e466]:
+              - /url: /.oxlintrc.json?view
+              - button [ref=e467]
+          - generic [ref=e472]: .oxlintrc.json
+          - generic [ref=e473]: 245 B
+        - generic [ref=e474] [cursor=pointer]:
+          - generic [ref=e475]:
+            - button "Download" [ref=e476]
+            - link "View" [ref=e477]:
+              - /url: /components.json?view
+              - button [ref=e478]
+          - generic [ref=e483]: components.json
+          - generic [ref=e484]: 533 B
+        - generic [ref=e485] [cursor=pointer]:
+          - generic [ref=e486]:
+            - button "Download" [ref=e487]
+            - link "View" [ref=e488]:
+              - /url: /dufs.exe?view
+              - button [ref=e489]
+          - generic [ref=e494]: dufs.exe
+          - generic [ref=e495]: 4.5 MB
+        - generic [ref=e496] [cursor=pointer]:
+          - generic [ref=e497]:
+            - button "Download" [ref=e498]
+            - link "View" [ref=e499]:
+              - /url: /index.html?view
+              - button [ref=e500]
+          - generic [ref=e505]: index.html
+          - generic [ref=e506]: 590 B
+        - generic [ref=e507] [cursor=pointer]:
+          - generic [ref=e508]:
+            - button "Download" [ref=e509]
+            - link "View" [ref=e510]:
+              - /url: /package.json?view
+              - button [ref=e511]
+          - generic [ref=e516]: package.json
+          - generic [ref=e517]: 882 B
+        - generic [ref=e518] [cursor=pointer]:
+          - generic [ref=e519]:
+            - button "Download" [ref=e520]
+            - link "View" [ref=e521]:
+              - /url: /pnpm-lock.yaml?view
+              - button [ref=e522]
+          - generic [ref=e527]: pnpm-lock.yaml
+          - generic [ref=e528]: 48.3 KB
+        - generic [ref=e529] [cursor=pointer]:
+          - generic [ref=e530]:
+            - button "Download" [ref=e531]
+            - link "View" [ref=e532]:
+              - /url: /postcss.config.js?view
+              - button [ref=e533]
+          - generic [ref=e538]: postcss.config.js
+          - generic [ref=e539]: 80 B
+        - generic [ref=e540] [cursor=pointer]:
+          - generic [ref=e541]:
+            - button "Download" [ref=e542]
+            - link "View" [ref=e543]:
+              - /url: /README.md?view
+              - button [ref=e544]
+          - generic [ref=e549]: README.md
+          - generic [ref=e550]: 608 B
+        - generic [ref=e551] [cursor=pointer]:
+          - generic [ref=e552]:
+            - button "Download" [ref=e553]
+            - link "View" [ref=e554]:
+              - /url: /tailwind.config.ts?view
+              - button [ref=e555]
+          - generic [ref=e560]: tailwind.config.ts
+          - generic [ref=e561]: 1.8 KB
+        - generic [ref=e562] [cursor=pointer]:
+          - generic [ref=e563]:
+            - button "Download" [ref=e564]
+            - link "View" [ref=e565]:
+              - /url: /tsconfig.app.json?view
+              - button [ref=e566]
+          - generic [ref=e571]: tsconfig.app.json
+          - generic [ref=e572]: 777 B
+        - generic [ref=e573] [cursor=pointer]:
+          - generic [ref=e574]:
+            - button "Download" [ref=e575]
+            - link "View" [ref=e576]:
+              - /url: /tsconfig.json?view
+              - button [ref=e577]
+          - generic [ref=e582]: tsconfig.json
+          - generic [ref=e583]: 119 B
+        - generic [ref=e584] [cursor=pointer]:
+          - generic [ref=e585]:
+            - button "Download" [ref=e586]
+            - link "View" [ref=e587]:
+              - /url: /tsconfig.node.json?view
+              - button [ref=e588]
+          - generic [ref=e593]: tsconfig.node.json
+          - generic [ref=e594]: 558 B
+        - generic [ref=e595] [cursor=pointer]:
+          - generic [ref=e596]:
+            - button "Download" [ref=e597]
+            - link "View" [ref=e598]:
+              - /url: /vite.config.ts?view
+              - button [ref=e599]
+          - generic [ref=e604]: vite.config.ts
+          - generic [ref=e605]: 385 B

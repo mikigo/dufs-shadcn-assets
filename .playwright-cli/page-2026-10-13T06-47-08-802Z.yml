@@ -1,0 +1,192 @@
+- generic [ref=e3]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: Explorer (22)
+    - generic [ref=e9]:
+      - generic [ref=e310] [cursor=pointer]:
+        - button "Expand" [ref=e311]
+        - button ".git" [ref=e314]
+      - generic [ref=e319] [cursor=pointer]:
+        - button "Expand" [ref=e320]
+        - button ".playwright-cli" [ref=e323]
+      - generic [ref=e328] [cursor=pointer]:
+        - button "Expand" [ref=e329]
+        - button "dist" [ref=e332]
+      - generic [ref=e337] [cursor=pointer]:
+        - button "Expand" [ref=e338]
+        - button "docs" [ref=e341]
+      - generic [ref=e346] [cursor=pointer]:
+        - button "Expand" [ref=e347]
+        - button "node_modules" [ref=e350]
+      - generic [ref=e355] [cursor=pointer]:
+        - button "Expand" [ref=e356]
+        - button "public" [ref=e359]
+      - generic [ref=e364] [cursor=pointer]:
+        - button "Expand" [ref=e365]
+        - button "scripts" [ref=e368]
+      - generic [ref=e372]:
+        - generic [ref=e373] [cursor=pointer]:
+          - button "Collapse" [ref=e503]
+          - button "src" [active] [ref=e377]
+        - generic [ref=e506]:
+          - generic [ref=e508] [cursor=pointer]:
+            - button "Expand" [ref=e509]
+            - button "api" [ref=e512]
+          - generic [ref=e517] [cursor=pointer]:
+            - button "Expand" [ref=e518]
+            - button "assets" [ref=e521]
+          - generic [ref=e526] [cursor=pointer]:
+            - button "Expand" [ref=e527]
+            - button "components" [ref=e530]
+          - generic [ref=e535] [cursor=pointer]:
+            - button "Expand" [ref=e536]
+            - button "context" [ref=e539]
+          - generic [ref=e544] [cursor=pointer]:
+            - button "Expand" [ref=e545]
+            - button "hooks" [ref=e548]
+          - generic [ref=e553] [cursor=pointer]:
+            - button "Expand" [ref=e554]
+            - button "lib" [ref=e557]
+          - generic [ref=e562] [cursor=pointer]:
+            - button "Expand" [ref=e563]
+            - button "types" [ref=e566]
+          - button "App.css" [ref=e572] [cursor=pointer]
+          - button "App.tsx" [ref=e579] [cursor=pointer]
+          - button "index.css" [ref=e586] [cursor=pointer]
+          - button "main.tsx" [ref=e593] [cursor=pointer]
+      - button ".gitignore" [ref=e383] [cursor=pointer]
+      - button ".oxlintrc.json" [ref=e390] [cursor=pointer]
+      - button "components.json" [ref=e397] [cursor=pointer]
+      - button "dufs.exe" [ref=e404] [cursor=pointer]
+      - button "index.html" [ref=e411] [cursor=pointer]
+      - button "package.json" [ref=e418] [cursor=pointer]
+      - button "pnpm-lock.yaml" [ref=e425] [cursor=pointer]
+      - button "postcss.config.js" [ref=e432] [cursor=pointer]
+      - button "README.md" [ref=e439] [cursor=pointer]
+      - button "tailwind.config.ts" [ref=e446] [cursor=pointer]
+      - button "tsconfig.app.json" [ref=e453] [cursor=pointer]
+      - button "tsconfig.json" [ref=e460] [cursor=pointer]
+      - button "tsconfig.node.json" [ref=e467] [cursor=pointer]
+      - button "vite.config.ts" [ref=e474] [cursor=pointer]
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - navigation "breadcrumb" [ref=e13]:
+        - list [ref=e14]:
+          - listitem [ref=e16]:
+            - link [ref=e598] [cursor=pointer]:
+              - /url: /
+          - generic [ref=e602]:
+            - listitem [aria-hidden] [ref=e603]
+            - listitem [ref=e606]:
+              - link "src" [disabled] [ref=e607]
+      - textbox "Search..." [ref=e25]
+      - button [ref=e27] [cursor=pointer]
+      - generic [ref=e28]:
+        - button "Show as icons" [ref=e29] [cursor=pointer]
+        - button [ref=e30] [cursor=pointer]
+    - table [ref=e34]:
+      - rowgroup [ref=e35]:
+        - row [ref=e36]:
+          - columnheader [ref=e37]
+          - columnheader [ref=e38]:
+            - button "Name ↑" [ref=e39] [cursor=pointer]:
+              - text: Name
+              - generic [ref=e40]: ↑
+          - columnheader [ref=e41]:
+            - button "Last Modified" [ref=e42] [cursor=pointer]
+          - columnheader [ref=e43]:
+            - button "Size" [ref=e44] [cursor=pointer]
+          - columnheader "Actions" [ref=e45]
+      - rowgroup [ref=e46]:
+        - row [ref=e608] [cursor=pointer]:
+          - cell [ref=e609]
+          - cell "api" [ref=e612]
+          - cell "2026-10-13 10:47" [ref=e613]
+          - cell "1 item" [ref=e614]
+          - cell [ref=e615]:
+            - button "Download" [ref=e617]
+        - row [ref=e618] [cursor=pointer]:
+          - cell [ref=e619]
+          - cell "assets" [ref=e622]
+          - cell "2026-10-13 10:33" [ref=e623]
+          - cell "3 items" [ref=e624]
+          - cell [ref=e625]:
+            - button "Download" [ref=e627]
+        - row [ref=e628] [cursor=pointer]:
+          - cell [ref=e629]
+          - cell "components" [ref=e632]
+          - cell "2026-10-13 11:05" [ref=e633]
+          - cell "7 items" [ref=e634]
+          - cell [ref=e635]:
+            - button "Download" [ref=e637]
+        - row [ref=e638] [cursor=pointer]:
+          - cell [ref=e639]
+          - cell "context" [ref=e642]
+          - cell "2026-10-13 10:53" [ref=e643]
+          - cell "1 item" [ref=e644]
+          - cell [ref=e645]:
+            - button "Download" [ref=e647]
+        - row [ref=e648] [cursor=pointer]:
+          - cell [ref=e649]
+          - cell "hooks" [ref=e652]
+          - cell "2026-10-13 10:57" [ref=e653]
+          - cell "1 item" [ref=e654]
+          - cell [ref=e655]:
+            - button "Download" [ref=e657]
+        - row [ref=e658] [cursor=pointer]:
+          - cell [ref=e659]
+          - cell "lib" [ref=e662]
+          - cell "2026-10-13 10:36" [ref=e663]
+          - cell "1 item" [ref=e664]
+          - cell [ref=e665]:
+            - button "Download" [ref=e667]
+        - row [ref=e668] [cursor=pointer]:
+          - cell [ref=e669]
+          - cell "types" [ref=e672]
+          - cell "2026-10-13 10:47" [ref=e673]
+          - cell "1 item" [ref=e674]
+          - cell [ref=e675]:
+            - button "Download" [ref=e677]
+        - row [ref=e678] [cursor=pointer]:
+          - cell [ref=e679]
+          - cell "App.css" [ref=e683]
+          - cell "2026-10-13 10:33" [ref=e684]
+          - cell "2.8 KB" [ref=e685]
+          - cell [ref=e686]:
+            - generic [ref=e687]:
+              - button "Download" [ref=e688]
+              - link "View" [ref=e689]:
+                - /url: /src/App.css?view
+                - button [ref=e690]
+        - row [ref=e691] [cursor=pointer]:
+          - cell [ref=e692]
+          - cell "App.tsx" [ref=e696]
+          - cell "2026-10-13 14:39" [ref=e697]
+          - cell "6 KB" [ref=e698]
+          - cell [ref=e699]:
+            - generic [ref=e700]:
+              - button "Download" [ref=e701]
+              - link "View" [ref=e702]:
+                - /url: /src/App.tsx?view
+                - button [ref=e703]
+        - row [ref=e704] [cursor=pointer]:
+          - cell [ref=e705]
+          - cell "index.css" [ref=e709]
+          - cell "2026-10-13 12:50" [ref=e710]
+          - cell "3.6 KB" [ref=e711]
+          - cell [ref=e712]:
+            - generic [ref=e713]:
+              - button "Download" [ref=e714]
+              - link "View" [ref=e715]:
+                - /url: /src/index.css?view
+                - button [ref=e716]
+        - row [ref=e717] [cursor=pointer]:
+          - cell [ref=e718]
+          - cell "main.tsx" [ref=e722]
+          - cell "2026-10-13 11:09" [ref=e723]
+          - cell "229 B" [ref=e724]
+          - cell [ref=e725]:
+            - generic [ref=e726]:
+              - button "Download" [ref=e727]
+              - link "View" [ref=e728]:
+                - /url: /src/main.tsx?view
+                - button [ref=e729]

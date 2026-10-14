@@ -1,0 +1,11 @@
+[     264ms] TypeError: Cannot read properties of undefined (reading 'sort')
+    at http://127.0.0.1:5000/src/App.tsx?view:21:105511
+    at Ec (http://127.0.0.1:5000/src/App.tsx?view:20:95382)
+    at Kl (http://127.0.0.1:5000/src/App.tsx?view:20:118695)
+    at Gl (http://127.0.0.1:5000/src/App.tsx?view:20:118468)
+    at Kl (http://127.0.0.1:5000/src/App.tsx?view:20:119912)
+    at Gl (http://127.0.0.1:5000/src/App.tsx?view:20:118468)
+    at Kl (http://127.0.0.1:5000/src/App.tsx?view:20:118675)
+    at Gl (http://127.0.0.1:5000/src/App.tsx?view:20:118468)
+    at Kl (http://127.0.0.1:5000/src/App.tsx?view:20:119912)
+    at Gl (http://127.0.0.1:5000/src/App.tsx?view:20:118468)

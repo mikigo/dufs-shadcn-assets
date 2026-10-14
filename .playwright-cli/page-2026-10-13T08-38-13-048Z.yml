@@ -1,0 +1,29 @@
+- generic [ref=f9e3]:
+  - generic [ref=f9e5]:
+    - generic [ref=f9e6]: Dufs
+    - generic [ref=f9e11]: Explorer (0)
+  - generic [ref=f9e16]:
+    - generic [ref=f9e18]:
+      - navigation "breadcrumb" [ref=f9e19]:
+        - list [ref=f9e20]:
+          - listitem [ref=f9e22]:
+            - link [ref=f9e23] [cursor=pointer]:
+              - /url: /
+          - generic [ref=f9e27]:
+            - listitem [aria-hidden] [ref=f9e28]
+            - listitem [ref=f9e31]:
+              - link "窗" [ref=f9e32] [cursor=pointer]:
+                - /url: /%E7%AA%97
+          - generic [ref=f9e33]:
+            - listitem [aria-hidden] [ref=f9e34]
+            - listitem [ref=f9e37]:
+              - link "厨房-双联动.png" [disabled] [ref=f9e38]
+      - textbox "Search..." [ref=f9e44]
+      - generic [ref=f9e45]:
+        - generic [ref=f9e46]:
+          - button "Show as list" [ref=f9e47] [cursor=pointer]
+          - button [ref=f9e48] [cursor=pointer]
+        - button [ref=f9e49] [cursor=pointer]
+    - generic [ref=f9e53]:
+      - generic [ref=f9e55]: No folder
+      - generic [ref=f9e56]: Folder will be created when a file is uploaded.

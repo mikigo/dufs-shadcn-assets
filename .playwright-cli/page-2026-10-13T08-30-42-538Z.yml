@@ -1,0 +1,118 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - generic [ref=e6]: Dufs
+    - generic [ref=e11]:
+      - generic [ref=e12]: Explorer (11)
+      - generic [ref=e14]:
+        - generic [ref=e545] [cursor=pointer]:
+          - button "Expand" [ref=e546]
+          - button "api" [ref=e549]
+        - generic [ref=e554] [cursor=pointer]:
+          - button "Expand" [ref=e555]
+          - button "assets" [ref=e558]
+        - generic [ref=e563] [cursor=pointer]:
+          - button "Expand" [ref=e564]
+          - button "components" [ref=e567]
+        - generic [ref=e572] [cursor=pointer]:
+          - button "Expand" [ref=e573]
+          - button "context" [ref=e576]
+        - generic [ref=e581] [cursor=pointer]:
+          - button "Expand" [ref=e582]
+          - button "hooks" [ref=e585]
+        - generic [ref=e590] [cursor=pointer]:
+          - button "Expand" [ref=e591]
+          - button "lib" [ref=e594]
+        - generic [ref=e599] [cursor=pointer]:
+          - button "Expand" [ref=e600]
+          - button "types" [ref=e603]
+        - button "App.css" [ref=e609] [cursor=pointer]
+        - button "App.tsx" [ref=e618] [cursor=pointer]
+        - button "index.css" [ref=e627] [cursor=pointer]
+        - button "main.tsx" [ref=e636] [cursor=pointer]
+  - generic [ref=e16]:
+    - generic [ref=e18]:
+      - navigation "breadcrumb" [ref=e19]:
+        - list [ref=e20]:
+          - listitem [ref=e22]:
+            - link [ref=e643] [cursor=pointer]:
+              - /url: /
+          - generic [ref=e647]:
+            - listitem [aria-hidden] [ref=e648]
+            - listitem [ref=e651]:
+              - link "src" [disabled] [ref=e652]
+      - textbox "Search..." [ref=e32]
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - button "Show as list" [ref=e35] [cursor=pointer]
+          - button [ref=e36] [cursor=pointer]
+        - button [ref=e37] [cursor=pointer]
+    - generic [ref=e761]:
+      - generic [ref=e762]: App.tsx
+      - code [ref=e766]:
+        - text: "import { useEffect, useRef, useCallback } from \"react\" import { AppProvider, useAppState } from \"@/context/AppContext\" import { uploadFile, newUrl, decodeBase64, fetchIndexData } from \"@/api/dufs\" import { ResizablePanel } from \"@/components/layout/ResizablePanel\" import { Sidebar } from \"@/components/layout/Sidebar\" import { MainPanel } from \"@/components/layout/MainPanel\" import { FileTree } from \"@/components/file-tree/FileTree\" import { Toolbar } from \"@/components/toolbar/Toolbar\" import { DirTable } from \"@/components/dir-table/DirTable\" import { IconView } from \"@/components/dir-table/IconView\" import { FilePreview } from \"@/components/file-preview/FilePreview\" import { ReadmePreview } from \"@/components/file-preview/ReadmePreview\" import { UploadProgressSheet } from \"@/components/dialogs/UploadProgressSheet\" import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from \"@/components/ui/empty\" import { FolderOpen } from \"lucide-react\" let uploadIdCounter = 0 function AppContent() { const { state, dispatch } = useAppState() const dropRef = useRef<HTMLDivElement>(null) useEffect(() => { const el = document.getElementById(\"index-data\") if (!el) return const raw = el.textContent || el.innerHTML // 注意: 不能使用 raw === \"__INDEX_DATA__\" 来检测占位符 // 因为 dufs 在服务 HTML 时会全局替换 __INDEX_DATA__， // JS 代码中的字面量字符串也会被替换成 base64 数据，导致比较永远为 true // 改用长度判断: 占位符只有 15 个字符，真实数据至少几百个字符 if (!raw || raw.length < 100) return const data = JSON.parse(decodeBase64(raw)) dispatch({ type: \"SET_CURRENT\", path: data.href, data }) if (data.auth) { dispatch({ type: \"SET_AUTH\", auth: { required: true, user: data.user || null } }) } }, [dispatch]) // 监听浏览器前进/后退，同步导航 useEffect(() => { const handlePopState = async () => { const path = location.pathname + location.search try { const data = await fetchIndexData(path || \"/\") dispatch({ type: \"SET_CURRENT\", path: data.href, data }) } catch (err) { console.error(\"PopState navigation failed:\", err) } } window.addEventListener(\"popstate\", handlePopState) return () => window.removeEventListener(\"popstate\", handlePopState) }, [dispatch]) // Debug: expose state globally useEffect(() => { (window as any).__appState = state }, [state]) const startUpload = useCallback("
+        - generic [ref=e767]:
+          - text: (
+          - generic [ref=e768]: "files: FileList | File[]"
+          - text: ) =>
+        - text: "{ for (let i = 0; i < files.length; i++) { const file = files[i] if (file.size === 0) continue const id = ++uploadIdCounter const item = { id, name: file.name, file, url: newUrl(state.currentPath, file.name), uploaded: 0, status: \"pending\" as const, } dispatch({ type: \"ADD_UPLOAD\", item }) uploadFile(id, file, item.url, { onProgress:"
+        - generic [ref=e769]: (id, uploaded) =>
+        - text: "{ dispatch({ type: \"UPDATE_UPLOAD\", id, updates: { uploaded, status: \"uploading\" } }) }, onComplete:"
+        - generic [ref=e770]: (id) =>
+        - text: "{ dispatch({ type: \"UPDATE_UPLOAD\", id, updates: { status: \"done\" } }) }, onError:"
+        - generic [ref=e771]: (id, error) =>
+        - text: "{ dispatch({ type: \"UPDATE_UPLOAD\", id, updates: { status: \"error\", errorMessage: error } }) }, }) } }, [state.currentPath, dispatch]) useEffect(() => { const el = dropRef.current if (!el) return const prevent = ("
+        - generic [ref=e772]: "e: DragEvent"
+        - text: ") => { e.preventDefault(); e.stopPropagation() } const handleDrop = ("
+        - generic [ref=e773]: "e: DragEvent"
+        - text: ") => { e.preventDefault() e.stopPropagation() if (!e.dataTransfer?.files.length) return startUpload(e.dataTransfer.files) } const events: [string,"
+        - generic [ref=e774]:
+          - text: (
+          - generic [ref=e775]: "e: Event"
+          - text: ) =>
+        - text: void][] = [ ["drag", prevent], ["dragstart", prevent], ["dragend", prevent], ["dragover", prevent], ["dragenter", prevent], ["dragleave", prevent], ["drop", handleDrop as any], ] events.forEach(
+        - generic [ref=e776]: ([name, fn]) =>
+        - text: el.addEventListener(name, fn)) return () => events.forEach(
+        - generic [ref=e777]: ([name, fn]) =>
+        - text: "el.removeEventListener(name, fn)) }, [startUpload]) const showPreview = state.selectedPath && !state.selectedPath.endsWith(\"/\") const sidebarDefaultWidth = Math.floor(window.innerWidth * 0.2) return ("
+        - generic [ref=e778]:
+          - generic [ref=e779]: "<div ref={dropRef} className=\"h-screen flex overflow-hidden\">"
+          - generic [ref=e780]: "<ResizablePanel defaultWidth={sidebarDefaultWidth} minWidth={200} maxWidth={Math.floor(window.innerWidth * 0.5)} collapsed={!state.sidebarOpen} >"
+          - generic [ref=e781]: <Sidebar>
+          - generic [ref=e782]: <FileTree />
+          - generic [ref=e783]: </Sidebar>
+          - generic [ref=e784]: </ResizablePanel>
+          - generic [ref=e785]: "<MainPanel toolbar={<Toolbar />"
+          - text: "} content={ showPreview ? ("
+          - generic [ref=e786]: <FilePreview />
+          - text: ") : ("
+          - generic [ref=e787]: <div className="p-4">
+          - text: "{!state.currentData?.paths?.length ? ("
+          - generic [ref=e788]: <Empty>
+          - generic [ref=e789]: <EmptyHeader>
+          - generic [ref=e790]: <EmptyMedia variant="icon">
+          - generic [ref=e791]: <FolderOpen />
+          - generic [ref=e792]: </EmptyMedia>
+          - generic [ref=e793]: <EmptyTitle>
+          - text: "{state.currentData?.dir_exists ? \"Empty folder\" : \"No folder\"}"
+          - generic [ref=e794]: </EmptyTitle>
+          - generic [ref=e795]: <EmptyDescription>
+          - text: "{state.currentData?.dir_exists ? \"This folder has no files or subdirectories yet.\" : \"Folder will be created when a file is uploaded.\"}"
+          - generic [ref=e796]: </EmptyDescription>
+          - generic [ref=e797]: </EmptyHeader>
+          - generic [ref=e798]: </Empty>
+          - text: ") : ( <> {state.viewMode === \"icons\" ?"
+          - generic [ref=e799]: <IconView />
+          - text: ":"
+          - generic [ref=e800]: <DirTable />
+          - text: "}"
+          - generic [ref=e801]: "<ReadmePreview currentPath={state.currentPath} hasReadme={ !!state.currentData?.paths?.some( p =>"
+          - text: "p.name.toLowerCase() === \"readme.md\" ) } /> </> )}"
+          - generic [ref=e802]: </div>
+          - text: ") } />"
+        - generic [ref=e803]: <UploadProgressSheet />
+        - text: "</div> ) } export default function App() { return ("
+        - generic [ref=e805]:
+          - generic [ref=e806]: <AppProvider>
+          - generic [ref=e807]: <AppContent />
+          - generic [ref=e808]: </AppProvider>
+        - text: ") }"

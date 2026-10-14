@@ -1,0 +1,19 @@
+- generic [ref=f13e3]:
+  - generic [ref=f13e5]:
+    - generic [ref=f13e6]: Dufs
+    - generic [ref=f13e11]: Explorer (0)
+  - generic [ref=f13e16]:
+    - generic [ref=f13e18]:
+      - navigation "breadcrumb" [ref=f13e19]:
+        - list [ref=f13e20]:
+          - listitem [ref=f13e22]:
+            - link [disabled] [ref=f13e23]
+      - textbox "Search..." [ref=f13e32]
+      - generic [ref=f13e33]:
+        - generic [ref=f13e34]:
+          - button "Show as list" [ref=f13e35] [cursor=pointer]
+          - button [ref=f13e36] [cursor=pointer]
+        - button [ref=f13e37] [cursor=pointer]
+    - generic [ref=f13e41]:
+      - generic [ref=f13e43]: No folder
+      - generic [ref=f13e44]: Folder will be created when a file is uploaded.

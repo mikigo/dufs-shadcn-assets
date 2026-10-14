@@ -1,0 +1,277 @@
+- generic [ref=f2e3]:
+  - generic [ref=f2e6]:
+    - generic [ref=f2e7]: Explorer (22)
+    - generic [ref=f2e9]:
+      - generic [ref=f2e11] [cursor=pointer]:
+        - button "Expand" [ref=f2e12]
+        - button ".git" [ref=f2e15]
+      - generic [ref=f2e20] [cursor=pointer]:
+        - button "Expand" [ref=f2e21]
+        - button ".playwright-cli" [ref=f2e24]
+      - generic [ref=f2e29] [cursor=pointer]:
+        - button "Expand" [ref=f2e30]
+        - button "dist" [ref=f2e33]
+      - generic [ref=f2e38] [cursor=pointer]:
+        - button "Expand" [ref=f2e39]
+        - button "docs" [ref=f2e42]
+      - generic [ref=f2e47] [cursor=pointer]:
+        - button "Expand" [ref=f2e48]
+        - button "node_modules" [ref=f2e51]
+      - generic [ref=f2e56] [cursor=pointer]:
+        - button "Expand" [ref=f2e57]
+        - button "public" [ref=f2e60]
+      - generic [ref=f2e65] [cursor=pointer]:
+        - button "Expand" [ref=f2e66]
+        - button "scripts" [ref=f2e69]
+      - generic [ref=f2e74] [cursor=pointer]:
+        - button "Expand" [ref=f2e75]
+        - button "src" [ref=f2e78]
+      - button ".gitignore" [ref=f2e84] [cursor=pointer]
+      - button ".oxlintrc.json" [ref=f2e91] [cursor=pointer]
+      - button "components.json" [ref=f2e98] [cursor=pointer]
+      - button "dufs.exe" [ref=f2e105] [cursor=pointer]
+      - button "index.html" [ref=f2e112] [cursor=pointer]
+      - button "package.json" [ref=f2e119] [cursor=pointer]
+      - button "pnpm-lock.yaml" [ref=f2e126] [cursor=pointer]
+      - button "postcss.config.js" [ref=f2e133] [cursor=pointer]
+      - button "README.md" [ref=f2e140] [cursor=pointer]
+      - button "tailwind.config.ts" [ref=f2e147] [cursor=pointer]
+      - button "tsconfig.app.json" [ref=f2e154] [cursor=pointer]
+      - button "tsconfig.json" [ref=f2e161] [cursor=pointer]
+      - button "tsconfig.node.json" [ref=f2e168] [cursor=pointer]
+      - button "vite.config.ts" [ref=f2e175] [cursor=pointer]
+  - generic [ref=f2e181]:
+    - generic [ref=f2e182]:
+      - navigation "breadcrumb" [ref=f2e183]:
+        - list [ref=f2e184]:
+          - listitem [ref=f2e186]:
+            - link [disabled] [ref=f2e187]
+      - textbox "Search..." [ref=f2e195]
+      - button [ref=f2e197] [cursor=pointer]
+      - generic [ref=f2e198]:
+        - button "Show as icons" [ref=f2e199] [cursor=pointer]
+        - button [ref=f2e200] [cursor=pointer]
+    - table [ref=f2e204]:
+      - rowgroup [ref=f2e205]:
+        - row [ref=f2e206]:
+          - columnheader [ref=f2e207]
+          - columnheader [ref=f2e208]:
+            - button "Name ↑" [ref=f2e209] [cursor=pointer]:
+              - text: Name
+              - generic [ref=f2e210]: ↑
+          - columnheader [ref=f2e211]:
+            - button "Last Modified" [ref=f2e212] [cursor=pointer]
+          - columnheader [ref=f2e213]:
+            - button "Size" [ref=f2e214] [cursor=pointer]
+          - columnheader "Actions" [ref=f2e215]
+      - rowgroup [ref=f2e216]:
+        - row [ref=f2e217] [cursor=pointer]:
+          - cell [ref=f2e218]
+          - cell ".git" [ref=f2e221]
+          - cell "2026-10-13 14:44" [ref=f2e222]
+          - cell "11 items" [ref=f2e223]
+          - cell [ref=f2e224]:
+            - button "Download" [ref=f2e226]
+        - row [ref=f2e227] [cursor=pointer]:
+          - cell [ref=f2e228]
+          - cell ".playwright-cli" [ref=f2e231]
+          - cell "2026-10-13 14:47" [ref=f2e232]
+          - cell "24 items" [ref=f2e233]
+          - cell [ref=f2e234]:
+            - button "Download" [ref=f2e236]
+        - row [ref=f2e237] [cursor=pointer]:
+          - cell [ref=f2e238]
+          - cell "dist" [ref=f2e241]
+          - cell "2026-10-13 14:46" [ref=f2e242]
+          - cell "4 items" [ref=f2e243]
+          - cell [ref=f2e244]:
+            - button "Download" [ref=f2e246]
+        - row [ref=f2e247] [cursor=pointer]:
+          - cell [ref=f2e248]
+          - cell "docs" [ref=f2e251]
+          - cell "2026-10-13 10:33" [ref=f2e252]
+          - cell "1 item" [ref=f2e253]
+          - cell [ref=f2e254]:
+            - button "Download" [ref=f2e256]
+        - row [ref=f2e257] [cursor=pointer]:
+          - cell [ref=f2e258]
+          - cell "node_modules" [ref=f2e261]
+          - cell "2026-10-13 14:38" [ref=f2e262]
+          - cell "26 items" [ref=f2e263]
+          - cell [ref=f2e264]:
+            - button "Download" [ref=f2e266]
+        - row [ref=f2e267] [cursor=pointer]:
+          - cell [ref=f2e268]
+          - cell "public" [ref=f2e271]
+          - cell "2026-10-13 11:11" [ref=f2e272]
+          - cell "3 items" [ref=f2e273]
+          - cell [ref=f2e274]:
+            - button "Download" [ref=f2e276]
+        - row [ref=f2e277] [cursor=pointer]:
+          - cell [ref=f2e278]
+          - cell "scripts" [ref=f2e281]
+          - cell "2026-10-13 12:00" [ref=f2e282]
+          - cell "1 item" [ref=f2e283]
+          - cell [ref=f2e284]:
+            - button "Download" [ref=f2e286]
+        - row [ref=f2e287] [cursor=pointer]:
+          - cell [ref=f2e288]
+          - cell "src" [ref=f2e291]
+          - cell "2026-10-13 10:57" [ref=f2e292]
+          - cell "11 items" [ref=f2e293]
+          - cell [ref=f2e294]:
+            - button "Download" [ref=f2e296]
+        - row [ref=f2e297] [cursor=pointer]:
+          - cell [ref=f2e298]
+          - cell ".gitignore" [ref=f2e302]
+          - cell "2026-10-13 11:24" [ref=f2e303]
+          - cell "41 B" [ref=f2e304]
+          - cell [ref=f2e305]:
+            - generic [ref=f2e306]:
+              - button "Download" [ref=f2e307]
+              - link "View" [ref=f2e308]:
+                - /url: /.gitignore?view
+                - button [ref=f2e309]
+        - row [ref=f2e310] [cursor=pointer]:
+          - cell [ref=f2e311]
+          - cell ".oxlintrc.json" [ref=f2e315]
+          - cell "2026-10-13 10:33" [ref=f2e316]
+          - cell "245 B" [ref=f2e317]
+          - cell [ref=f2e318]:
+            - generic [ref=f2e319]:
+              - button "Download" [ref=f2e320]
+              - link "View" [ref=f2e321]:
+                - /url: /.oxlintrc.json?view
+                - button [ref=f2e322]
+        - row [ref=f2e323] [cursor=pointer]:
+          - cell [ref=f2e324]
+          - cell "components.json" [ref=f2e328]
+          - cell "2026-10-13 10:35" [ref=f2e329]
+          - cell "533 B" [ref=f2e330]
+          - cell [ref=f2e331]:
+            - generic [ref=f2e332]:
+              - button "Download" [ref=f2e333]
+              - link "View" [ref=f2e334]:
+                - /url: /components.json?view
+                - button [ref=f2e335]
+        - row [ref=f2e336] [cursor=pointer]:
+          - cell [ref=f2e337]
+          - cell "dufs.exe" [ref=f2e341]
+          - cell "2026-05-07 09:53" [ref=f2e342]
+          - cell "4.5 MB" [ref=f2e343]
+          - cell [ref=f2e344]:
+            - generic [ref=f2e345]:
+              - button "Download" [ref=f2e346]
+              - link "View" [ref=f2e347]:
+                - /url: /dufs.exe?view
+                - button [ref=f2e348]
+        - row [ref=f2e349] [cursor=pointer]:
+          - cell [ref=f2e350]
+          - cell "index.html" [ref=f2e354]
+          - cell "2026-10-13 11:57" [ref=f2e355]
+          - cell "590 B" [ref=f2e356]
+          - cell [ref=f2e357]:
+            - generic [ref=f2e358]:
+              - button "Download" [ref=f2e359]
+              - link "View" [ref=f2e360]:
+                - /url: /index.html?view
+                - button [ref=f2e361]
+        - row [ref=f2e362] [cursor=pointer]:
+          - cell [ref=f2e363]
+          - cell "package.json" [ref=f2e367]
+          - cell "2026-10-13 14:38" [ref=f2e368]
+          - cell "943 B" [ref=f2e369]
+          - cell [ref=f2e370]:
+            - generic [ref=f2e371]:
+              - button "Download" [ref=f2e372]
+              - link "View" [ref=f2e373]:
+                - /url: /package.json?view
+                - button [ref=f2e374]
+        - row [ref=f2e375] [cursor=pointer]:
+          - cell [ref=f2e376]
+          - cell "pnpm-lock.yaml" [ref=f2e380]
+          - cell "2026-10-13 14:38" [ref=f2e381]
+          - cell "78.7 KB" [ref=f2e382]
+          - cell [ref=f2e383]:
+            - generic [ref=f2e384]:
+              - button "Download" [ref=f2e385]
+              - link "View" [ref=f2e386]:
+                - /url: /pnpm-lock.yaml?view
+                - button [ref=f2e387]
+        - row [ref=f2e388] [cursor=pointer]:
+          - cell [ref=f2e389]
+          - cell "postcss.config.js" [ref=f2e393]
+          - cell "2026-10-13 10:34" [ref=f2e394]
+          - cell "80 B" [ref=f2e395]
+          - cell [ref=f2e396]:
+            - generic [ref=f2e397]:
+              - button "Download" [ref=f2e398]
+              - link "View" [ref=f2e399]:
+                - /url: /postcss.config.js?view
+                - button [ref=f2e400]
+        - row [ref=f2e401] [cursor=pointer]:
+          - cell [ref=f2e402]
+          - cell "README.md" [ref=f2e406]
+          - cell "2026-10-13 11:12" [ref=f2e407]
+          - cell "608 B" [ref=f2e408]
+          - cell [ref=f2e409]:
+            - generic [ref=f2e410]:
+              - button "Download" [ref=f2e411]
+              - link "View" [ref=f2e412]:
+                - /url: /README.md?view
+                - button [ref=f2e413]
+        - row [ref=f2e414] [cursor=pointer]:
+          - cell [ref=f2e415]
+          - cell "tailwind.config.ts" [ref=f2e419]
+          - cell "2026-10-13 11:41" [ref=f2e420]
+          - cell "1.8 KB" [ref=f2e421]
+          - cell [ref=f2e422]:
+            - generic [ref=f2e423]:
+              - button "Download" [ref=f2e424]
+              - link "View" [ref=f2e425]:
+                - /url: /tailwind.config.ts?view
+                - button [ref=f2e426]
+        - row [ref=f2e427] [cursor=pointer]:
+          - cell [ref=f2e428]
+          - cell "tsconfig.app.json" [ref=f2e432]
+          - cell "2026-10-13 10:48" [ref=f2e433]
+          - cell "777 B" [ref=f2e434]
+          - cell [ref=f2e435]:
+            - generic [ref=f2e436]:
+              - button "Download" [ref=f2e437]
+              - link "View" [ref=f2e438]:
+                - /url: /tsconfig.app.json?view
+                - button [ref=f2e439]
+        - row [ref=f2e440] [cursor=pointer]:
+          - cell [ref=f2e441]
+          - cell "tsconfig.json" [ref=f2e445]
+          - cell "2026-10-13 10:33" [ref=f2e446]
+          - cell "119 B" [ref=f2e447]
+          - cell [ref=f2e448]:
+            - generic [ref=f2e449]:
+              - button "Download" [ref=f2e450]
+              - link "View" [ref=f2e451]:
+                - /url: /tsconfig.json?view
+                - button [ref=f2e452]
+        - row [ref=f2e453] [cursor=pointer]:
+          - cell [ref=f2e454]
+          - cell "tsconfig.node.json" [ref=f2e458]
+          - cell "2026-10-13 10:33" [ref=f2e459]
+          - cell "558 B" [ref=f2e460]
+          - cell [ref=f2e461]:
+            - generic [ref=f2e462]:
+              - button "Download" [ref=f2e463]
+              - link "View" [ref=f2e464]:
+                - /url: /tsconfig.node.json?view
+                - button [ref=f2e465]
+        - row [ref=f2e466] [cursor=pointer]:
+          - cell [ref=f2e467]
+          - cell "vite.config.ts" [ref=f2e471]
+          - cell "2026-10-13 12:00" [ref=f2e472]
+          - cell "385 B" [ref=f2e473]
+          - cell [ref=f2e474]:
+            - generic [ref=f2e475]:
+              - button "Download" [ref=f2e476]
+              - link "View" [ref=f2e477]:
+                - /url: /vite.config.ts?view
+                - button [ref=f2e478]
