@@ -82,10 +82,12 @@ function AppContent() {
             console.log("[popstate:?view] stale, aborting")
             return
           }
+          requestSkipTreeRebuild()
           dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
         } catch (e) {
           console.log("[popstate:?view] fetch failed:", e)
           if (location.pathname + location.search !== path) return
+          requestSkipTreeRebuild()
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
             href: parentDir, uri_prefix: "", kind: "Index" as const, paths: [],
             allow_upload: false, allow_delete: false,
