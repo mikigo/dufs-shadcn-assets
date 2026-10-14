@@ -2,7 +2,7 @@ import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
 import { formatFileSize, formatDirSize, isEditable } from "@/lib/utils"
 import { Download, Trash2, Pencil, ArrowRightLeft, FolderSymlink, FileSymlink, FileText } from "lucide-react"
-import { FileIcon, DefaultFolderIcon } from "@react-symbols/icons/utils"
+import { FileIcon, FolderIcon } from "@react-symbols/icons/utils"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
@@ -11,7 +11,7 @@ import type { PathItem } from "@/types/dufs"
 
 function getLargeIcon(pathType: string, filename?: string) {
   switch (pathType) {
-    case "Dir": return <DefaultFolderIcon className="size-10" />
+    case "Dir": return <FolderIcon folderName={filename || ""} className="size-10" />
     case "SymlinkDir": return <FolderSymlink className="size-10" />
     case "SymlinkFile": return <FileSymlink className="size-10" />
     default: return <FileIcon fileName={filename || ""} className="size-10" />
