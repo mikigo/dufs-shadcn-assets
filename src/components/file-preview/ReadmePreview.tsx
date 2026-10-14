@@ -29,8 +29,6 @@ export function ReadmePreview({ currentPath, hasReadme }: Props) {
       container,
       file: url,
       fileName: "README.md",
-      height: "500px",
-      width: "100%",
       plugins: [textPlugin()],
       theme: "auto",
       toolbar: false,
