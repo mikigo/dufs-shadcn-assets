@@ -1,7 +1,0 @@
-[      99ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:5000/favicon.ico:0
-[  149626ms] [LOG] [App] index-data element: found @ http://127.0.0.1:5000/:20
-[  149626ms] [LOG] [App] raw data length: 2424 isPlaceholder: true @ http://127.0.0.1:5000/:20
-[  207585ms] [LOG] [App] index-data element: found @ http://127.0.0.1:5000/:20
-[  207585ms] [LOG] [App] raw data length: 2424 isPlaceholder: true @ http://127.0.0.1:5000/:20
-[  264260ms] [LOG] [App] index-data element: found @ http://127.0.0.1:5000/:20
-[  264260ms] [LOG] [App] raw data length: 2424 isPlaceholder: true @ http://127.0.0.1:5000/:20
