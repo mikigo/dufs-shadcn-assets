@@ -1,13 +1,26 @@
 // 解析 vscode-icons 映射文件，生成图标查找表
-import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync } from "fs"
-import { resolve, basename } from "path"
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, readdirSync } from "fs"
+import { resolve, basename, dirname } from "path"
 
-const vscIconsDir = "C:\\Users\\Administrator\\.vscode\\extensions\\vscode-icons-team.vscode-icons-13.0.0"
-const mappingPath = resolve(vscIconsDir, "dist/src/vsicons-icon-theme.json")
-const iconsSrc = resolve(vscIconsDir, "icons")
-const projectRoot = resolve(import.meta.dirname, "..")
+// 优先使用项目自带的映射文件，找不到则回退到 VS Code 扩展目录
+const scriptDir = dirname(new URL(import.meta.url).pathname.replace(/^\/([a-zA-Z]):/, "$1:"))
+const localMapping = resolve(scriptDir, "vsicons-icon-theme.json")
+const vscExtDir = "C:\\Users\\Administrator\\.vscode\\extensions\\vscode-icons-team.vscode-icons-13.0.0"
+const mappingPath = existsSync(localMapping) ? localMapping : resolve(vscExtDir, "dist/src/vsicons-icon-theme.json")
+const iconsSrc = existsSync(localMapping) ? resolve(scriptDir, "..", "src/assets/vsc-icons") : resolve(vscExtDir, "icons")
+const projectRoot = resolve(scriptDir, "..")
 const iconsDest = resolve(projectRoot, "src/assets/vsc-icons")
 const mapOutput = resolve(projectRoot, "src/generated/vsc-icon-map.ts")
+
+// 如果使用本地映射文件但 icons 目录不存在，从 VS Code 扩展拷贝
+if (existsSync(localMapping) && !existsSync(iconsSrc)) {
+  const vscIcons = resolve(vscExtDir, "icons")
+  if (existsSync(vscIcons)) {
+    mkdirSync(iconsSrc, { recursive: true })
+    const files = readdirSync(vscIcons)
+    for (const f of files) { copyFileSync(resolve(vscIcons, f), resolve(iconsSrc, f)) }
+  }
+}
 
 const raw = readFileSync(mappingPath, "utf-8")
 
