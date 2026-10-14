@@ -64,7 +64,10 @@ export function ActionButtons() {
   }
 
   const handleRefresh = async () => {
-    const data = await fetchIndexData(state.currentPath)
+    const params = new URLSearchParams(window.location.search)
+    const q = params.get("q")
+    const path = q ? state.currentPath + "?q=" + encodeURIComponent(q) : state.currentPath
+    const data = await fetchIndexData(path)
     dispatch({ type: "SET_CURRENT", path: state.currentPath, data })
   }
 
