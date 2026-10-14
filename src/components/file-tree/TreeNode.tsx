@@ -6,6 +6,7 @@ interface Props {
   node: TreeNodeType
   depth: number
   loading: boolean
+  selected: boolean
   onToggle: (path: string, loaded: boolean) => void
   onSelect: (path: string) => void
   onNavigate: (path: string) => void
@@ -36,7 +37,7 @@ function getIcon(isDir: boolean, expanded: boolean, filename?: string) {
   }
 }
 
-export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect, onNavigate }: Props) {
+export function TreeNodeComponent({ node, depth, loading, selected, onToggle, onSelect, onNavigate }: Props) {
   const expanded = node.children !== null
 
   return (
@@ -44,7 +45,8 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect, on
       <div
         className={cn(
           "flex items-center gap-1.5 w-full py-1 text-[13px] hover:bg-accent hover:text-accent-foreground rounded-md text-left",
-          "transition-colors duration-100 leading-tight cursor-pointer group"
+          "transition-colors duration-100 leading-tight cursor-pointer group",
+          selected && "bg-accent text-accent-foreground font-semibold"
         )}
         style={{ paddingLeft: depth * 16 + 8, paddingRight: 8 }}
       >
@@ -95,6 +97,7 @@ export function TreeNodeComponent({ node, depth, loading, onToggle, onSelect, on
               node={child}
               depth={depth + 1}
               loading={false}
+              selected={false}
               onToggle={onToggle}
               onSelect={onSelect}
               onNavigate={onNavigate}

@@ -23,12 +23,10 @@ function flattenTree(nodes: TreeNode[]): FlatNode[] {
 }
 
 export function FileTree() {
-  const { tree, treeLoading, handleToggle, handleSelect, handleNavigate } = useFileTree()
+  const { tree, treeLoading, selectedPath, handleToggle, handleSelect, handleNavigate } = useFileTree()
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const flatNodes = useMemo(() => flattenTree(tree), [tree])
-
-  console.log("[FileTree] render tree.length:", tree.length, "flatNodes:", flatNodes.length)
 
   const virtualizer = useVirtualizer({
     count: flatNodes.length,
@@ -40,7 +38,7 @@ export function FileTree() {
   return (
     <div className="flex flex-col h-full">
       <div className="px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-widest select-none shrink-0">
-        Explorer ({tree.length})
+        Explorer
       </div>
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto">
         <div className="px-2 py-1 relative" style={{ height: virtualizer.getTotalSize() }}>
@@ -58,6 +56,7 @@ export function FileTree() {
                   node={node}
                   depth={node.depth}
                   loading={treeLoading.has(node.path)}
+                  selected={selectedPath === node.path}
                   onToggle={handleToggle}
                   onSelect={handleSelect}
                   onNavigate={handleNavigate}

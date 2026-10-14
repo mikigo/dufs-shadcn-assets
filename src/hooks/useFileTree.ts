@@ -105,5 +105,5 @@ export function useFileTree() {
     }
   }, [dispatch])
 
-  return { tree: state.tree, treeLoading: state.treeLoading, handleToggle, handleSelect, handleNavigate }
+  return { tree: state.tree, treeLoading: state.treeLoading, selectedPath: state.selectedPath, handleToggle, handleSelect, handleNavigate }
 }
