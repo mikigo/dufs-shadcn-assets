@@ -51,13 +51,13 @@ if (config.logo_text) {
   console.log(`✓ Applied logo_text: ${config.logo_text}`)
 }
 
-// Inline favicon SVG
+// Inline favicon SVG — matching HardDrive logo style
 const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <rect width="32" height="32" rx="7" fill="#18181b"/>
-  <rect x="4" y="7" width="24" height="18" rx="3" fill="#3b82f6"/>
-  <rect x="6" y="9" width="20" height="8" rx="1" fill="#60a5fa" opacity="0.5"/>
-  <circle cx="16" cy="19" r="3.5" fill="#18181b"/>
-  <circle cx="16" cy="19" r="1.5" fill="#60a5fa"/>
+  <path d="M8 16h.02" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M2.21 12.58a2 2 0 00-.21.9V18a2 2 0 002 2h16a2 2 0 002-2v-4.53a2 2 0 00-.21-.9L18.55 6.11A2 2 0 0016.76 5H7.24a2 2 0 00-1.79 1.11z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21.95 13H2.05" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M6 16h.02" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`
 html = html.replace('type="image/x-icon" href="favicon.ico"', `href="data:image/svg+xml,${encodeURIComponent(faviconSvg)}"`)
 console.log('✓ Inlined favicon')
