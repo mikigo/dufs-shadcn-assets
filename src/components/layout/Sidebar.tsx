@@ -14,7 +14,7 @@ export function Sidebar({ children }: Props) {
           <HardDrive className="w-4 h-4" />
         </div>
         <span className="text-sm font-semibold text-sidebar-foreground tracking-tight">
-          Dufs
+          {document.title || "Dufs"}
         </span>
       </div>
       {children}
