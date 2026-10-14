@@ -55,9 +55,11 @@ export function ResizablePanel({ defaultWidth, minWidth, maxWidth, collapsed, ch
       </div>
       {!collapsed && (
         <div
-          className="w-px bg-border hover:bg-ring/30 cursor-col-resize flex-shrink-0 transition-colors"
+          className="w-2 -mx-[3px] cursor-col-resize flex-shrink-0 flex justify-center group"
           onMouseDown={onMouseDown}
-        />
+        >
+          <div className="w-px h-full bg-border group-hover:bg-ring/30 transition-colors" />
+        </div>
       )}
     </>
   )
