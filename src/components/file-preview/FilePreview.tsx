@@ -38,29 +38,31 @@ export function FilePreview() {
     <div className="h-full flex flex-col">
       <div className="px-4 py-2.5 border-b border-border/40 text-sm font-medium flex items-center gap-2 bg-background">
         <span className="truncate">{fileName}</span>
-        <button
-          onClick={handleRefresh}
-          className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
-          title="Refresh"
-        >
-          <RefreshCw className="size-3.5" />
-        </button>
-        {editable && isTextLike && !editing && (
+        <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={() => setEditing(true)}
+            onClick={handleRefresh}
             className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
-            title="Edit"
+            title="Refresh"
           >
-            <Pen className="size-4" />
+            <RefreshCw className="size-3.5" />
           </button>
-        )}
-        <button
-          onClick={handleClose}
-          className="ml-auto p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
-          title="Close"
-        >
-          <X className="size-4" />
-        </button>
+          {editable && isTextLike && !editing && (
+            <button
+              onClick={() => setEditing(true)}
+              className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
+              title="Edit"
+            >
+              <Pen className="size-4" />
+            </button>
+          )}
+          <button
+            onClick={handleClose}
+            className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
+            title="Close"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
       </div>
       <div className="flex-1 overflow-hidden bg-muted/30">
         {isTextLike ? (
