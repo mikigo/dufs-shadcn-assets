@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
 import { formatFileSize, formatDirSize, formatMtime, isEditable } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, FolderSymlink, FileSymlink, FileText } from "lucide-react"
-import { FileIcon, FolderIcon } from "@react-symbols/icons/utils"
+import { Download, Trash2, Pencil, ArrowRightLeft, FolderSymlink, FileSymlink, FileText, Folder } from "lucide-react"
+import { FileIcon } from "@react-symbols/icons/utils"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
@@ -14,7 +14,7 @@ import type { PathItem } from "@/types/dufs"
 
 function getIcon(pathType: string, filename?: string) {
   switch (pathType) {
-    case "Dir": return <FolderIcon folderName={filename || ""} className="size-5 shrink-0" />
+    case "Dir": return <Folder className="size-5 shrink-0 text-muted-foreground" />
     case "SymlinkDir": return <FolderSymlink className="size-5 shrink-0 text-muted-foreground" />
     case "SymlinkFile": return <FileSymlink className="size-5 shrink-0 text-muted-foreground" />
     default: return <FileIcon fileName={filename || ""} className="size-5 shrink-0" />

@@ -1,7 +1,7 @@
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Folder, FolderOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { TreeNode as TreeNodeType } from "@/types/dufs"
-import { FileIcon, FolderIcon } from "@react-symbols/icons/utils"
+import { FileIcon } from "@react-symbols/icons/utils"
 
 interface Props {
   node: TreeNodeType
@@ -61,7 +61,9 @@ export function TreeNodeComponent({ node, depth, loading, selected, onToggle, on
           className="flex items-center gap-1.5 min-w-0 flex-1"
         >
           {node.isDir ? (
-            <FolderIcon folderName={node.name} className={iconCls} />
+            expanded
+              ? <FolderOpen className={iconCls + " text-primary"} />
+              : <Folder className={iconCls + " text-muted-foreground"} />
           ) : (
             <FileIcon fileName={node.name} className={iconCls} />
           )}
