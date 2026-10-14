@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react"
-import { createViewer, textPlugin } from "@open-file-viewer/core"
-import type { FileViewer } from "@open-file-viewer/core"
-import { newUrl } from "@/api/dufs"
+import { useEffect, useState } from "react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import { fetchFileContent, newUrl } from "@/api/dufs"
+import hljs from "highlight.js"
+import { injectHljsTheme } from "@glitchoff/markify"
 
 interface Props {
   currentPath: string
@@ -9,47 +11,87 @@ interface Props {
 }
 
 export function ReadmePreview({ currentPath, hasReadme }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const viewerRef = useRef<FileViewer | null>(null)
+  const [content, setContent] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!hasReadme) {
-      if (viewerRef.current) {
-        viewerRef.current.destroy()
-        viewerRef.current = null
-      }
+      setContent(null)
       return
     }
-
-    const container = containerRef.current
-    if (!container) return
-
+    setLoading(true)
     const url = newUrl(currentPath, "README.md")
-    const viewer = createViewer({
-      container,
-      file: url,
-      fileName: "README.md",
-      plugins: [textPlugin()],
-      theme: "auto",
-      toolbar: false,
-    })
-
-    viewerRef.current = viewer
-
-    return () => {
-      viewer.destroy()
-      viewerRef.current = null
-    }
+    fetchFileContent(url)
+      .then(setContent)
+      .catch(() => setContent(null))
+      .finally(() => setLoading(false))
   }, [currentPath, hasReadme])
 
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains("dark")
+    injectHljsTheme(isDark ? "dark" : "light")
+  }, [])
+
   if (!hasReadme) return null
+  if (loading) return (
+    <div className="mt-6 border-t pt-4">
+      <div className="h-4 bg-muted rounded animate-pulse w-1/3 mb-3" />
+      <div className="space-y-2">
+        <div className="h-3 bg-muted rounded animate-pulse" />
+        <div className="h-3 bg-muted rounded animate-pulse w-4/5" />
+        <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
+      </div>
+    </div>
+  )
+  if (!content) return null
 
   return (
     <div className="mt-6 border-t pt-4">
       <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
         README.md
       </div>
-      <div ref={containerRef} />
+      <div className="prose prose-sm max-w-none dark:prose-invert
+        prose-headings:text-foreground
+        prose-p:text-foreground/80 prose-p:leading-relaxed
+        prose-code:text-foreground/80 prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
+        prose-pre:bg-muted prose-pre:border prose-pre:border-border
+        prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-foreground
+        prose-li:text-foreground/80
+        prose-img:rounded-lg prose-img:border prose-img:border-border
+        prose-hr:border-border
+        prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:bg-muted/50 prose-blockquote:py-0.5 prose-blockquote:px-4 prose-blockquote:rounded-r-md
+      ">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            pre: ({ children }) => <pre>{children}</pre>,
+            code({ className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || "")
+              const codeStr = String(children).replace(/\n$/, "")
+              if (match && codeStr) {
+                try {
+                  const result = hljs.highlight(codeStr, { language: match[1] })
+                  if (result.value) {
+                    return (
+                      <code
+                        dangerouslySetInnerHTML={{ __html: result.value }}
+                        className={className}
+                        {...props}
+                      />
+                    )
+                  }
+                } catch {
+                  // fall through
+                }
+              }
+              return <code className={className} {...props}>{children}</code>
+            },
+          }}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
     </div>
   )
 }

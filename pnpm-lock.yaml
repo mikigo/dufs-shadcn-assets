@@ -56,6 +56,12 @@ importers:
       react-dom:
         specifier: ^19.2.8
         version: 19.3.0(react@19.3.0)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@19.3.0)(react@19.3.0)
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1
       tailwind-merge:
         specifier: ^3.7.0
         version: 3.7.0
