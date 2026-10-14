@@ -1,10 +1,11 @@
 import { useAppState } from "@/context/AppContext"
-import { baseNameFromUrl } from "@/api/dufs"
+import { baseNameFromUrl, pushHistory } from "@/api/dufs"
 import { TextPreview } from "./TextPreview"
 import { OfvPreview } from "./OfvPreview"
+import { X } from "lucide-react"
 
 export function FilePreview() {
-  const { state } = useAppState()
+  const { state, dispatch } = useAppState()
 
   if (!state.selectedPath) return null
 
@@ -16,10 +17,24 @@ export function FilePreview() {
     ".hrl", ".hs", ".clj", ".edn", ".dart", ".groovy", ".Makefile", ".Dockerfile",
   ].some(ext => fileName.toLowerCase().endsWith(ext))
 
+  const parentDir = state.selectedPath.substring(0, state.selectedPath.lastIndexOf("/") + 1) || "/"
+
+  const handleClose = () => {
+    dispatch({ type: "SELECT", path: null })
+    pushHistory(parentDir)
+  }
+
   return (
     <div className="h-full flex flex-col">
       <div className="px-4 py-2.5 border-b border-border/40 text-sm font-medium flex items-center gap-2 bg-background">
-        {fileName}
+        <span className="truncate">{fileName}</span>
+        <button
+          onClick={handleClose}
+          className="ml-auto p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
+          title="Close"
+        >
+          <X className="size-4" />
+        </button>
       </div>
       <div className="flex-1 overflow-hidden bg-muted/30">
         {isTextLike ? (
