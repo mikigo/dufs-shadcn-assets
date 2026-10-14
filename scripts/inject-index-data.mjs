@@ -62,20 +62,21 @@ const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" 
 html = html.replace('type="image/x-icon" href="favicon.ico"', `href="data:image/svg+xml,${encodeURIComponent(faviconSvg)}"`)
 console.log('✓ Inlined favicon')
 
-// Inline logo SVGs into config for runtime use
+// Inline logo SVGs into runtime config (for Sidebar), clean config saved to dist
 const logoSrc = resolve(publicDir, 'logo.svg')
 const darkLogoSrc = resolve(publicDir, 'logo-dark.svg')
+const runtimeConfig = { ...config }
 if (existsSync(logoSrc)) {
-  config._logoData = 'data:image/svg+xml;base64,' + readFileSync(logoSrc).toString('base64')
+  runtimeConfig._logoData = 'data:image/svg+xml;base64,' + readFileSync(logoSrc).toString('base64')
   console.log('✓ Inlined logo.svg')
 }
 if (existsSync(darkLogoSrc)) {
-  config._darkLogoData = 'data:image/svg+xml;base64,' + readFileSync(darkLogoSrc).toString('base64')
+  runtimeConfig._darkLogoData = 'data:image/svg+xml;base64,' + readFileSync(darkLogoSrc).toString('base64')
   console.log('✓ Inlined logo-dark.svg')
 }
 
-// Embed config
-const configScript = `<script id="dufs-config" type="application/json">${JSON.stringify(config)}</script>`
+// Embed runtime config into HTML
+const configScript = `<script id="dufs-config" type="application/json">${JSON.stringify(runtimeConfig)}</script>`
 html = html.replace(indexDataMarker, indexDataMarker + '\n' + configScript)
 
 writeFileSync(configDst, JSON.stringify(config, null, 2), 'utf-8')
