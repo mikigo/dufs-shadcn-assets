@@ -10,13 +10,13 @@ interface Props {
 
 export function ResizablePanel({ defaultWidth, minWidth, maxWidth, collapsed, children }: Props) {
   const [width, setWidth] = useState(defaultWidth)
-  const isResizing = useRef(false)
+  const [dragging, setDragging] = useState(false)
   const startX = useRef(0)
   const startWidth = useRef(0)
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
-    isResizing.current = true
+    setDragging(true)
     startX.current = e.clientX
     startWidth.current = width
     document.body.style.cursor = "col-resize"
@@ -25,13 +25,12 @@ export function ResizablePanel({ defaultWidth, minWidth, maxWidth, collapsed, ch
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if (!isResizing.current) return
+      if (!dragging) return
       const delta = e.clientX - startX.current
-      const newWidth = Math.max(minWidth, Math.min(maxWidth, startWidth.current + delta))
-      setWidth(newWidth)
+      setWidth(Math.max(minWidth, Math.min(maxWidth, startWidth.current + delta)))
     }
     const onMouseUp = () => {
-      isResizing.current = false
+      setDragging(false)
       document.body.style.cursor = ""
       document.body.style.userSelect = ""
     }
@@ -41,19 +40,25 @@ export function ResizablePanel({ defaultWidth, minWidth, maxWidth, collapsed, ch
       document.removeEventListener("mousemove", onMouseMove)
       document.removeEventListener("mouseup", onMouseUp)
     }
-  }, [minWidth, maxWidth])
-
-  if (collapsed) return null
+  }, [dragging, minWidth, maxWidth])
 
   return (
     <>
-      <div style={{ width, minWidth, maxWidth, flexShrink: 0 }}>
-        {children}
-      </div>
       <div
-        className="w-px bg-border hover:bg-ring/30 cursor-col-resize flex-shrink-0 transition-colors"
-        onMouseDown={onMouseDown}
-      />
+        className="overflow-hidden flex-shrink-0"
+        style={{
+          width: collapsed ? 0 : width,
+          transition: dragging ? "none" : "width 0.2s ease-in-out",
+        }}
+      >
+        <div style={{ width, minWidth }}>{children}</div>
+      </div>
+      {!collapsed && (
+        <div
+          className="w-px bg-border hover:bg-ring/30 cursor-col-resize flex-shrink-0 transition-colors"
+          onMouseDown={onMouseDown}
+        />
+      )}
     </>
   )
 }
