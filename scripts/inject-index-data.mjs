@@ -1,12 +1,11 @@
-// Inject __INDEX_DATA__, config, inline logo SVGs and favicon into built HTML
+// Inject __INDEX_DATA__, config, inline logos/favicon into built HTML
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
 
 const distDir = resolve(import.meta.dirname, '..', 'dist')
 const htmlPath = resolve(distDir, 'index.html')
-const configSrc = resolve(import.meta.dirname, '..', 'config.json')
-const configDst = resolve(distDir, 'config.json')
 const publicDir = resolve(import.meta.dirname, '..', 'public')
+const configSrc = resolve(publicDir, 'config.json')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
 const defaultConfig = {
@@ -51,7 +50,7 @@ if (config.logo_text) {
   console.log(`✓ Applied logo_text: ${config.logo_text}`)
 }
 
-// Inline favicon SVG — reads from public/favicon.svg, falls back to default
+// Inline favicon SVG
 const faviconSrc = resolve(publicDir, 'favicon.svg')
 let faviconData
 if (existsSync(faviconSrc)) {
@@ -62,7 +61,7 @@ if (existsSync(faviconSrc)) {
 html = html.replace('type="image/x-icon" href="favicon.ico"', `href="data:image/svg+xml,${encodeURIComponent(faviconData)}"`)
 console.log('✓ Inlined favicon')
 
-// Inline logo SVGs into runtime config (for Sidebar), clean config saved to dist
+// Inline logo SVGs into runtime config
 const logoSrc = resolve(publicDir, 'logo.svg')
 const darkLogoSrc = resolve(publicDir, 'logo-dark.svg')
 const runtimeConfig = { ...config }
@@ -75,9 +74,8 @@ if (existsSync(darkLogoSrc)) {
   console.log('✓ Inlined logo-dark.svg')
 }
 
-// Embed runtime config into HTML
+// Embed runtime config into HTML (Vite copies public/config.json to dist/)
 const configScript = `<script id="dufs-config" type="application/json">${JSON.stringify(runtimeConfig)}</script>`
 html = html.replace(indexDataMarker, indexDataMarker + '\n' + configScript)
 
-writeFileSync(configDst, JSON.stringify(config, null, 2), 'utf-8')
 writeFileSync(htmlPath, html, 'utf-8')
