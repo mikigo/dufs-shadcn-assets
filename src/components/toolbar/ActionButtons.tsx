@@ -1,7 +1,7 @@
 import { useAppState } from "@/context/AppContext"
 import { Button } from "@/components/ui/button"
 import { Upload, FolderPlus, FilePlus, Download, PanelLeft, LayoutGrid, List, RefreshCw } from "lucide-react"
-import { uploadFile, createFolder, createFile, fetchIndexData } from "@/api/dufs"
+import { enqueueUpload, createFolder, createFile, fetchIndexData } from "@/api/dufs"
 import { newUrl } from "@/lib/utils"
 import { useRef } from "react"
 
@@ -24,14 +24,14 @@ export function ActionButtons() {
         status: "pending" as const,
       }
       dispatch({ type: "ADD_UPLOAD", item })
-      uploadFile(id, file, item.url, {
-        onProgress: (id, uploaded, _total) => {
+      enqueueUpload(id, file, item.url, {
+        onProgress: (id: number, uploaded: number) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { uploaded, status: "uploading" } })
         },
-        onComplete: (id) => {
+        onComplete: (id: number) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "done" } })
         },
-        onError: (id, error) => {
+        onError: (id: number, error: string) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "error", errorMessage: error } })
         },
       })

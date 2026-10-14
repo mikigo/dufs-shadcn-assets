@@ -9,6 +9,29 @@
       if (theme === "dark" || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
       }
+      // XHR 读取 config.json，覆盖构建时嵌入的默认配置
+      {
+        try {
+          const xhr = new XMLHttpRequest()
+          xhr.open("GET", "./config.json", false)
+          xhr.send()
+          const embedded = document.getElementById("dufs-config")
+          if (embedded) {
+            let cfg
+            try { cfg = JSON.parse(embedded.textContent) } catch (_) {}
+            if (xhr.status === 200) {
+              try {
+                const overrides = JSON.parse(xhr.responseText)
+                cfg = { ...cfg, ...overrides }
+                if (overrides.logo === '' || overrides.logo === null) delete cfg._logoData
+                if (overrides.dark_logo === '' || overrides.dark_logo === null) delete cfg._darkLogoData
+                embedded.textContent = JSON.stringify(cfg)
+              } catch (_) {}
+            }
+            document.title = (cfg && cfg.logo_text) || ''
+          }
+        } catch (_) {}
+      }
     </script>
     <title>Dufs</title>
   </head>

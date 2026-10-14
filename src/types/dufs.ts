@@ -55,6 +55,7 @@ export interface UploadItem {
   uploaded: number
   status: "pending" | "uploading" | "done" | "error"
   errorMessage?: string
+  rootDir?: string
 }
 
 export type AppAction =

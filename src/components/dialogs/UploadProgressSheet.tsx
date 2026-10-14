@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
 import { Upload, Check, RefreshCw } from "lucide-react"
-import { uploadFile } from "@/api/dufs"
+import { retryUpload } from "@/api/dufs"
 
 export function UploadProgressSheet() {
   const { state, dispatch } = useAppState()
@@ -19,7 +19,7 @@ export function UploadProgressSheet() {
     const upload = state.uploads.find(u => u.id === id)
     if (!upload) return
     dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "pending", uploaded: 0 } })
-    uploadFile(id, upload.file, upload.url, {
+    retryUpload(id, upload.file, upload.url, {
       onProgress: (id, uploaded, _total) => {
         dispatch({ type: "UPDATE_UPLOAD", id, updates: { uploaded, status: "uploading" } })
       },

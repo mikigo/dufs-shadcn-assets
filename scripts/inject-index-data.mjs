@@ -9,11 +9,8 @@ const configSrc = resolve(publicDir, 'config.json')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
 const defaultConfig = {
-  logo_text: 'dufs-shadcn-assets',
-  logo: './logo.svg',
-  dark_logo: './dark-logo.svg',
   logo_size: '28px',
-  logo_text_font_size: '14px',
+  logo_text_font_size: '20px',
 }
 
 let config
@@ -45,11 +42,6 @@ if (!html.includes('__INDEX_DATA__')) {
   console.log('✓ __INDEX_DATA__ placeholder already present')
 }
 
-if (config.logo_text) {
-  html = html.replace(/<title>.*?<\/title>/, `<title>${config.logo_text}</title>`)
-  console.log(`✓ Applied logo_text: ${config.logo_text}`)
-}
-
 // Inline favicon SVG
 const faviconSrc = resolve(publicDir, 'favicon.svg')
 let faviconData
@@ -61,21 +53,21 @@ if (existsSync(faviconSrc)) {
 html = html.replace('type="image/x-icon" href="favicon.ico"', `href="data:image/svg+xml,${encodeURIComponent(faviconData)}"`)
 console.log('✓ Inlined favicon')
 
-// Inline logo SVGs into runtime config
+// Inline logo SVGs into runtime config (only if config has logo/dark_logo set)
 const logoSrc = resolve(publicDir, 'logo.svg')
 const darkLogoSrc = resolve(publicDir, 'logo-dark.svg')
 const runtimeConfig = { ...config }
-if (existsSync(logoSrc)) {
+if (config.logo && existsSync(logoSrc)) {
   runtimeConfig._logoData = 'data:image/svg+xml;base64,' + readFileSync(logoSrc).toString('base64')
   console.log('✓ Inlined logo.svg')
 }
-if (existsSync(darkLogoSrc)) {
+if (config.dark_logo && existsSync(darkLogoSrc)) {
   runtimeConfig._darkLogoData = 'data:image/svg+xml;base64,' + readFileSync(darkLogoSrc).toString('base64')
   console.log('✓ Inlined logo-dark.svg')
 }
 
-// Embed runtime config into HTML (Vite copies public/config.json to dist/)
+// Embed runtime config as default; index.html's XHR can override it at runtime
 const configScript = `<script id="dufs-config" type="application/json">${JSON.stringify(runtimeConfig)}</script>`
-html = html.replace(indexDataMarker, indexDataMarker + '\n' + configScript)
+html = html.replace('<meta name="viewport"', configScript + '\n    <meta name="viewport"')
 
 writeFileSync(htmlPath, html, 'utf-8')

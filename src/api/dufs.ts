@@ -120,12 +120,26 @@ export interface UploadCallbacks {
   onError: (id: number, error: string) => void
 }
 
-export function uploadFile(
-  id: number,
-  file: File,
-  uploadUrl: string,
-  callbacks: UploadCallbacks,
-): void {
+interface UploadTask {
+  id: number
+  file: File
+  uploadUrl: string
+  callbacks: UploadCallbacks
+  uploadOffset: number
+}
+
+let uploadRunning = false
+const uploadQueue: UploadTask[] = []
+
+function processQueue() {
+  if (uploadRunning || uploadQueue.length === 0) return
+  uploadRunning = true
+  const task = uploadQueue.shift()!
+  doUpload(task)
+}
+
+function doUpload(task: UploadTask) {
+  const { id, file, uploadUrl, callbacks, uploadOffset } = task
   const xhr = new XMLHttpRequest()
   let lastTime = Date.now()
 
@@ -133,11 +147,12 @@ export function uploadFile(
     const now = Date.now()
     if (now - lastTime < 300) return
     lastTime = now
-    callbacks.onProgress(id, e.loaded, e.total)
+    callbacks.onProgress(id, e.loaded + uploadOffset, file.size)
   })
 
   xhr.addEventListener("readystatechange", () => {
     if (xhr.readyState === 4) {
+      uploadRunning = false
       if (xhr.status >= 200 && xhr.status < 300) {
         callbacks.onComplete(id)
       } else {
@@ -145,13 +160,61 @@ export function uploadFile(
           callbacks.onError(id, `${xhr.status} ${xhr.statusText}`)
         }
       }
+      processQueue()
     }
   })
 
-  xhr.addEventListener("error", () => callbacks.onError(id, "Network error"))
-  xhr.addEventListener("abort", () => callbacks.onError(id, "Aborted"))
-  xhr.open("PUT", uploadUrl)
-  xhr.send(file)
+  xhr.addEventListener("error", () => {
+    uploadRunning = false
+    callbacks.onError(id, "Network error")
+    processQueue()
+  })
+  xhr.addEventListener("abort", () => {
+    uploadRunning = false
+    callbacks.onError(id, "Aborted")
+    processQueue()
+  })
+
+  if (uploadOffset > 0) {
+    xhr.open("PATCH", uploadUrl)
+    xhr.setRequestHeader("X-Update-Range", "append")
+    xhr.send(file.slice(uploadOffset))
+  } else {
+    xhr.open("PUT", uploadUrl)
+    xhr.send(file)
+  }
+}
+
+export function enqueueUpload(
+  id: number,
+  file: File,
+  uploadUrl: string,
+  callbacks: UploadCallbacks,
+) {
+  uploadQueue.push({ id, file, uploadUrl, callbacks, uploadOffset: 0 })
+  processQueue()
+}
+
+export async function retryUpload(
+  id: number,
+  file: File,
+  uploadUrl: string,
+  callbacks: UploadCallbacks,
+) {
+  let uploadOffset = 0
+  try {
+    const res = await fetch(uploadUrl, { method: "HEAD" })
+    if (res.status === 200) {
+      const len = res.headers.get("content-length")
+      uploadOffset = len ? parseInt(len, 10) || 0 : 0
+    }
+  } catch {}
+  uploadQueue.push({ id, file, uploadUrl, callbacks, uploadOffset })
+  processQueue()
+}
+
+export function isUploading(): boolean {
+  return uploadRunning || uploadQueue.length > 0
 }
 
 export function newUrl(base: string, name: string): string {

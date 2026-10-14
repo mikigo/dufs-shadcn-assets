@@ -150,47 +150,25 @@
   padding: 0 !important;
 }
 
-/* 始终显示滚动条，避免 Windows 自动隐藏 */
+/* 滚动条 — 始终可见，使用 muted-foreground 适配深浅色主题 */
 @layer base {
-  /* Firefox */
   * {
-    scrollbar-width: auto;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 25%, transparent) transparent;
   }
 
-  /* Chrome / Edge / Safari */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 5px;
-    border: 2px solid transparent;
-    background-clip: content-box;
+    background: color-mix(in srgb, var(--muted-foreground) 25%, transparent);
+    border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.4);
-    border: 2px solid transparent;
-    background-clip: content-box;
+    background: color-mix(in srgb, var(--muted-foreground) 45%, transparent);
   }
-}
-
-/* Custom scrollbar — always visible, themed */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.4);
 }

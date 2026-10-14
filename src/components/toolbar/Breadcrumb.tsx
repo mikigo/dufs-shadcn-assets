@@ -23,10 +23,11 @@ export function Breadcrumb() {
   const prefix = (state.currentData?.uri_prefix ?? "").replace(/\/+$/, "")
 
   const handleClick = async (path: string) => {
+    const dirPath = path.endsWith("/") || path === "/" ? path : path + "/"
     try {
-      const data = await fetchIndexData(path)
-      pushHistory(path)
-      dispatch({ type: "SET_CURRENT", path, data })
+      const data = await fetchIndexData(dirPath)
+      pushHistory(dirPath)
+      dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } catch (err) {
       console.error("Breadcrumb navigation failed:", err)
     }

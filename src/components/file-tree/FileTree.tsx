@@ -56,7 +56,7 @@ export function FileTree() {
                   node={node}
                   depth={node.depth}
                   loading={treeLoading.has(node.path)}
-                  selected={selectedPath === node.path}
+                  selected={selectedPath?.replace(/\/$/, "") === node.path}
                   onToggle={handleToggle}
                   onSelect={handleSelect}
                   onNavigate={handleNavigate}

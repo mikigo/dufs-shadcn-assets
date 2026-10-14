@@ -1,10 +1,23 @@
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
 import type { TreeNode } from "@/types/dufs"
 
+function findNode(nodes: TreeNode[], path: string): TreeNode | null {
+  for (const n of nodes) {
+    if (n.path === path) return n
+    if (n.children) {
+      const f = findNode(n.children, path)
+      if (f) return f
+    }
+  }
+  return null
+}
+
 export function useFileTree() {
   const { state, dispatch } = useAppState()
+  const prevPathRef = useRef(state.currentPath)
+  const treeNavRef = useRef(false)
 
   // 仅在树为空时重建（初始加载或整页刷新如搜索）。
   // SPA 导航（树点击/popstate/表格双击）不重建，只更新右侧面板。
@@ -28,6 +41,42 @@ export function useFileTree() {
       dispatch({ type: "SET_TREE", path: state.currentPath || "/", nodes })
     }
   }, [state.currentPath, state.currentData, state.tree.length, dispatch])
+
+  // 当 currentPath 变化时（从主内容区导航），在文件树中展开并选中对应目录
+  useEffect(() => {
+    if (!state.currentPath || state.currentPath === "/") return
+    if (state.tree.length === 0) return
+
+    const isExternalNav = !treeNavRef.current
+    treeNavRef.current = false
+
+    if (state.currentPath === prevPathRef.current) return
+
+    const normalized = state.currentPath.replace(/\/$/, "")
+    if (!normalized) return
+
+    const segments = normalized.split("/").filter(Boolean)
+    let partialPath = ""
+
+    for (const seg of segments) {
+      partialPath += "/" + seg
+      const node = findNode(state.tree, partialPath)
+      if (!node) return
+      if (node.isDir && node.children === null && !node.loaded) {
+        dispatch({ type: "EXPAND_TREE", path: partialPath })
+        return
+      }
+    }
+
+    if (isExternalNav) {
+      dispatch({ type: "SELECT", path: normalized + "/" })
+    }
+  }, [state.currentPath, state.tree, dispatch])
+
+  // 跟踪 currentPath，避免树展开后选中时误判为路径变化
+  useEffect(() => {
+    prevPathRef.current = state.currentPath
+  }, [state.currentPath])
 
   useEffect(() => {
     const loadingPaths = Array.from(state.treeLoading)
@@ -59,17 +108,7 @@ export function useFileTree() {
   }, [state.treeLoading, dispatch])
 
   const handleToggle = useCallback((path: string, loaded: boolean) => {
-    const findNode = (nodes: TreeNode[]): TreeNode | null => {
-      for (const n of nodes) {
-        if (n.path === path) return n
-        if (n.children) {
-          const f = findNode(n.children)
-          if (f) return f
-        }
-      }
-      return null
-    }
-    const node = findNode(state.tree)
+    const node = findNode(state.tree, path)
     if (!node) return
     if (node.children !== null) {
       dispatch({ type: "COLLAPSE_TREE", path })
@@ -79,6 +118,7 @@ export function useFileTree() {
   }, [state.tree, dispatch])
 
   const handleSelect = useCallback(async (path: string) => {
+    treeNavRef.current = true
     pushHistory(path + "?view")
     const parentDir = path.substring(0, path.lastIndexOf("/") + 1) || "/"
     try {
@@ -91,6 +131,7 @@ export function useFileTree() {
   }, [dispatch])
 
   const handleNavigate = useCallback(async (path: string) => {
+    treeNavRef.current = true
     try {
       const dirPath = path.endsWith("/") ? path : path + "/"
       const data = await fetchIndexData(dirPath)

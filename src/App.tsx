@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react"
 import { AppProvider, useAppState } from "@/context/AppContext"
-import { uploadFile, newUrl, decodeBase64, fetchIndexData } from "@/api/dufs"
+import { enqueueUpload, isUploading, checkAuth, newUrl, decodeBase64, fetchIndexData, pushHistory } from "@/api/dufs"
 import { ResizablePanel } from "@/components/layout/ResizablePanel"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { MainPanel } from "@/components/layout/MainPanel"
@@ -25,15 +25,23 @@ function AppContent() {
       const el = document.getElementById("index-data")
       if (!el) return
       const raw = el.textContent || el.innerHTML
-      // 注意: 不能使用 raw === "__INDEX_DATA__" 来检测占位符
-      // 因为 dufs 在服务 HTML 时会全局替换 __INDEX_DATA__，
-      // JS 代码中的字面量字符串也会被替换成 base64 数据，导致比较永远为 true
-      // 改用长度判断: 占位符只有 15 个字符，真实数据至少几百个字符
       if (!raw || raw.length < 100) return
       const data = JSON.parse(decodeBase64(raw))
 
       // 文件预览页（kind: "View"）：拉取父目录数据填充文件树
       if (data.kind === "View") {
+        // 无尾部斜杠的路径可能是目录，尝试获取目录列表
+        if (!data.href.endsWith("/")) {
+          try {
+            const indexData = await fetchIndexData(data.href + "/")
+            if (indexData.kind === "Index") {
+              dispatch({ type: "SET_CURRENT", path: indexData.href, data: indexData })
+              pushHistory(indexData.href)
+              return
+            }
+          } catch {}
+        }
+
         const parentDir = data.href.substring(0, data.href.lastIndexOf("/") + 1) || "/"
         let dirData
         try {
@@ -65,12 +73,12 @@ function AppContent() {
     init()
   }, [dispatch])
 
-  // 监听浏览器前进/后退，同步导航
+// 监听浏览器前进/后退，同步导航
   useEffect(() => {
     const handlePopState = async () => {
       const path = location.pathname + location.search
       // ?view URL → 文件预览，需要先拉取父目录数据填充树
-if (location.search === "?view") {
+      if (location.search === "?view") {
         const parentDir = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) || "/"
         try {
           const dirData = await fetchIndexData(parentDir)
@@ -90,11 +98,24 @@ if (location.search === "?view") {
         dispatch({ type: "SELECT", path: location.pathname })
         return
       }
+
+      let targetPath = path || "/"
       try {
-        const data = await fetchIndexData(path || "/")
-        if (location.pathname + location.search !== path) {
-          return
+        let data = await fetchIndexData(targetPath)
+        if (location.pathname + location.search !== path) return
+
+        // 无尾部斜杠的路径可能是目录，尝试获取目录列表
+        if (data.kind === "View" && !targetPath.endsWith("/")) {
+          try {
+            const indexData = await fetchIndexData(targetPath + "/")
+            if (location.pathname + location.search !== path) return
+            if (indexData.kind === "Index") {
+              data = indexData
+              pushHistory(indexData.href)
+            }
+          } catch {}
         }
+
         dispatch({ type: "SET_TREE", path: "/", nodes: [] })
         dispatch({ type: "SET_CURRENT", path: data.href, data })
       } catch (err) {
@@ -109,21 +130,37 @@ if (location.search === "?view") {
     (window as any).__appState = state
   }, [state])
 
-  const startUpload = useCallback((files: FileList | File[]) => {
+  const ensureAuth = useCallback(async () => {
+    if (state.auth.required && !state.auth.user) {
+      try {
+        const user = await checkAuth(state.currentPath)
+        dispatch({ type: "SET_AUTH", auth: { required: true, user } })
+      } catch {
+        // 认证失败则不继续上传
+        return false
+      }
+    }
+    return true
+  }, [state.auth.required, state.auth.user, state.currentPath, dispatch])
+
+  const startUpload = useCallback(async (files: FileList | File[], baseDir?: string) => {
+    if (!await ensureAuth()) return
+    const dirPath = baseDir || state.currentPath
     for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      if (file.size === 0) continue
+      const file = files[i as unknown as number]
+      if (!file || file.size === 0) continue
       const id = ++uploadIdCounter
       const item = {
         id,
-        name: file.name,
-        file,
-        url: newUrl(state.currentPath, file.name),
+        name: (file as any).webkitRelativePath || file.name,
+        file: file as File,
+        url: newUrl(dirPath, (file as any).webkitRelativePath || file.name),
         uploaded: 0,
         status: "pending" as const,
+        rootDir: baseDir,
       }
       dispatch({ type: "ADD_UPLOAD", item })
-      uploadFile(id, file, item.url, {
+      enqueueUpload(id, file as File, item.url, {
         onProgress: (id, uploaded) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { uploaded, status: "uploading" } })
         },
@@ -135,7 +172,45 @@ if (location.search === "?view") {
         },
       })
     }
-  }, [state.currentPath, dispatch])
+  }, [ensureAuth, state.currentPath, dispatch])
+
+  const startFolderUpload = useCallback(async (entry: any) => {
+    const files: File[] = []
+    const dirs: string[] = []
+    async function traverse(e: any, prefix: string) {
+      if (e.isFile) {
+        const file = await new Promise<File>((resolve) => e.file(resolve))
+        Object.defineProperty(file, "webkitRelativePath", { value: prefix + e.name, writable: false })
+        files.push(file)
+      } else if (e.isDirectory) {
+        dirs.push(prefix + e.name)
+        const reader = e.createReader()
+        const readAll = (): Promise<any[]> => {
+          return new Promise((resolve) => {
+            const entries: any[] = []
+            function readBatch() {
+              reader.readEntries((batch: any[]) => {
+                if (batch.length === 0) resolve(entries)
+                else { entries.push(...batch); readBatch() }
+              })
+            }
+            readBatch()
+          })
+        }
+        const children = await readAll()
+        for (const child of children) {
+          await traverse(child, prefix + e.name + "/")
+        }
+      }
+    }
+    await traverse(entry, "")
+    if (!await ensureAuth()) return
+    for (const d of dirs) {
+      const dirUrl = newUrl(state.currentPath, d) + "/"
+      try { await fetch(dirUrl, { method: "MKCOL" }) } catch {}
+    }
+    startUpload(files, state.currentPath)
+  }, [ensureAuth, state.currentPath, startUpload])
 
   useEffect(() => {
     const el = dropRef.current
@@ -144,8 +219,19 @@ if (location.search === "?view") {
     const handleDrop = (e: DragEvent) => {
       e.preventDefault()
       e.stopPropagation()
-      if (!e.dataTransfer?.files.length) return
-      startUpload(e.dataTransfer.files)
+      const items = e.dataTransfer?.items
+      if (!items?.length) return
+      // 文件夹递归上传
+      if (typeof items[0].webkitGetAsEntry === "function") {
+        const entry = items[0].webkitGetAsEntry()
+        if (entry) {
+          startFolderUpload(entry)
+          return
+        }
+      }
+      if (e.dataTransfer?.files.length) {
+        startUpload(e.dataTransfer.files)
+      }
     }
     const events: [string, (e: Event) => void][] = [
       ["drag", prevent], ["dragstart", prevent], ["dragend", prevent],
@@ -154,7 +240,18 @@ if (location.search === "?view") {
     ]
     events.forEach(([name, fn]) => el.addEventListener(name, fn))
     return () => events.forEach(([name, fn]) => el.removeEventListener(name, fn))
-  }, [startUpload])
+  }, [startUpload, startFolderUpload])
+
+  // beforeunload 保护：上传中阻止页面离开
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isUploading()) {
+        e.preventDefault()
+      }
+    }
+    window.addEventListener("beforeunload", handler)
+    return () => window.removeEventListener("beforeunload", handler)
+  }, [])
 
   const showPreview = state.selectedPath && !state.selectedPath.endsWith("/")
 
@@ -167,6 +264,7 @@ if (location.search === "?view") {
         minWidth={200}
         maxWidth={Math.floor(window.innerWidth * 0.5)}
         collapsed={!state.sidebarOpen}
+        storageKey="sidebar-width"
       >
         <Sidebar>
           <FileTree />
