@@ -1,12 +1,15 @@
+import { useState } from "react"
 import { useAppState } from "@/context/AppContext"
 import { baseNameFromUrl, pushHistory } from "@/api/dufs"
 import { isEditable } from "@/lib/utils"
 import { TextPreview } from "./TextPreview"
+import { EditPreview } from "./EditPreview"
 import { OfvPreview } from "./OfvPreview"
 import { X, Pen } from "lucide-react"
 
 export function FilePreview() {
   const { state, dispatch } = useAppState()
+  const [editing, setEditing] = useState(false)
 
   if (!state.selectedPath) return null
 
@@ -30,15 +33,14 @@ export function FilePreview() {
     <div className="h-full flex flex-col">
       <div className="px-4 py-2.5 border-b border-border/40 text-sm font-medium flex items-center gap-2 bg-background">
         <span className="truncate">{fileName}</span>
-        {editable && (
-          <a
-            href={state.selectedPath + "?edit"}
-            target="_blank"
+        {editable && isTextLike && !editing && (
+          <button
+            onClick={() => setEditing(true)}
             className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
             title="Edit"
           >
             <Pen className="size-4" />
-          </a>
+          </button>
         )}
         <button
           onClick={handleClose}
@@ -50,7 +52,15 @@ export function FilePreview() {
       </div>
       <div className="flex-1 overflow-hidden bg-muted/30">
         {isTextLike ? (
-          <TextPreview filePath={state.selectedPath} />
+          editing ? (
+            <EditPreview
+              filePath={state.selectedPath}
+              onSave={() => setEditing(false)}
+              onCancel={() => setEditing(false)}
+            />
+          ) : (
+            <TextPreview filePath={state.selectedPath} />
+          )
         ) : (
           <OfvPreview filePath={state.selectedPath} />
         )}
