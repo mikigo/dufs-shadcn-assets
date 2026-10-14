@@ -148,9 +148,6 @@ export function DirTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-0.5">
-                    <Button variant="ghost" size="icon" onClick={(e) => handleDownload(e, item)} title="Download">
-                      <Download data-icon />
-                    </Button>
                     {!isDir && (
                       <a href={fileUrl + "?view"} target="_blank" title="View">
                         <Button variant="ghost" size="icon">
@@ -158,25 +155,26 @@ export function DirTable() {
                         </Button>
                       </a>
                     )}
-                    {state.currentData?.allow_upload && (
-                      <>
-                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
-                          <ArrowRightLeft data-icon />
+                    {state.currentData?.allow_upload && !isDir && isEditable(item.name) && (
+                      <a href={fileUrl + "?edit"} target="_blank" title="Edit">
+                        <Button variant="ghost" size="icon">
+                          <Pencil data-icon />
                         </Button>
-                        {!isDir && isEditable(item.name) && (
-                          <a href={fileUrl + "?edit"} target="_blank" title="Edit">
-                            <Button variant="ghost" size="icon">
-                              <Pencil data-icon />
-                            </Button>
-                          </a>
-                        )}
-                      </>
+                      </a>
+                    )}
+                    {state.currentData?.allow_upload && (
+                      <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
+                        <ArrowRightLeft data-icon />
+                      </Button>
                     )}
                     {state.currentData?.allow_delete && (
                       <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }} title="Delete">
                         <Trash2 data-icon />
                       </Button>
                     )}
+                    <Button variant="ghost" size="icon" onClick={(e) => handleDownload(e, item)} title="Download">
+                      <Download data-icon />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

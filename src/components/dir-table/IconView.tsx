@@ -131,9 +131,6 @@ export function IconView() {
             >
               {/* Actions on hover */}
               <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5">
-                <Button variant="ghost" size="icon" className="size-6" onClick={(e) => handleDownload(e, item)} title="Download">
-                  <Download className="size-3" />
-                </Button>
                 {!isDir && (
                   <a href={fileUrl + "?view"} target="_blank" title="View">
                     <Button variant="ghost" size="icon" className="size-6">
@@ -141,20 +138,18 @@ export function IconView() {
                     </Button>
                   </a>
                 )}
-                {state.currentData?.allow_upload && (
-                  <>
-                    <Button variant="ghost" size="icon" className="size-6"
-                      onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
-                      <ArrowRightLeft className="size-3" />
+                {state.currentData?.allow_upload && !isDir && isEditable(item.name) && (
+                  <a href={fileUrl + "?edit"} target="_blank" title="Edit">
+                    <Button variant="ghost" size="icon" className="size-6">
+                      <Pencil className="size-3" />
                     </Button>
-                    {!isDir && isEditable(item.name) && (
-                      <a href={fileUrl + "?edit"} target="_blank" title="Edit">
-                        <Button variant="ghost" size="icon" className="size-6">
-                          <Pencil className="size-3" />
-                        </Button>
-                      </a>
-                    )}
-                  </>
+                  </a>
+                )}
+                {state.currentData?.allow_upload && (
+                  <Button variant="ghost" size="icon" className="size-6"
+                    onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
+                    <ArrowRightLeft className="size-3" />
+                  </Button>
                 )}
                 {state.currentData?.allow_delete && (
                   <Button variant="ghost" size="icon" className="size-6"
@@ -162,6 +157,9 @@ export function IconView() {
                     <Trash2 className="size-3" />
                   </Button>
                 )}
+                <Button variant="ghost" size="icon" className="size-6" onClick={(e) => handleDownload(e, item)} title="Download">
+                  <Download className="size-3" />
+                </Button>
               </div>
 
               {/* Icon */}
