@@ -1,12 +1,12 @@
+<p align="center">
+  <img src="public/logo.svg" alt="Logo" width="64" />
+</p>
+
 # dufs-shadcn-assets
 
 > **dufs 的前端主题项目** — 通过 `dufs --assets` 替换 dufs 内置 UI 的现代化文件管理界面。
 
 基于 [shadcn/ui](https://ui.shadcn.com/)构建。文件预览能力由 Open File Viewer 提供，覆盖 30+ 种文件格式。
-
-<p align="center">
-  <img src="public/logo.svg" alt="Logo" width="64" />
-</p>
 
 ## 亮点
 
