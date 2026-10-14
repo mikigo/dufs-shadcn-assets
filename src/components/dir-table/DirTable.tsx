@@ -4,9 +4,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, formatMtime, isEditable } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, FolderSymlink, FileSymlink, FileText, Folder } from "lucide-react"
-import { FileIcon } from "@react-symbols/icons/utils"
+import { formatFileSize, formatDirSize, formatMtime } from "@/lib/utils"
+import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder } from "lucide-react"
+import { VscFileIcon } from "@/components/file-tree/VscFileIcon"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
@@ -17,7 +17,7 @@ function getIcon(pathType: string, filename?: string) {
     case "Dir": return <Folder className="size-5 shrink-0 text-muted-foreground" />
     case "SymlinkDir": return <FolderSymlink className="size-5 shrink-0 text-muted-foreground" />
     case "SymlinkFile": return <FileSymlink className="size-5 shrink-0 text-muted-foreground" />
-    default: return <FileIcon fileName={filename || ""} className="size-5 shrink-0" />
+    default: return <VscFileIcon fileName={filename || ""} className="size-5 shrink-0" />
   }
 }
 
@@ -120,14 +120,13 @@ export function DirTable() {
             <TableHead>{sortHeader("Name", "name")}</TableHead>
             <TableHead className="w-36">{sortHeader("Last Modified", "mtime")}</TableHead>
             <TableHead className="w-24 text-right">{sortHeader("Size", "size")}</TableHead>
-            <TableHead className="w-28">Actions</TableHead>
+            <TableHead className="w-28 text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {sorted.map(item => {
             const isDir = item.path_type.endsWith("Dir")
             const sizeDisplay = isDir ? formatDirSize(item.size) : formatFileSize(item.size).join(" ")
-            const fileUrl = newUrl(state.currentPath, item.name)
             return (
               <TableRow
                 key={item.name}
@@ -148,20 +147,6 @@ export function DirTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-0.5 justify-end">
-                    {!isDir && (
-                      <a href={fileUrl + "?view"} target="_blank" title="View">
-                        <Button variant="ghost" size="icon">
-                          <FileText data-icon />
-                        </Button>
-                      </a>
-                    )}
-                    {state.currentData?.allow_upload && !isDir && isEditable(item.name) && (
-                      <a href={fileUrl + "?edit"} target="_blank" title="Edit">
-                        <Button variant="ghost" size="icon">
-                          <Pencil data-icon />
-                        </Button>
-                      </a>
-                    )}
                     {state.currentData?.allow_upload && (
                       <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
                         <ArrowRightLeft data-icon />

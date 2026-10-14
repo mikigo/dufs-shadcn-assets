@@ -150,6 +150,11 @@
   padding: 0 !important;
 }
 
+/* vscode-icons: 暗色模式下调整亮度，保持辨识度 */
+.dark [data-vsc-icon] svg {
+  filter: brightness(0.9) saturate(1.1);
+}
+
 /* 滚动条 — 始终可见，使用 muted-foreground 适配深浅色主题 */
 @layer base {
   * {

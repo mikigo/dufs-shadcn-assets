@@ -1,5 +1,5 @@
 // Inject __INDEX_DATA__, config, inline logos/favicon into built HTML
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, cpSync } from 'fs'
 import { resolve } from 'path'
 
 const distDir = resolve(import.meta.dirname, '..', 'dist')
@@ -11,6 +11,7 @@ const indexDataMarker = '<script id="index-data" type="application/json">__INDEX
 const defaultConfig = {
   logo_size: '28px',
   logo_text_font_size: '20px',
+  view_mode: 'icons',
 }
 
 let config
@@ -71,3 +72,18 @@ const configScript = `<script id="dufs-config" type="application/json">${JSON.st
 html = html.replace('<meta name="viewport"', configScript + '\n    <meta name="viewport"')
 
 writeFileSync(htmlPath, html, 'utf-8')
+
+// 离线环境：将 PDF.js cmaps 和 standard_fonts 复制到 dist/ 和 sample-files/
+const nodeModules = resolve(import.meta.dirname, '..', 'node_modules')
+const cmapsSrc = resolve(nodeModules, 'pdfjs-dist/cmaps')
+const fontsSrc = resolve(nodeModules, 'pdfjs-dist/standard_fonts')
+const sampleDir = resolve(import.meta.dirname, '..', 'sample-files')
+const cmapsDest = resolve(distDir, 'cmaps')
+const fontsDest = resolve(distDir, 'standard_fonts')
+if (existsSync(cmapsSrc)) { cpSync(cmapsSrc, cmapsDest, { recursive: true }) }
+if (existsSync(fontsSrc)) { cpSync(fontsSrc, fontsDest, { recursive: true }) }
+console.log('✓ Copied PDF.js cmaps & standard_fonts (for dist/)')
+
+// 提示：PDF 离线预览的 cmaps/standard_fonts 需要手动复制到 serve-path
+// 例如: cp -r dist/cmaps sample-files/cmaps
+// 否则 PDF 中的 CJK 字符和标准字体可能无法正确渲染

@@ -1,7 +1,7 @@
 import { ChevronRight, Folder, FolderOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { TreeNode as TreeNodeType } from "@/types/dufs"
-import { FileIcon } from "@react-symbols/icons/utils"
+import { VscFileIcon } from "./VscFileIcon"
 
 interface Props {
   node: TreeNodeType
@@ -66,7 +66,7 @@ export function TreeNodeComponent({ node, depth, loading, selected, onToggle, on
               ? <FolderOpen className={iconCls + " text-primary"} />
               : <Folder className={iconCls + " text-muted-foreground"} />
           ) : (
-            <FileIcon fileName={node.name} className={iconCls} />
+            <VscFileIcon fileName={node.name} className={iconCls} />
           )}
           <span className="truncate">{node.name}</span>
           {loading && (

@@ -1,8 +1,8 @@
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, isEditable } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, FolderSymlink, FileSymlink, FileText, Folder } from "lucide-react"
-import { FileIcon } from "@react-symbols/icons/utils"
+import { formatFileSize, formatDirSize } from "@/lib/utils"
+import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder } from "lucide-react"
+import { VscFileIcon } from "@/components/file-tree/VscFileIcon"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
@@ -14,7 +14,7 @@ function getLargeIcon(pathType: string, filename?: string) {
     case "Dir": return <Folder className="size-10" />
     case "SymlinkDir": return <FolderSymlink className="size-10" />
     case "SymlinkFile": return <FileSymlink className="size-10" />
-    default: return <FileIcon fileName={filename || ""} className="size-10" />
+    default: return <VscFileIcon fileName={filename || ""} className="size-10 shrink-0" />
   }
 }
 
@@ -121,7 +121,6 @@ export function IconView() {
       <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))" }}>
         {sorted.map(item => {
           const isDir = item.path_type.endsWith("Dir")
-          const fileUrl = newUrl(state.currentPath, item.name)
           return (
             <div
               key={item.name}
@@ -131,20 +130,6 @@ export function IconView() {
             >
               {/* Actions on hover */}
               <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5">
-                {!isDir && (
-                  <a href={fileUrl + "?view"} target="_blank" title="View">
-                    <Button variant="ghost" size="icon" className="size-6">
-                      <FileText className="size-3" />
-                    </Button>
-                  </a>
-                )}
-                {state.currentData?.allow_upload && !isDir && isEditable(item.name) && (
-                  <a href={fileUrl + "?edit"} target="_blank" title="Edit">
-                    <Button variant="ghost" size="icon" className="size-6">
-                      <Pencil className="size-3" />
-                    </Button>
-                  </a>
-                )}
                 {state.currentData?.allow_upload && (
                   <Button variant="ghost" size="icon" className="size-6"
                     onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">

@@ -73,6 +73,19 @@ function AppContent() {
     init()
   }, [dispatch])
 
+  // 从 dufs-config 读取 view_mode 配置
+  useEffect(() => {
+    try {
+      const el = document.getElementById("dufs-config")
+      if (el?.textContent) {
+        const cfg = JSON.parse(el.textContent)
+        if (cfg.view_mode === "list" || cfg.view_mode === "icons") {
+          dispatch({ type: "SET_VIEW_MODE", mode: cfg.view_mode })
+        }
+      }
+    } catch {}
+  }, [dispatch])
+
 // 监听浏览器前进/后退，同步导航
   useEffect(() => {
     const handlePopState = async () => {

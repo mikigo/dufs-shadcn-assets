@@ -21,9 +21,12 @@ import {
 } from "@open-file-viewer/core"
 import type { FileViewer } from "@open-file-viewer/core"
 import "@open-file-viewer/core/style.css"
+import "leaflet/dist/leaflet.css"
 import { baseNameFromUrl } from "@/api/dufs"
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url"
 import legacyWorkerSrc from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url"
+const cMapUrl = "./cmaps/"
+const standardFontDataUrl = "./standard_fonts/"
 
 interface Props {
   filePath: string
@@ -31,7 +34,7 @@ interface Props {
 
 const plugins = [
   officePlugin(),
-  pdfPlugin({ workerSrc, legacyWorkerSrc }),
+  pdfPlugin({ workerSrc, legacyWorkerSrc, cMapUrl, standardFontDataUrl }),
   videoPlugin(),
   audioPlugin(),
   imagePlugin(),

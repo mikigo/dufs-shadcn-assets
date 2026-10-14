@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/inject-index-data.mjs",
+    "build": "node scripts/generate-vsc-icon-map.mjs && tsc -b && vite build && node scripts/inject-index-data.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -17,11 +17,13 @@
     "@tailwindcss/typography": "^0.5.20",
     "@tanstack/react-virtual": "^3.14.19",
     "@types/highlightjs": "^9.12.6",
+    "@types/leaflet": "^1.9.22",
     "autoprefixer": "^10.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cn": "^0.4.0",
     "highlight.js": "^11.12.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^1.55.0",
     "pdfjs-dist": "^6.4.299",
     "postcss": "^8.5.30",
