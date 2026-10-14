@@ -70,16 +70,16 @@ function AppContent() {
     const handlePopState = async () => {
       const path = location.pathname + location.search
       // ?view URL → 文件预览，需要先拉取父目录数据填充树
-      if (location.search === "?view") {
+if (location.search === "?view") {
         const parentDir = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) || "/"
         try {
           const dirData = await fetchIndexData(parentDir)
-          if (location.search !== "?view" || location.pathname + location.search !== path) {
-            return
-          }
+          if (location.search !== "?view" || location.pathname + location.search !== path) return
+          dispatch({ type: "SET_TREE", path: "/", nodes: [] })
           dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
         } catch (e) {
           if (location.pathname + location.search !== path) return
+          dispatch({ type: "SET_TREE", path: "/", nodes: [] })
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
             href: parentDir, uri_prefix: "", kind: "Index" as const, paths: [],
             allow_upload: false, allow_delete: false,
@@ -95,6 +95,7 @@ function AppContent() {
         if (location.pathname + location.search !== path) {
           return
         }
+        dispatch({ type: "SET_TREE", path: "/", nodes: [] })
         dispatch({ type: "SET_CURRENT", path: data.href, data })
       } catch (err) {
       }
