@@ -69,11 +69,23 @@ function AppContent() {
   useEffect(() => {
     const handlePopState = async () => {
       const path = location.pathname + location.search
-      // ?view URL → 文件预览，直接 SELECT 而不是 fetch directory data
-      if (location.search === "?view") {
-        dispatch({ type: "SELECT", path: location.pathname })
-        return
-      }
+// ?view URL → 文件预览，需要先拉取父目录数据填充树
+if (location.search === "?view") {
+  const parentDir = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) || "/"
+  try {
+    const dirData = await fetchIndexData(parentDir)
+    dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
+  } catch {
+    dispatch({ type: "SET_CURRENT", path: parentDir, data: {
+      href: parentDir, uri_prefix: "", kind: "Index" as const, paths: [],
+      allow_upload: false, allow_delete: false,
+      allow_search: false, allow_archive: false,
+      auth: false, user: "", dir_exists: true, editable: "",
+    }})
+  }
+  dispatch({ type: "SELECT", path: location.pathname })
+  return
+}
       try {
         const data = await fetchIndexData(path || "/")
         dispatch({ type: "SET_CURRENT", path: data.href, data })
