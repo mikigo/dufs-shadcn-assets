@@ -7,18 +7,16 @@ import { fetchIndexData, pushHistory } from "@/api/dufs"
 export function SearchBar() {
   const params = Object.fromEntries(new URLSearchParams(window.location.search).entries())
   const [q, setQ] = useState(params.q ?? "")
-  const { dispatch } = useAppState()
+  const { state, dispatch } = useAppState()
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    const url = new URL(window.location.href)
-    if (q) url.searchParams.set("q", q)
-    else url.searchParams.delete("q")
-    const searchPath = url.pathname + url.search
+    const dirPath = state.currentPath || "/"
+    const searchPath = q ? dirPath + "?q=" + encodeURIComponent(q) : dirPath
     try {
       const data = await fetchIndexData(searchPath)
       pushHistory(searchPath)
-      dispatch({ type: "SET_CURRENT", path: data.href, data })
+      dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } catch {
       // search failed, do nothing
     }
