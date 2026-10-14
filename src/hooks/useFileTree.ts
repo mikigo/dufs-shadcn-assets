@@ -3,26 +3,18 @@ import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
 import type { TreeNode } from "@/types/dufs"
 
-let pendingSkipCount = 0
-
-/** 外部调用（如 popstate handler）：标记下一次树重建应跳过 */
-export function requestSkipTreeRebuild() {
-  pendingSkipCount += 1
-}
+let initialTreeBuilt = false
 
 export function useFileTree() {
   const { state, dispatch } = useAppState()
 
-  // 仅在页面初始加载或面板导航（双击表格/面包屑）时重建树
-  // 从文件树点击目录导航或 popstate 时跳过树重建（只更新右侧面板）
+  // 仅首次初始化时从 __INDEX_DATA__ 构建树，之后永不重建
+  // 后续所有导航（树点击、popstate、表格双击）通过懒加载更新树的子节点
   useEffect(() => {
-    if (pendingSkipCount > 0) {
-      console.log("[useFileTree] skip rebuild, remaining:", pendingSkipCount - 1)
-      pendingSkipCount -= 1
-      return
-    }
+    if (initialTreeBuilt) return
     if (state.currentData?.paths) {
-      console.log("[useFileTree] rebuild tree for", state.currentPath, "with", state.currentData.paths.length, "items")
+      initialTreeBuilt = true
+      console.log("[useFileTree] initial build tree for", state.currentPath, "with", state.currentData.paths.length, "items")
       const nodes: TreeNode[] = state.currentData.paths
         .sort((a, b) => {
           const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
@@ -95,7 +87,6 @@ export function useFileTree() {
     const parentDir = path.substring(0, path.lastIndexOf("/") + 1) || "/"
     try {
       const data = await fetchIndexData(parentDir)
-      pendingSkipCount += 1
       dispatch({ type: "SET_CURRENT", path: parentDir, data })
     } catch {
       // 静默失败
@@ -107,7 +98,6 @@ export function useFileTree() {
     try {
       const dirPath = path.endsWith("/") ? path : path + "/"
       const data = await fetchIndexData(dirPath)
-      pendingSkipCount += 1
       pushHistory(dirPath)
       dispatch({ type: "SET_CURRENT", path: dirPath, data })
     } catch (err) {
