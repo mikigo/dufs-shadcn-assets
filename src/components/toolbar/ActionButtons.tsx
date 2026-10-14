@@ -1,7 +1,7 @@
 import { useAppState } from "@/context/AppContext"
 import { Button } from "@/components/ui/button"
-import { Upload, FolderPlus, FilePlus, Download, PanelLeft, LayoutGrid, List } from "lucide-react"
-import { uploadFile, createFolder, createFile } from "@/api/dufs"
+import { Upload, FolderPlus, FilePlus, Download, PanelLeft, LayoutGrid, List, RefreshCw } from "lucide-react"
+import { uploadFile, createFolder, createFile, fetchIndexData } from "@/api/dufs"
 import { newUrl } from "@/lib/utils"
 import { useRef } from "react"
 
@@ -63,16 +63,21 @@ export function ActionButtons() {
     a.click()
   }
 
+  const handleRefresh = async () => {
+    const data = await fetchIndexData(state.currentPath)
+    dispatch({ type: "SET_CURRENT", path: state.currentPath, data })
+  }
+
   return (
     <div className="flex items-center gap-1 ml-auto">
       {state.currentData?.allow_archive && (
-        <Button variant="ghost" size="icon" onClick={handleDownload}>
+        <Button variant="ghost" size="icon" onClick={handleDownload} title="Download ZIP">
           <Download data-icon />
         </Button>
       )}
       {state.currentData?.allow_upload && (
         <>
-          <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()}>
+          <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} title="Upload files">
             <Upload data-icon />
           </Button>
           <input
@@ -82,14 +87,17 @@ export function ActionButtons() {
             className="hidden"
             onChange={(e) => e.target.files && handleUpload(e.target.files)}
           />
-          <Button variant="ghost" size="icon" onClick={handleNewFolder}>
+          <Button variant="ghost" size="icon" onClick={handleNewFolder} title="New folder">
             <FolderPlus data-icon />
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleNewFile}>
+          <Button variant="ghost" size="icon" onClick={handleNewFile} title="New file">
             <FilePlus data-icon />
           </Button>
         </>
       )}
+      <Button variant="ghost" size="icon" onClick={handleRefresh} title="Refresh">
+        <RefreshCw data-icon />
+      </Button>
       <Button
         variant="ghost" size="icon"
         title={state.viewMode === "icons" ? "Show as list" : "Show as icons"}
@@ -97,7 +105,7 @@ export function ActionButtons() {
       >
         {state.viewMode === "icons" ? <LayoutGrid data-icon /> : <List data-icon />}
       </Button>
-      <Button variant="ghost" size="icon" onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}>
+      <Button variant="ghost" size="icon" onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })} title="Toggle sidebar">
         <PanelLeft data-icon />
       </Button>
     </div>

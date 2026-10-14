@@ -41,7 +41,7 @@ export function FileTree() {
         Explorer
       </div>
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto">
-        <div className="px-2 py-1 relative" style={{ height: virtualizer.getTotalSize() }}>
+        <div className="px-2 pt-1 pb-3 relative" style={{ height: virtualizer.getTotalSize() + 16 }}>
           {virtualizer.getVirtualItems().map((virtualItem) => {
             const node = flatNodes[virtualItem.index]
             return (

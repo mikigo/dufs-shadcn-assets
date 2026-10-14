@@ -1,15 +1,16 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { useAppState } from "@/context/AppContext"
 import { baseNameFromUrl, pushHistory } from "@/api/dufs"
 import { isEditable } from "@/lib/utils"
 import { TextPreview } from "./TextPreview"
 import { EditPreview } from "./EditPreview"
 import { OfvPreview } from "./OfvPreview"
-import { X, Pen } from "lucide-react"
+import { X, Pen, RefreshCw } from "lucide-react"
 
 export function FilePreview() {
   const { state, dispatch } = useAppState()
   const [editing, setEditing] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   if (!state.selectedPath) return null
 
@@ -29,10 +30,21 @@ export function FilePreview() {
     pushHistory(parentDir)
   }
 
+  const handleRefresh = useCallback(() => {
+    setRefreshKey(k => k + 1)
+  }, [])
+
   return (
     <div className="h-full flex flex-col">
       <div className="px-4 py-2.5 border-b border-border/40 text-sm font-medium flex items-center gap-2 bg-background">
         <span className="truncate">{fileName}</span>
+        <button
+          onClick={handleRefresh}
+          className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
+          title="Refresh"
+        >
+          <RefreshCw className="size-3.5" />
+        </button>
         {editable && isTextLike && !editing && (
           <button
             onClick={() => setEditing(true)}
@@ -54,15 +66,16 @@ export function FilePreview() {
         {isTextLike ? (
           editing ? (
             <EditPreview
+              key={refreshKey}
               filePath={state.selectedPath}
               onSave={() => setEditing(false)}
               onCancel={() => setEditing(false)}
             />
           ) : (
-            <TextPreview filePath={state.selectedPath} />
+            <TextPreview key={refreshKey} filePath={state.selectedPath} />
           )
         ) : (
-          <OfvPreview filePath={state.selectedPath} />
+          <OfvPreview key={refreshKey} filePath={state.selectedPath} />
         )}
       </div>
     </div>
