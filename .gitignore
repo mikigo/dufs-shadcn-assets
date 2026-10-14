@@ -4,4 +4,3 @@ dist
 *.local
 *.exe
 /.playwright-cli/config.json
-/docs/*

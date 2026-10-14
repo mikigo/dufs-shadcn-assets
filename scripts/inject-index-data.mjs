@@ -1,4 +1,4 @@
-// Inject __INDEX_DATA__ placeholder, auto-generate config.json, apply to HTML
+// Inject __INDEX_DATA__ placeholder, auto-generate config.json, inline favicon, apply to HTML
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
 
@@ -6,6 +6,7 @@ const distDir = resolve(import.meta.dirname, '..', 'dist')
 const htmlPath = resolve(distDir, 'index.html')
 const configSrc = resolve(import.meta.dirname, '..', 'config.json')
 const configDst = resolve(distDir, 'config.json')
+const faviconSrc = resolve(import.meta.dirname, '..', 'public', 'favicon.ico')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
 const defaultConfig = {
@@ -45,10 +46,16 @@ if (!html.includes('__INDEX_DATA__')) {
   console.log('✓ __INDEX_DATA__ placeholder already present')
 }
 
-config = JSON.parse(readFileSync(configSrc, 'utf-8'))
 if (config.logo_text) {
   html = html.replace(/<title>.*?<\/title>/, `<title>${config.logo_text}</title>`)
   console.log(`✓ Applied logo_text: ${config.logo_text}`)
+}
+
+if (existsSync(faviconSrc)) {
+  const b64 = readFileSync(faviconSrc).toString('base64')
+  const dataUri = `data:image/x-icon;base64,${b64}`
+  html = html.replace('href="favicon.ico"', `href="${dataUri}"`)
+  console.log('✓ Inlined favicon.ico')
 }
 
 // Embed config as script tag so React SPA can read it at runtime
