@@ -48,59 +48,6 @@ export function newUrl(base: string, name: string): string {
   return url
 }
 
-/** 根据文件扩展名返回对应的图标名称 */
-const EXT_ICON_MAP: Record<string, string> = {
-  // 图片
-  jpg: "image", jpeg: "image", png: "image", gif: "image", svg: "image",
-  webp: "image", bmp: "image", ico: "image", tiff: "image",
-  // 视频
-  mp4: "video", mov: "video", avi: "video", wmv: "video", flv: "video",
-  webm: "video", mkv: "video",
-  // 音频
-  mp3: "audio", wav: "audio", ogg: "audio", flac: "audio", m4a: "audio",
-  aac: "audio", wma: "audio",
-  // 脚本（终端可执行）
-  py: "terminal", sh: "terminal", bash: "terminal", zsh: "terminal",
-  rb: "terminal", ps1: "terminal", bat: "terminal", cmd: "terminal",
-  // 代码
-  js: "code", ts: "code", jsx: "code", tsx: "code",
-  css: "code", scss: "code", less: "code", html: "code", htm: "code",
-  xml: "code", go: "code", rs: "code", java: "code", c: "code",
-  cpp: "code", h: "code", php: "code", swift: "code", kt: "code",
-  scala: "code", dart: "code", lua: "code", r: "code", sql: "code",
-  vue: "code", svelte: "code",
-  // 配置（JSON样式）
-  json: "json", yaml: "json", yml: "json", toml: "json",
-  // 系统配置
-  ini: "cog", cfg: "cog", conf: "cog", env: "cog",
-  // Markdown / 纯文本
-  md: "text", mdx: "text", txt: "text", log: "text", pdf: "text",
-  // Word 文档
-  doc: "pen", docx: "pen", pages: "pen", odt: "pen", rtf: "pen",
-  // 演示文稿
-  ppt: "presentation", pptx: "presentation", odp: "presentation", key: "presentation",
-  // 表格
-  xls: "spreadsheet", xlsx: "spreadsheet", csv: "spreadsheet",
-  tsv: "spreadsheet", ods: "spreadsheet", numbers: "spreadsheet",
-  // 压缩包
-  zip: "archive", tar: "archive", gz: "archive", rar: "archive",
-  "7z": "archive", bz2: "archive", xz: "archive",
-}
-
-export type FileIconType =
-  | "default" | "image" | "video" | "audio"
-  | "code" | "terminal" | "json" | "cog"
-  | "text" | "pen" | "presentation" | "spreadsheet" | "archive"
-
-export function getFileIconType(filename: string): FileIconType {
-  const ext = filename.split(".").pop()?.toLowerCase() || ""
-  return (EXT_ICON_MAP[ext] as FileIconType) || "default"
-}
-
-export function baseNameFromUrl(url: string): string {
-  return decodeURIComponent(url.split("/").filter(v => v.length > 0).slice(-1)[0])
-}
-
 /** 可在线编辑的纯文本文件扩展名 */
 const EDITABLE_EXTS = new Set([
   "md", "mdx", "txt", "log",

@@ -4,8 +4,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, formatMtime, getFileIconType, isEditable } from "@/lib/utils"
-import { Download, Trash2, Pencil, ArrowRightLeft, File, Folder, FolderSymlink, FileSymlink, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive, FileSpreadsheet, FileTerminal, FileJson, FileCog, FilePen, Presentation } from "lucide-react"
+import { formatFileSize, formatDirSize, formatMtime, isEditable } from "@/lib/utils"
+import { Download, Trash2, Pencil, ArrowRightLeft, FolderSymlink, FileSymlink, FileText } from "lucide-react"
+import { FileIcon, DefaultFolderIcon } from "@react-symbols/icons/utils"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
@@ -13,28 +14,10 @@ import type { PathItem } from "@/types/dufs"
 
 function getIcon(pathType: string, filename?: string) {
   switch (pathType) {
-    case "Dir": return <Folder className="size-4 text-muted-foreground shrink-0" />
-    case "SymlinkDir": return <FolderSymlink className="size-4 text-muted-foreground shrink-0" />
-    case "SymlinkFile": return <FileSymlink className="size-4 text-muted-foreground shrink-0" />
-    default: {
-      const type = filename ? getFileIconType(filename) : "default"
-      const cls = "size-4 text-muted-foreground shrink-0"
-      switch (type) {
-        case "image": return <FileImage className={cls} />
-        case "video": return <FileVideo className={cls} />
-        case "audio": return <FileAudio className={cls} />
-        case "code": return <FileCode className={cls} />
-        case "terminal": return <FileTerminal className={cls} />
-        case "json": return <FileJson className={cls} />
-        case "cog": return <FileCog className={cls} />
-        case "text": return <FileText className={cls} />
-        case "pen": return <FilePen className={cls} />
-        case "presentation": return <Presentation className={cls} />
-        case "spreadsheet": return <FileSpreadsheet className={cls} />
-        case "archive": return <FileArchive className={cls} />
-        default: return <File className={cls} />
-      }
-    }
+    case "Dir": return <DefaultFolderIcon className="size-5 shrink-0" />
+    case "SymlinkDir": return <FolderSymlink className="size-5 shrink-0 text-muted-foreground" />
+    case "SymlinkFile": return <FileSymlink className="size-5 shrink-0 text-muted-foreground" />
+    default: return <FileIcon fileName={filename || ""} className="size-5 shrink-0" />
   }
 }
 

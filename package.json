@@ -13,6 +13,7 @@
     "@base-ui/react": "^1.9.0",
     "@glitchoff/markify": "0.2.2",
     "@open-file-viewer/core": "^1.0.0",
+    "@react-symbols/icons": "^1.4.1",
     "@tailwindcss/typography": "^0.5.20",
     "@tanstack/react-virtual": "^3.14.19",
     "@types/highlightjs": "^9.12.6",

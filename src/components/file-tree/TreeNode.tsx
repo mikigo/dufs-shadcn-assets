@@ -1,6 +1,7 @@
-import { ChevronRight, Folder, FolderOpen, File, FileText, FileCode, FileImage, FileVideo, FileAudio, FileArchive, FileSpreadsheet, FileTerminal, FileJson, FileCog, FilePen, Presentation } from "lucide-react"
-import { cn, getFileIconType } from "@/lib/utils"
+import { ChevronRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 import type { TreeNode as TreeNodeType } from "@/types/dufs"
+import { FileIcon, DefaultFolderIcon, DefaultFolderOpenedIcon } from "@react-symbols/icons/utils"
 
 interface Props {
   node: TreeNodeType
@@ -12,30 +13,7 @@ interface Props {
   onNavigate: (path: string) => void
 }
 
-function getIcon(isDir: boolean, expanded: boolean, filename?: string) {
-  if (isDir) {
-    return expanded
-      ? <FolderOpen className="shrink-0 size-4 text-primary group-hover:text-accent-foreground" />
-      : <Folder className="shrink-0 size-4 text-muted-foreground group-hover:text-accent-foreground" />
-  }
-  const type = filename ? getFileIconType(filename) : "default"
-  const cls = "shrink-0 size-4 text-muted-foreground group-hover:text-accent-foreground"
-  switch (type) {
-    case "image": return <FileImage className={cls} />
-    case "video": return <FileVideo className={cls} />
-    case "audio": return <FileAudio className={cls} />
-    case "code": return <FileCode className={cls} />
-    case "terminal": return <FileTerminal className={cls} />
-    case "json": return <FileJson className={cls} />
-    case "cog": return <FileCog className={cls} />
-    case "text": return <FileText className={cls} />
-    case "pen": return <FilePen className={cls} />
-    case "presentation": return <Presentation className={cls} />
-    case "spreadsheet": return <FileSpreadsheet className={cls} />
-    case "archive": return <FileArchive className={cls} />
-    default: return <File className={cls} />
-  }
-}
+const iconCls = "shrink-0 size-5"
 
 export function TreeNodeComponent({ node, depth, loading, selected, onToggle, onSelect, onNavigate }: Props) {
   const expanded = node.children !== null
@@ -82,7 +60,13 @@ export function TreeNodeComponent({ node, depth, loading, selected, onToggle, on
           }}
           className="flex items-center gap-1.5 min-w-0 flex-1"
         >
-          {getIcon(node.isDir, expanded, node.name)}
+          {node.isDir ? (
+            expanded
+              ? <DefaultFolderOpenedIcon className={iconCls} />
+              : <DefaultFolderIcon className={iconCls} />
+          ) : (
+            <FileIcon fileName={node.name} className={iconCls} />
+          )}
           <span className="truncate">{node.name}</span>
           {loading && (
             <span className="ml-auto size-3 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin shrink-0" />
