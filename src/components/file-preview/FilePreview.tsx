@@ -1,8 +1,9 @@
 import { useAppState } from "@/context/AppContext"
 import { baseNameFromUrl, pushHistory } from "@/api/dufs"
+import { isEditable } from "@/lib/utils"
 import { TextPreview } from "./TextPreview"
 import { OfvPreview } from "./OfvPreview"
-import { X } from "lucide-react"
+import { X, Pen } from "lucide-react"
 
 export function FilePreview() {
   const { state, dispatch } = useAppState()
@@ -10,6 +11,7 @@ export function FilePreview() {
   if (!state.selectedPath) return null
 
   const fileName = baseNameFromUrl(state.selectedPath)
+  const editable = isEditable(fileName)
   const isTextLike = [".txt", ".json", ".xml", ".yml", ".yaml", ".toml", ".ini", ".cfg",
     ".conf", ".log", ".csv", ".tsv", ".html", ".htm", ".css", ".js", ".ts", ".tsx", ".jsx",
     ".rs", ".py", ".rb", ".go", ".java", ".c", ".cpp", ".h", ".sh", ".bash", ".zsh",
@@ -28,6 +30,16 @@ export function FilePreview() {
     <div className="h-full flex flex-col">
       <div className="px-4 py-2.5 border-b border-border/40 text-sm font-medium flex items-center gap-2 bg-background">
         <span className="truncate">{fileName}</span>
+        {editable && (
+          <a
+            href={state.selectedPath + "?edit"}
+            target="_blank"
+            className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
+            title="Edit"
+          >
+            <Pen className="size-4" />
+          </a>
+        )}
         <button
           onClick={handleClose}
           className="ml-auto p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"
