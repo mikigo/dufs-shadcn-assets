@@ -23,7 +23,6 @@ function reducer(state: AppState, action: AppAction): AppState {
     case "SET_TREE": {
       const { path, nodes } = action
       const replace = state.currentPath === path || state.tree.length === 0
-      console.log("[SET_TREE]", replace ? "REPLACE" : "UPDATE", "path:", path, "currentPath:", state.currentPath, "nodes:", nodes.length, "oldTreeLen:", state.tree.length)
       // Initial load or navigation: replace entire tree with current directory nodes
       if (replace) {
         return { ...state, tree: nodes }

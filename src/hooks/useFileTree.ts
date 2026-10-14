@@ -14,7 +14,6 @@ export function useFileTree() {
     if (initialTreeBuilt) return
     if (state.currentData?.paths) {
       initialTreeBuilt = true
-      console.log("[useFileTree] initial build tree for", state.currentPath, "with", state.currentData.paths.length, "items")
       const nodes: TreeNode[] = state.currentData.paths
         .sort((a, b) => {
           const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
