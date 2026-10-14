@@ -28,6 +28,8 @@ export function FileTree() {
 
   const flatNodes = useMemo(() => flattenTree(tree), [tree])
 
+  console.log("[FileTree] render tree.length:", tree.length, "flatNodes:", flatNodes.length)
+
   const virtualizer = useVirtualizer({
     count: flatNodes.length,
     getScrollElement: () => scrollRef.current,
