@@ -6,7 +6,6 @@ const distDir = resolve(import.meta.dirname, '..', 'dist')
 const htmlPath = resolve(distDir, 'index.html')
 const configSrc = resolve(import.meta.dirname, '..', 'config.json')
 const configDst = resolve(distDir, 'config.json')
-const faviconSrc = resolve(import.meta.dirname, '..', 'public', 'favicon.ico')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
 const defaultConfig = {
@@ -51,12 +50,14 @@ if (config.logo_text) {
   console.log(`✓ Applied logo_text: ${config.logo_text}`)
 }
 
-if (existsSync(faviconSrc)) {
-  const b64 = readFileSync(faviconSrc).toString('base64')
-  const dataUri = `data:image/x-icon;base64,${b64}`
-  html = html.replace('href="favicon.ico"', `href="${dataUri}"`)
-  console.log('✓ Inlined favicon.ico')
-}
+// Generate minimal SVG favicon matching project style
+const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="6" fill="#1c2333"/>
+  <path d="M7 9a2 2 0 012-2h6l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" fill="#4f6bf6"/>
+  <path d="M7 13h18v3a2 2 0 01-2 2H9a2 2 0 01-2-2v-3z" fill="#8b9cff" opacity="0.6"/>
+</svg>`
+const faviconUri = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`
+html = html.replace('type="image/x-icon" href="favicon.ico"', `href="${faviconUri}"`)
 
 // Embed config as script tag so React SPA can read it at runtime
 const configScript = `<script id="dufs-config" type="application/json">${JSON.stringify(config)}</script>`
