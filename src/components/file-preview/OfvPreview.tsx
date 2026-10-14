@@ -57,9 +57,11 @@ export function OfvPreview({ filePath }: Props) {
     const container = containerRef.current
     if (!container) return
 
+    const cacheBustedPath = filePath + "?_t=" + Date.now()
+
     const viewer = createViewer({
       container,
-      file: filePath,
+      file: cacheBustedPath,
       fileName: baseNameFromUrl(filePath),
       height: "100%",
       width: "100%",

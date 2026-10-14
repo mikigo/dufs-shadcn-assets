@@ -65,7 +65,7 @@ export async function fetchIndexData(dirPath: string): Promise<DufsData> {
 }
 
 export async function fetchFileContent(filePath: string): Promise<string> {
-  const res = await fetch(filePath)
+  const res = await fetch(filePath, { cache: "no-store" })
   await assertResOK(res)
   const buffer = await res.arrayBuffer()
   return decodeContent(buffer)
