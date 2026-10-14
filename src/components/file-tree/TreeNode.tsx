@@ -22,9 +22,10 @@ export function TreeNodeComponent({ node, depth, loading, selected, onToggle, on
     <div>
       <div
         className={cn(
-          "flex items-center gap-1.5 w-full py-1 text-[13px] hover:bg-muted hover:text-foreground rounded-md text-left",
+          "flex items-center gap-1.5 w-full py-1 text-[13px] rounded-md text-left",
           "transition-colors duration-100 leading-tight cursor-pointer group",
-          selected && "bg-muted text-foreground font-semibold"
+          "hover:bg-gray-100 dark:hover:bg-white/10",
+          selected && "bg-gray-100 dark:bg-white/10 font-semibold"
         )}
         style={{ paddingLeft: depth * 16 + 8, paddingRight: 8 }}
       >

@@ -147,7 +147,7 @@ export function DirTable() {
                   {sizeDisplay}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-0.5 justify-end">
                     {!isDir && (
                       <a href={fileUrl + "?view"} target="_blank" title="View">
                         <Button variant="ghost" size="icon">
