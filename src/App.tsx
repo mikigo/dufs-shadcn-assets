@@ -69,14 +69,21 @@ function AppContent() {
   useEffect(() => {
     const handlePopState = async () => {
       const path = location.pathname + location.search
+      console.log("[popstate]", path)
       // ?view URL → 文件预览，需要先拉取父目录数据填充树
       if (location.search === "?view") {
         const parentDir = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) || "/"
+        console.log("[popstate:?view] parentDir:", parentDir)
         try {
           const dirData = await fetchIndexData(parentDir)
-          if (location.search !== "?view" || location.pathname + location.search !== path) return
+          console.log("[popstate:?view] fetched", dirData.href, dirData.paths?.length, "items")
+          if (location.search !== "?view" || location.pathname + location.search !== path) {
+            console.log("[popstate:?view] stale, aborting")
+            return
+          }
           dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
-        } catch {
+        } catch (e) {
+          console.log("[popstate:?view] fetch failed:", e)
           if (location.pathname + location.search !== path) return
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
             href: parentDir, uri_prefix: "", kind: "Index" as const, paths: [],
@@ -90,10 +97,14 @@ function AppContent() {
       }
       try {
         const data = await fetchIndexData(path || "/")
-        if (location.pathname + location.search !== path) return
+        console.log("[popstate:dir] fetched", data.href, data.paths?.length, "items")
+        if (location.pathname + location.search !== path) {
+          console.log("[popstate:dir] stale, current:", location.pathname + location.search, "expected:", path)
+          return
+        }
         dispatch({ type: "SET_CURRENT", path: data.href, data })
       } catch (err) {
-        console.error("PopState navigation failed:", err)
+        console.error("[popstate:dir] fetch failed:", err)
       }
     }
     window.addEventListener("popstate", handlePopState)

@@ -13,10 +13,12 @@ export function useFileTree() {
   // 从文件树点击目录导航时，跳过树重建（只更新右侧面板）
   useEffect(() => {
     if (skipTreeRebuild.current > 0) {
+      console.log("[useFileTree] skip rebuild, remaining:", skipTreeRebuild.current - 1)
       skipTreeRebuild.current -= 1
       return
     }
     if (state.currentData?.paths) {
+      console.log("[useFileTree] rebuild tree for", state.currentPath, "with", state.currentData.paths.length, "items")
       const nodes: TreeNode[] = state.currentData.paths
         .sort((a, b) => {
           const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
