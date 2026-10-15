@@ -1,286 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" data-lang="zh">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>dufs-shadcn-assets — Modern file server UI theme</title>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>dufs-shadcn-assets</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --color-bg: #ffffff;
-      --color-text: #171717;
-      --color-text-secondary: #4d4d4d;
-      --color-text-muted: #666666;
-      --color-border: rgba(0, 0, 0, 0.08);
-      --color-surface: #fafafa;
-      --color-accent: #0a72ef;
-      --color-destructive: #ff5b4f;
-      --color-code-bg: #fafafa;
-      --shadow-border: 0px 0px 0px 1px rgba(0, 0, 0, 0.08);
-      --shadow-card: 0px 0px 0px 1px rgba(0,0,0,0.08), 0px 2px 2px rgba(0,0,0,0.04);
-      --shadow-card-hover: 0px 0px 0px 1px rgba(0,0,0,0.08), 0px 4px 8px rgba(0,0,0,0.08);
-      --radius: 6px;
-      --radius-lg: 12px;
+      --bg: #0a0a0f;
+      --bg-alt: #12121a;
+      --text: #e8e8ed;
+      --text-dim: #8b8b9e;
+      --text-muted: #5c5c72;
+      --purple: #7c3aed;
+      --purple-glow: rgba(124,58,237,0.4);
+      --purple-light: #a78bfa;
+      --cyan: #06b6d4;
+      --cyan-glow: rgba(6,182,212,0.3);
+      --pink: #ec4899;
+      --border: rgba(255,255,255,0.06);
+      --card-bg: rgba(255,255,255,0.03);
+      --radius: 12px;
     }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      font-feature-settings: "liga";
-      color: var(--color-text);
-      background: var(--color-bg);
-      line-height: 1.6;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
 
-    h1, h2, h3, h4 { letter-spacing: -0.02em; }
-    h1 { font-size: 3rem; font-weight: 600; line-height: 1.1; letter-spacing: -0.04em; }
-    h2 { font-size: 2rem; font-weight: 600; line-height: 1.2; }
-    h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; }
-
-    code, pre {
-      font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-feature-settings: "liga";
-    }
-
-    a { color: var(--color-accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* Layout */
-    .container { max-width: 1024px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
     /* Nav */
-    .nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 24px; max-width: 1024px; margin: 0 auto;
-    }
-    .nav-logo { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--color-text); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 14px 24px; backdrop-filter: blur(20px); background: rgba(10,10,15,0.8); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
     .nav-logo svg { width: 28px; height: 28px; }
-    .nav-links { display: flex; gap: 20px; align-items: center; }
-    .nav-links a { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); transition: color 0.15s; }
-    .nav-links a:hover { color: var(--color-text); text-decoration: none; }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; font-size: 14px; font-weight: 500;
-      border-radius: var(--radius); cursor: pointer; transition: all 0.15s;
-      text-decoration: none; border: none; font-family: inherit; line-height: 1.43;
-    }
-    .btn:focus-visible { outline: 2px solid hsla(212, 100%, 48%, 1); outline-offset: 2px; }
-    .btn-primary { background: var(--color-text); color: var(--color-bg); }
-    .btn-primary:hover { background: #333; text-decoration: none; }
-    .btn-outline { background: var(--color-bg); color: var(--color-text); box-shadow: var(--shadow-border); }
-    .btn-outline:hover { background: var(--color-surface); text-decoration: none; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .lang-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-dim); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s; }
+    .lang-btn:hover { color: var(--text); border-color: var(--purple); }
+    .lang-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .nav-btn { background: var(--purple); color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .nav-btn:hover { background: #6d28d9; }
 
     /* Hero */
-    .hero {
-      padding: 80px 0 60px; text-align: center;
+    .hero { padding: 160px 0 100px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 50% 0%, var(--purple-glow) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, var(--cyan-glow) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
     }
-    .hero h1 { margin-bottom: 16px; }
-    .hero p {
-      font-size: 1.25rem; color: var(--color-text-secondary); max-width: 640px;
-      margin: 0 auto 32px; line-height: 1.6;
-    }
-    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .hero-screenshot {
-      margin-top: 48px; border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      overflow: hidden; max-width: 900px; margin-left: auto; margin-right: auto;
-    }
-    .hero-screenshot img { width: 100%; display: block; }
+    @keyframes bgPulse { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1.1); } }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badge { display: inline-block; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: var(--purple-light); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.03em; }
+    .hero h1 span { background: linear-gradient(135deg, var(--purple-light), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 1.2rem; color: var(--text-dim); max-width: 680px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: none; font-family: inherit; }
+    .btn-primary { background: var(--purple); color: #fff; box-shadow: 0 0 30px var(--purple-glow); }
+    .btn-primary:hover { background: #6d28d9; transform: translateY(-2px); box-shadow: 0 0 40px var(--purple-glow); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
+    .btn-ghost:hover { border-color: var(--purple); color: var(--purple-light); }
 
-    /* Feature Grid */
-    .section { padding: 80px 0; }
-    .section-header { text-align: center; margin-bottom: 48px; }
-    .section-header h2 { margin-bottom: 12px; }
-    .section-header p { font-size: 18px; color: var(--color-text-secondary); }
+    /* Stats bar */
+    .stats-bar { display: flex; justify-content: center; gap: 48px; padding: 40px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--purple-light), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+    /* Section */
+    .section { padding: 100px 0; }
+    .section h2 { font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 12px; letter-spacing: -0.02em; }
+    .section-sub { text-align: center; color: var(--text-dim); font-size: 1.05rem; margin-bottom: 56px; }
+
+    /* Feature grid */
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .feature-card {
-      background: var(--color-bg); padding: 28px 24px; transition: background 0.15s;
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 32px 24px; transition: all 0.3s; position: relative; overflow: hidden;
     }
-    .feature-card:hover { background: var(--color-surface); }
-    .feature-icon { font-size: 28px; margin-bottom: 12px; }
-    .feature-card h3 { margin-bottom: 8px; }
-    .feature-card p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+    .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); opacity: 0; transition: opacity 0.3s; }
+    .feature-card:hover { border-color: rgba(124,58,237,0.3); transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* Screenshots */
+    .screenshots { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .screenshot-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); transition: all 0.3s; }
+    .screenshot-card:hover { border-color: var(--purple); transform: scale(1.02); }
+    .screenshot-card img { width: 100%; display: block; }
+    .screenshot-card.full { grid-column: 1 / -1; }
+    .screenshot-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .screenshot-trio .screenshot-card { border-radius: 8px; }
 
     /* Quick Start */
-    .code-block {
-      background: var(--color-code-bg); border-radius: var(--radius);
-      box-shadow: var(--shadow-border); padding: 20px 24px;
-      overflow-x: auto; font-size: 14px; line-height: 1.7;
-      color: var(--color-text); margin-top: 24px;
-    }
-    .code-block .comment { color: var(--color-text-muted); }
-    .code-block .cmd { color: var(--color-accent); }
+    .code-block { background: #0d0d17; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; overflow-x: auto; position: relative; }
+    .code-block .line { display: block; font-size: 14px; line-height: 1.8; }
+    .code-block .comment { color: #5c6370; }
+    .code-block .cmd { color: var(--cyan); }
+    .code-block .str { color: var(--purple-light); }
+    .code-block .key { color: var(--pink); }
 
-    /* Stats */
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--color-border); border-radius: var(--radius-lg); overflow: hidden; margin-top: 48px; }
-    .stat-card { background: var(--color-bg); padding: 24px; text-align: center; }
-    .stat-value { font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; }
-    .stat-label { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
+    /* Config table */
+    .config-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .config-table th { text-align: left; padding: 12px 16px; color: var(--text-dim); font-weight: 500; border-bottom: 1px solid var(--border); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .config-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    .config-table code { background: #0d0d17; padding: 2px 8px; border-radius: 4px; font-size: 13px; color: var(--purple-light); }
+
+    /* Upload features */
+    .upload-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; }
+    .upload-item { background: var(--card-bg); padding: 28px 20px; text-align: center; transition: background 0.2s; }
+    .upload-item:hover { background: rgba(124,58,237,0.08); }
+    .upload-item .icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .upload-item strong { display: block; font-size: 14px; margin-bottom: 6px; }
+    .upload-item span { font-size: 12px; color: var(--text-dim); }
 
     /* Footer */
-    .footer { border-top: 1px solid var(--color-border); padding: 32px 0; margin-top: 80px; }
-    .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .footer-text { font-size: 14px; color: var(--color-text-muted); }
-    .footer-links { display: flex; gap: 16px; }
-    .footer-links a { font-size: 14px; color: var(--color-text-muted); }
-    .footer-links a:hover { color: var(--color-text); text-decoration: none; }
+    .footer { padding: 48px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 13px; }
+    .footer a { color: var(--purple-light); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .footer p { margin-top: 8px; }
+
+    .zh .en { display: none; }
+    .en .zh { display: none; }
+
+    [data-lang="zh"] .en-text { display: none; }
+    [data-lang="en"] .zh-text { display: none; }
 
     @media (max-width: 768px) {
-      h1 { font-size: 2.2rem; }
-      h2 { font-size: 1.6rem; }
-      .features { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .hero { padding: 48px 0 40px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .upload-grid { grid-template-columns: repeat(2, 1fr); }
+      .screenshots { grid-template-columns: 1fr; }
+      .screenshot-trio { grid-template-columns: 1fr; }
+      .stats-bar { gap: 24px; }
     }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
-    <a href="/dufs-shadcn-assets" class="nav-logo">
-      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#171717"/><g transform="translate(4,4)"><path d="M8 16h.02" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M2.21 12.58a2 2 0 00-.21.9V18a2 2 0 002 2h16a2 2 0 002-2v-4.53a2 2 0 00-.21-.9L18.55 6.11A2 2 0 0016.76 5H7.24a2 2 0 00-1.79 1.11z" stroke="white" stroke-width="1.5"/><path d="M21.95 13H2.05" stroke="white" stroke-width="1.5"/><path d="M6 16h.02" stroke="white" stroke-width="1.5"/></g></svg>
-      dufs-shadcn-assets
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#7c3aed"/><g transform="translate(4,4)"><path d="M8 16h.02" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path d="M2.21 12.58a2 2 0 00-.21.9V18a2 2 0 002 2h16a2 2 0 002-2v-4.53a2 2 0 00-.21-.9L18.55 6.11A2 2 0 0016.76 5H7.24a2 2 0 00-1.79 1.11z" stroke="#fff" stroke-width="1.5"/><path d="M21.95 13H2.05" stroke="#fff" stroke-width="1.5"/><path d="M6 16h.02" stroke="#fff" stroke-width="1.5"/></g></svg>
+    dufs-shadcn-assets
+  </a>
+  <div class="nav-actions">
+    <button class="lang-btn active" onclick="switchLang('zh')">中文</button>
+    <button class="lang-btn" onclick="switchLang('en')">EN</button>
+    <a href="https://github.com/mikigo/dufs-shadcn-assets/releases" class="nav-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span class="zh-text">下载</span><span class="en-text">Download</span>
     </a>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#quickstart">Quick Start</a>
-      <a href="https://github.com/mikigo/dufs-shadcn-assets/releases" class="btn btn-primary">Download</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="zh-text">dufs 前端主题 · 开源 · MIT</span>
+      <span class="en-text">dufs UI Theme · Open Source · MIT</span>
     </div>
-  </nav>
-
-  <main>
-    <section class="hero container">
-      <h1>Modern File Server &mdash;<br>Beautifully Rethought</h1>
-      <p>A shadcn/ui-powered theme for dufs. Rich file previews, VS Code-like icons, dual view modes, and complete offline support &mdash; all in a single HTML file.</p>
-      <div class="hero-actions">
-        <a href="https://github.com/mikigo/dufs-shadcn-assets/releases" class="btn btn-primary">Download Latest</a>
-        <a href="https://github.com/mikigo/dufs-shadcn-assets" class="btn btn-outline">View on GitHub</a>
-      </div>
-    </section>
-
-    <section id="features" class="section container">
-      <div class="section-header">
-        <h2>Everything you need</h2>
-        <p>A complete file management UI that replaces the default dufs interface.</p>
-      </div>
-      <div class="features">
-        <div class="feature-card">
-          <div class="feature-icon">🎨</div>
-          <h3>VS Code Icons</h3>
-          <p>1,132 hand-picked icons from vscode-icons. Automatic file-type detection with extension, filename, and folder name matching.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📁</div>
-          <h3>Dual View Modes</h3>
-          <p>Switch between icon grid and table list views. Configurable default mode via config.json.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📄</div>
-          <h3>Rich File Preview</h3>
-          <p>Preview 30+ formats: Office, PDF, images, video, audio, 3D models, CAD, GIS, archives, ebooks &mdash; all powered by Open File Viewer.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🌳</div>
-          <h3>File Tree Sidebar</h3>
-          <p>Virtual-scrolled directory tree with lazy loading and auto-expand. Navigate folders naturally.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⬆️</div>
-          <h3>Upload Enhanced</h3>
-          <p>Queue-based serial uploads with resume support. Drag-and-drop folders with recursive traversal. Beforeunload protection.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📦</div>
-          <h3>Fully Offline</h3>
-          <p>Single-file build with zero CDN dependencies. All icons, fonts, and preview assets are self-contained.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🌓</div>
-          <h3>Dark &amp; Light Themes</h3>
-          <p>Vercel Geist-inspired design with system-aware theme detection and manual toggle. Custom scrollbar styling.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔍</div>
-          <h3>Syntax Highlighting</h3>
-          <p>30+ language support for code previews. Smart UTF-8/GBK encoding detection. Inline editing with Ctrl+S.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🎛️</div>
-          <h3>Fully Configurable</h3>
-          <p>Custom logo, title, sizes, default view &mdash; all via config.json. Runtime override support.</p>
-        </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-value">1,132</div>
-          <div class="stat-label">File Type Icons</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">30+</div>
-          <div class="stat-label">Preview Formats</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">~20 MB</div>
-          <div class="stat-label">Self-contained</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">100%</div>
-          <div class="stat-label">Offline Ready</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="quickstart" class="section container">
-      <div class="section-header">
-        <h2>Get started in seconds</h2>
-        <p>Download the latest release, extract, and run.</p>
-      </div>
-      <div class="code-block">
-<pre><span class="comment"># 1. Download the latest release from GitHub</span>
-<span class="comment">#    https://github.com/mikigo/dufs-shadcn-assets/releases</span>
-
-<span class="comment"># 2. Extract to your assets directory</span>
-<span class="cmd">unzip</span> dufs-shadcn-assets.zip -d ./assets
-
-<span class="comment"># 3. Start dufs with the custom theme</span>
-<span class="cmd">./dufs</span> ./serve-path -A --assets ./assets
-
-<span class="comment"># 4. Open http://localhost:5000</span></pre>
-      </div>
-
-      <div style="margin-top: 32px;">
-        <h3 style="margin-bottom: 16px;">Configuration</h3>
-        <div class="code-block">
-<pre><span class="comment">// assets/config.json</span>
-{
-  <span class="cmd">"logo_text"</span>: <span class="cmd">"My File Server"</span>,
-  <span class="cmd">"logo_size"</span>: <span class="cmd">"32px"</span>,
-  <span class="cmd">"logo_text_font_size"</span>: <span class="cmd">"18px"</span>,
-  <span class="cmd">"view_mode"</span>: <span class="cmd">"icons"</span>
-}</pre>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-content">
-      <div class="footer-text">Built with React &middot; Vite &middot; shadcn/ui &middot; Open File Viewer &middot; vscode-icons</div>
-      <div class="footer-links">
-        <a href="https://github.com/mikigo/dufs-shadcn-assets">GitHub</a>
-        <a href="https://github.com/mikigo/dufs-shadcn-assets/releases">Releases</a>
-        <a href="https://github.com/sigoden/dufs">Dufs</a>
-      </div>
+    <h1>
+      <span class="zh-text">重新定义<br>文件服务器的颜值</span>
+      <span class="en-text">A Modern Face<br>for Your File Server</span>
+    </h1>
+    <p>
+      <span class="zh-text">基于 shadcn/ui 打造的 dufs 前端主题 — 1132 个 VS Code 图标、30+ 格式预览、双视图模式、完全离线可用，构建产物仅为单个 HTML 文件。</span>
+      <span class="en-text">A shadcn/ui-powered frontend theme for dufs — 1,132 VS Code icons, 30+ format previews, dual view modes, fully offline capable, all in a single HTML file.</span>
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/mikigo/dufs-shadcn-assets/releases" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="zh-text">下载最新版本</span><span class="en-text">Download Latest</span>
+      </a>
+      <a href="https://github.com/mikigo/dufs-shadcn-assets" class="btn btn-ghost">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+        <span class="zh-text">GitHub</span>
+      </a>
     </div>
-  </footer>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">1,132</div><div class="stat-label"><span class="zh-text">文件类型图标</span><span class="en-text">File Type Icons</span></div></div>
+  <div class="stat-item"><div class="stat-num">30+</div><div class="stat-label"><span class="zh-text">预览格式</span><span class="en-text">Preview Formats</span></div></div>
+  <div class="stat-item"><div class="stat-num">~20 MB</div><div class="stat-label"><span class="zh-text">自包含</span><span class="en-text">Self-contained</span></div></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label"><span class="zh-text">离线可用</span><span class="en-text">Offline Ready</span></div></div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <h2><span class="zh-text">核心特性</span><span class="en-text">Core Features</span></h2>
+    <p class="section-sub"><span class="zh-text">一个主题，覆盖文件管理的所有需求</span><span class="en-text">One theme, all your file management needs</span></p>
+    <div class="feature-grid">
+      <div class="feature-card"><span class="feature-icon">🎨</span><h3><span class="zh-text">VS Code 图标</span><span class="en-text">VS Code Icons</span></h3><p><span class="zh-text">从本地 VS Code 扩展实时解析 1,132 个图标。自动匹配 599 扩展名、1,923 文件名、524 文件夹名，支持多级回退策略。</span><span class="en-text">1,132 icons parsed from VS Code extension. Matches 599 extensions, 1,923 filenames, 524 folder names with multi-tier fallback.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">📁</span><h3><span class="zh-text">双视图模式</span><span class="en-text">Dual View Modes</span></h3><p><span class="zh-text">图标网格和表格列表一键切换，通过 config.json 的 view_mode 字段配置默认模式，用户偏好即时生效。</span><span class="en-text">Toggle between icon grid and table list. Configure default via config.json — take effect instantly.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">📄</span><h3><span class="zh-text">富媒体预览</span><span class="en-text">Rich File Preview</span></h3><p><span class="zh-text">基于 Open File Viewer 支持 30+ 格式：Office (.docx/.pptx/.xlsx)、PDF、图片、视频、音频、3D 模型、CAD、GIS、压缩包、电子书、邮件、XMind 等。</span><span class="en-text">30+ formats via Open File Viewer: Office, PDF, images, video, audio, 3D models, CAD, GIS, archives, ebooks, email, XMind and more.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">🌳</span><h3><span class="zh-text">侧边栏文件树</span><span class="en-text">Sidebar File Tree</span></h3><p><span class="zh-text">虚拟滚动 + 懒加载，大数据量目录流畅渲染。主面板导航时自动展开并选中对应节点，支持浏览器前进后退。</span><span class="en-text">Virtual scrolling + lazy load. Auto-expands and highlights nodes on navigation. Full browser history support.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">⬆️</span><h3><span class="zh-text">上传增强</span><span class="en-text">Upload Enhanced</span></h3><p><span class="zh-text">队列串行上传、断点续传 (PATCH + Range)、文件夹递归拖拽 (webkitGetAsEntry)、离开保护 (beforeunload)、上传前认证预检。</span><span class="en-text">Serial queue, resume (PATCH+Range), folder drag-drop (webkitGetAsEntry), beforeunload protection, auth pre-check.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">📝</span><h3><span class="zh-text">代码预览 & 编辑</span><span class="en-text">Code Preview &amp; Edit</span></h3><p><span class="zh-text">highlight.js 30+ 语言语法高亮，UTF-8/GBK 智能编码检测。在线编辑支持 Ctrl+S 保存、Esc 取消。README.md 自动渲染。</span><span class="en-text">30+ language syntax highlighting, UTF-8/GBK detection. Inline edit with Ctrl+S save, Esc cancel. Auto-render README.md.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">🌓</span><h3><span class="zh-text">双主题系统</span><span class="en-text">Dual Theme System</span></h3><p><span class="zh-text">Vercel Geist 设计风格，shadow-as-border 技巧。深浅色一键切换，跟随系统偏好自动检测。Sidebar 独立配色，6px 主题色滚动条。</span><span class="en-text">Vercel Geist inspired, shadow-as-border technique. Manual/auto theme toggle. Independent sidebar colors, 6px themed scrollbar.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">🔒</span><h3><span class="zh-text">认证集成</span><span class="en-text">Auth Integration</span></h3><p><span class="zh-text">HTTP Basic Auth 完整支持。Login/Logout 按钮，CHECKAUTH 方法触发认证。下载 token 自动生成，上传前认证预检。</span><span class="en-text">Full HTTP Basic Auth. Login/Logout buttons, CHECKAUTH flow. Auto token generation for downloads, pre-upload auth check.</span></p></div>
+      <div class="feature-card"><span class="feature-icon">📦</span><h3><span class="zh-text">完全离线</span><span class="en-text">Fully Offline</span></h3><p><span class="zh-text">vite-plugin-singlefile 单文件构建。所有 JS/CSS/Font/Icon 内联，PDF.js cmaps/standard_fonts 本地化，Leaflet CSS 本地导入，零外部请求。</span><span class="en-text">Single-file build with vite-plugin-singlefile. All inline, no CDN. Local PDF.js cmaps, local Leaflet CSS. Zero external requests.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--bg-alt);">
+  <div class="container">
+    <h2><span class="zh-text">截图展示</span><span class="en-text">Screenshots</span></h2>
+    <p class="section-sub"><span class="zh-text">图标视图 & 列表视图 & 深色模式</span><span class="en-text">Icon View &amp; List View &amp; Dark Mode</span></p>
+    <div class="screenshots">
+      <div class="screenshot-card full"><img src="public/home.png" alt="Home"></div>
+      <div class="screenshot-card"><img src="public/dark-home.png" alt="Dark"></div>
+      <div class="screenshot-card"><img src="public/view-mode-list.png" alt="List"></div>
+    </div>
+
+    <h2 style="margin-top: 80px;"><span class="zh-text">Office 文档预览</span><span class="en-text">Office Document Preview</span></h2>
+    <p class="section-sub"><span class="zh-text">Word · Excel · PowerPoint 文档在线预览，基于 Open File Viewer</span><span class="en-text">Word · Excel · PowerPoint preview powered by Open File Viewer</span></p>
+    <div class="screenshot-trio">
+      <div class="screenshot-card"><img src="public/预览-word.png" alt="Word"></div>
+      <div class="screenshot-card"><img src="public/预览-excel.png" alt="Excel"></div>
+      <div class="screenshot-card"><img src="public/预览-ppt.png" alt="PPT"></div>
+    </div>
+
+    <h2 style="margin-top: 80px;"><span class="zh-text">代码预览 & 在线编辑 & README</span><span class="en-text">Code Preview &amp; Edit &amp; README</span></h2>
+    <p class="section-sub"><span class="zh-text">语法高亮、在线编辑、Markdown 自动渲染</span><span class="en-text">Syntax highlighting, inline editing, automatic Markdown rendering</span></p>
+    <div class="screenshots">
+      <div class="screenshot-card"><img src="public/预览-script-file.png" alt="Code"></div>
+      <div class="screenshot-card"><img src="public/在线编辑.png" alt="Edit"></div>
+      <div class="screenshot-card full"><img src="public/自动渲染当前目录下的README.png" alt="README"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2><span class="zh-text">上传增强</span><span class="en-text">Upload Enhanced</span></h2>
+    <p class="section-sub"><span class="zh-text">企业级上传机制，稳定可靠</span><span class="en-text">Enterprise-grade upload mechanism, stable and reliable</span></p>
+    <div class="upload-grid">
+      <div class="upload-item"><div class="icon">📥</div><strong><span class="zh-text">队列串行</span><span class="en-text">Serial Queue</span></strong><span><span class="zh-text">逐一处理避免并发</span><span class="en-text">One at a time</span></span></div>
+      <div class="upload-item"><div class="icon">🔄</div><strong><span class="zh-text">断点续传</span><span class="en-text">Resume Upload</span></strong><span><span class="zh-text">PATCH + Range 续传</span><span class="en-text">PATCH + X-Update-Range</span></span></div>
+      <div class="upload-item"><div class="icon">📂</div><strong><span class="zh-text">文件夹拖拽</span><span class="en-text">Folder Drop</span></strong><span><span class="zh-text">递归遍历自动创建目录</span><span class="en-text">Recursive with MKCOL</span></span></div>
+      <div class="upload-item"><div class="icon">🛡️</div><strong><span class="zh-text">离开保护</span><span class="en-text">Leave Protection</span></strong><span><span class="zh-text">beforeunload 阻止关闭</span><span class="en-text">beforeunload guard</span></span></div>
+      <div class="upload-item"><div class="icon">🔐</div><strong><span class="zh-text">认证预检</span><span class="en-text">Auth Pre-check</span></strong><span><span class="zh-text">CHECKAUTH 自动检测</span><span class="en-text">Auto CHECKAUTH</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--bg-alt);">
+  <div class="container">
+    <h2><span class="zh-text">快速开始</span><span class="en-text">Quick Start</span></h2>
+    <p class="section-sub"><span class="zh-text">下载 → 解压 → 启动，三步搞定</span><span class="en-text">Download → Extract → Start, three steps</span></p>
+    <div class="code-block">
+      <span class="line comment"># <span class="zh-text">1. 从 GitHub Releases 下载最新版本</span><span class="en-text">1. Download latest from GitHub Releases</span></span>
+      <span class="line comment"># <span class="zh-text">   解压到任意目录，例如 ./assets</span><span class="en-text">   Extract to any directory, e.g. ./assets</span></span>
+      <span class="line"><span class="cmd">unzip</span> dufs-shadcn-assets.zip -d ./assets</span>
+      <span class="line"></span>
+      <span class="line comment"># <span class="zh-text">2. 启动 dufs，指定 assets 目录</span><span class="en-text">2. Start dufs with assets directory</span></span>
+      <span class="line"><span class="cmd">./dufs</span> ./serve-path -A <span class="key">--assets</span> ./assets</span>
+    </div>
+
+    <h2 style="margin-top: 64px;"><span class="zh-text">配置</span><span class="en-text">Configuration</span></h2>
+    <p class="section-sub" style="margin-bottom: 32px;"><span class="zh-text">通过 config.json 定制品牌和默认行为</span><span class="en-text">Customize branding and defaults via config.json</span></p>
+    <table class="config-table">
+      <thead><tr><th><span class="zh-text">字段</span><span class="en-text">Field</span></th><th><span class="zh-text">类型</span><span class="en-text">Type</span></th><th><span class="zh-text">默认值</span><span class="en-text">Default</span></th><th><span class="zh-text">说明</span><span class="en-text">Description</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>logo_text</code></td><td>string</td><td></td><td><span class="zh-text">侧边栏标题 / 浏览器标签页标题</span><span class="en-text">Sidebar title / Browser tab title</span></td></tr>
+        <tr><td><code>logo</code></td><td>string</td><td></td><td><span class="zh-text">浅色模式 Logo 路径</span><span class="en-text">Light mode logo path</span></td></tr>
+        <tr><td><code>dark_logo</code></td><td>string</td><td></td><td><span class="zh-text">深色模式 Logo 路径</span><span class="en-text">Dark mode logo path</span></td></tr>
+        <tr><td><code>logo_size</code></td><td>string</td><td><code>28px</code></td><td><span class="zh-text">Logo 图片尺寸</span><span class="en-text">Logo image size</span></td></tr>
+        <tr><td><code>logo_text_font_size</code></td><td>string</td><td><code>20px</code></td><td><span class="zh-text">标题文字大小</span><span class="en-text">Title font size</span></td></tr>
+        <tr><td><code>view_mode</code></td><td>string</td><td><code>icons</code></td><td><span class="zh-text">默认视图模式 (icons / list)</span><span class="en-text">Default view mode (icons / list)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2><span class="zh-text">技术栈</span><span class="en-text">Tech Stack</span></h2>
+    <p class="section-sub"><span class="zh-text">现代化前端技术，构建为单个自包含文件</span><span class="en-text">Modern frontend, built as a single self-contained file</span></p>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">React 19 + TypeScript</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">Vite 8</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">Tailwind CSS 3</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">shadcn/ui</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">@base-ui/react</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">@tanstack/react-virtual</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">@open-file-viewer/core</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">highlight.js</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">pdfjs-dist</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">leaflet</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">vscode-icons</span>
+      <span style="background:var(--card-bg);border:1px solid var(--border);padding:8px 18px;border-radius:20px;font-size:14px;color:var(--text-dim)">vite-plugin-singlefile</span>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>dufs-shadcn-assets &mdash; Built with React · Vite · shadcn/ui · Open File Viewer · vscode-icons</p>
+    <p style="margin-top:12px">
+      <a href="https://github.com/mikigo/dufs-shadcn-assets">GitHub</a> ·
+      <a href="https://github.com/mikigo/dufs-shadcn-assets/releases">Releases</a> ·
+      <a href="https://github.com/sigoden/dufs">Dufs</a>
+    </p>
+    <p style="margin-top:16px; color:var(--text-muted)">MIT License</p>
+  </div>
+</footer>
+
+<script>
+function switchLang(lang) {
+  document.documentElement.setAttribute('data-lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === (lang === 'zh' ? '中文' : 'EN')));
+}
+</script>
 
 </body>
 </html>
