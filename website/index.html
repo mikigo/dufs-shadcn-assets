@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dufs-shadcn-assets — Modern file server UI theme</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #171717;
+      --color-text-secondary: #4d4d4d;
+      --color-text-muted: #666666;
+      --color-border: rgba(0, 0, 0, 0.08);
+      --color-surface: #fafafa;
+      --color-accent: #0a72ef;
+      --color-destructive: #ff5b4f;
+      --color-code-bg: #fafafa;
+      --shadow-border: 0px 0px 0px 1px rgba(0, 0, 0, 0.08);
+      --shadow-card: 0px 0px 0px 1px rgba(0,0,0,0.08), 0px 2px 2px rgba(0,0,0,0.04);
+      --shadow-card-hover: 0px 0px 0px 1px rgba(0,0,0,0.08), 0px 4px 8px rgba(0,0,0,0.08);
+      --radius: 6px;
+      --radius-lg: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-feature-settings: "liga";
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 { letter-spacing: -0.02em; }
+    h1 { font-size: 3rem; font-weight: 600; line-height: 1.1; letter-spacing: -0.04em; }
+    h2 { font-size: 2rem; font-weight: 600; line-height: 1.2; }
+    h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; }
+
+    code, pre {
+      font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-feature-settings: "liga";
+    }
+
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .container { max-width: 1024px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; max-width: 1024px; margin: 0 auto;
+    }
+    .nav-logo { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--color-text); }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); transition: color 0.15s; }
+    .nav-links a:hover { color: var(--color-text); text-decoration: none; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; font-size: 14px; font-weight: 500;
+      border-radius: var(--radius); cursor: pointer; transition: all 0.15s;
+      text-decoration: none; border: none; font-family: inherit; line-height: 1.43;
+    }
+    .btn:focus-visible { outline: 2px solid hsla(212, 100%, 48%, 1); outline-offset: 2px; }
+    .btn-primary { background: var(--color-text); color: var(--color-bg); }
+    .btn-primary:hover { background: #333; text-decoration: none; }
+    .btn-outline { background: var(--color-bg); color: var(--color-text); box-shadow: var(--shadow-border); }
+    .btn-outline:hover { background: var(--color-surface); text-decoration: none; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px; text-align: center;
+    }
+    .hero h1 { margin-bottom: 16px; }
+    .hero p {
+      font-size: 1.25rem; color: var(--color-text-secondary); max-width: 640px;
+      margin: 0 auto 32px; line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-screenshot {
+      margin-top: 48px; border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden; max-width: 900px; margin-left: auto; margin-right: auto;
+    }
+    .hero-screenshot img { width: 100%; display: block; }
+
+    /* Feature Grid */
+    .section { padding: 80px 0; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header h2 { margin-bottom: 12px; }
+    .section-header p { font-size: 18px; color: var(--color-text-secondary); }
+
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+    .feature-card {
+      background: var(--color-bg); padding: 28px 24px; transition: background 0.15s;
+    }
+    .feature-card:hover { background: var(--color-surface); }
+    .feature-icon { font-size: 28px; margin-bottom: 12px; }
+    .feature-card h3 { margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+    /* Quick Start */
+    .code-block {
+      background: var(--color-code-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow-border); padding: 20px 24px;
+      overflow-x: auto; font-size: 14px; line-height: 1.7;
+      color: var(--color-text); margin-top: 24px;
+    }
+    .code-block .comment { color: var(--color-text-muted); }
+    .code-block .cmd { color: var(--color-accent); }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--color-border); border-radius: var(--radius-lg); overflow: hidden; margin-top: 48px; }
+    .stat-card { background: var(--color-bg); padding: 24px; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; }
+    .stat-label { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
+
+    /* Footer */
+    .footer { border-top: 1px solid var(--color-border); padding: 32px 0; margin-top: 80px; }
+    .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-text { font-size: 14px; color: var(--color-text-muted); }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { font-size: 14px; color: var(--color-text-muted); }
+    .footer-links a:hover { color: var(--color-text); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.6rem; }
+      .features { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding: 48px 0 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/dufs-shadcn-assets" class="nav-logo">
+      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#171717"/><g transform="translate(4,4)"><path d="M8 16h.02" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M2.21 12.58a2 2 0 00-.21.9V18a2 2 0 002 2h16a2 2 0 002-2v-4.53a2 2 0 00-.21-.9L18.55 6.11A2 2 0 0016.76 5H7.24a2 2 0 00-1.79 1.11z" stroke="white" stroke-width="1.5"/><path d="M21.95 13H2.05" stroke="white" stroke-width="1.5"/><path d="M6 16h.02" stroke="white" stroke-width="1.5"/></g></svg>
+      dufs-shadcn-assets
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#quickstart">Quick Start</a>
+      <a href="https://github.com/mikigo/dufs-shadcn-assets/releases" class="btn btn-primary">Download</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero container">
+      <h1>Modern File Server &mdash;<br>Beautifully Rethought</h1>
+      <p>A shadcn/ui-powered theme for dufs. Rich file previews, VS Code-like icons, dual view modes, and complete offline support &mdash; all in a single HTML file.</p>
+      <div class="hero-actions">
+        <a href="https://github.com/mikigo/dufs-shadcn-assets/releases" class="btn btn-primary">Download Latest</a>
+        <a href="https://github.com/mikigo/dufs-shadcn-assets" class="btn btn-outline">View on GitHub</a>
+      </div>
+    </section>
+
+    <section id="features" class="section container">
+      <div class="section-header">
+        <h2>Everything you need</h2>
+        <p>A complete file management UI that replaces the default dufs interface.</p>
+      </div>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>VS Code Icons</h3>
+          <p>1,132 hand-picked icons from vscode-icons. Automatic file-type detection with extension, filename, and folder name matching.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📁</div>
+          <h3>Dual View Modes</h3>
+          <p>Switch between icon grid and table list views. Configurable default mode via config.json.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>Rich File Preview</h3>
+          <p>Preview 30+ formats: Office, PDF, images, video, audio, 3D models, CAD, GIS, archives, ebooks &mdash; all powered by Open File Viewer.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌳</div>
+          <h3>File Tree Sidebar</h3>
+          <p>Virtual-scrolled directory tree with lazy loading and auto-expand. Navigate folders naturally.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⬆️</div>
+          <h3>Upload Enhanced</h3>
+          <p>Queue-based serial uploads with resume support. Drag-and-drop folders with recursive traversal. Beforeunload protection.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Fully Offline</h3>
+          <p>Single-file build with zero CDN dependencies. All icons, fonts, and preview assets are self-contained.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌓</div>
+          <h3>Dark &amp; Light Themes</h3>
+          <p>Vercel Geist-inspired design with system-aware theme detection and manual toggle. Custom scrollbar styling.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Syntax Highlighting</h3>
+          <p>30+ language support for code previews. Smart UTF-8/GBK encoding detection. Inline editing with Ctrl+S.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎛️</div>
+          <h3>Fully Configurable</h3>
+          <p>Custom logo, title, sizes, default view &mdash; all via config.json. Runtime override support.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value">1,132</div>
+          <div class="stat-label">File Type Icons</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">30+</div>
+          <div class="stat-label">Preview Formats</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~20 MB</div>
+          <div class="stat-label">Self-contained</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Offline Ready</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quickstart" class="section container">
+      <div class="section-header">
+        <h2>Get started in seconds</h2>
+        <p>Download the latest release, extract, and run.</p>
+      </div>
+      <div class="code-block">
+<pre><span class="comment"># 1. Download the latest release from GitHub</span>
+<span class="comment">#    https://github.com/mikigo/dufs-shadcn-assets/releases</span>
+
+<span class="comment"># 2. Extract to your assets directory</span>
+<span class="cmd">unzip</span> dufs-shadcn-assets.zip -d ./assets
+
+<span class="comment"># 3. Start dufs with the custom theme</span>
+<span class="cmd">./dufs</span> ./serve-path -A --assets ./assets
+
+<span class="comment"># 4. Open http://localhost:5000</span></pre>
+      </div>
+
+      <div style="margin-top: 32px;">
+        <h3 style="margin-bottom: 16px;">Configuration</h3>
+        <div class="code-block">
+<pre><span class="comment">// assets/config.json</span>
+{
+  <span class="cmd">"logo_text"</span>: <span class="cmd">"My File Server"</span>,
+  <span class="cmd">"logo_size"</span>: <span class="cmd">"32px"</span>,
+  <span class="cmd">"logo_text_font_size"</span>: <span class="cmd">"18px"</span>,
+  <span class="cmd">"view_mode"</span>: <span class="cmd">"icons"</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-text">Built with React &middot; Vite &middot; shadcn/ui &middot; Open File Viewer &middot; vscode-icons</div>
+      <div class="footer-links">
+        <a href="https://github.com/mikigo/dufs-shadcn-assets">GitHub</a>
+        <a href="https://github.com/mikigo/dufs-shadcn-assets/releases">Releases</a>
+        <a href="https://github.com/sigoden/dufs">Dufs</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
