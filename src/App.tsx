@@ -73,15 +73,24 @@ function AppContent() {
     init()
   }, [dispatch])
 
-  // 从 dufs-config 读取 view_mode 配置
+  // 从 dufs-config 读取初始配置（仅首次，localStorage 优先）
   useEffect(() => {
     try {
       const el = document.getElementById("dufs-config")
-      if (el?.textContent) {
-        const cfg = JSON.parse(el.textContent)
-        if (cfg.view_mode === "list" || cfg.view_mode === "icons") {
-          dispatch({ type: "SET_VIEW_MODE", mode: cfg.view_mode })
-        }
+      if (!el?.textContent) return
+      const cfg = JSON.parse(el.textContent)
+
+      // view_mode: localStorage 优先，否则用 config
+      const savedView = localStorage.getItem("dufs-view-mode")
+      const viewMode = savedView || cfg.view_mode
+      if (viewMode === "list" || viewMode === "icons") {
+        dispatch({ type: "SET_VIEW_MODE", mode: viewMode })
+      }
+
+      // theme: localStorage 优先，否则用 config
+      if (!localStorage.getItem("dufs-theme") && (cfg.theme === "dark" || cfg.theme === "light")) {
+        localStorage.setItem("dufs-theme", cfg.theme)
+        document.documentElement.classList.toggle("dark", cfg.theme === "dark")
       }
     } catch {}
   }, [dispatch])

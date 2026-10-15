@@ -104,7 +104,7 @@ export function ActionButtons() {
       <Button
         variant="ghost" size="icon"
         title={state.viewMode === "icons" ? "Show as list" : "Show as icons"}
-        onClick={() => dispatch({ type: "SET_VIEW_MODE", mode: state.viewMode === "icons" ? "list" : "icons" })}
+        onClick={() => { const next = state.viewMode === "icons" ? "list" : "icons"; dispatch({ type: "SET_VIEW_MODE", mode: next }); localStorage.setItem("dufs-view-mode", next) }}
       >
         {state.viewMode === "icons" ? <LayoutGrid data-icon /> : <List data-icon />}
       </Button>

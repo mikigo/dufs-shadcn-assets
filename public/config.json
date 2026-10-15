@@ -4,5 +4,6 @@
   "dark_logo": "./dark-logo.svg",
   "logo_size": "28px",
   "logo_text_font_size": "20px",
-  "view_mode": "list"
+  "view_mode": "list",
+  "theme": "light"
 }

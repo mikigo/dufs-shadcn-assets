@@ -160,6 +160,7 @@ dufs ./serve-path --assets ./assets
 | `logo_size` | string | `28px` | Logo 图片尺寸 |
 | `logo_text_font_size` | string | `20px` | 标题文字大小 |
 | `view_mode` | string | `icons` | 默认视图模式 (`icons` / `list`) |
+| `theme` | string | `light` | 默认主题 (`light` / `dark`) |
 
 ## License
 

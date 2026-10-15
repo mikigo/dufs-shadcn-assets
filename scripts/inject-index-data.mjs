@@ -12,6 +12,7 @@ const defaultConfig = {
   logo_size: '28px',
   logo_text_font_size: '20px',
   view_mode: 'icons',
+  theme: 'light',
 }
 
 let config
