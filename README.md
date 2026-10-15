@@ -6,9 +6,13 @@
 
 > **dufs 的前端主题项目** — 通过 `dufs --assets` 替换 dufs 内置 UI 的现代化文件管理界面。
 
-基于 [shadcn/ui](https://ui.shadcn.com/)构建。文件预览能力由 Open File Viewer 提供，覆盖 30+ 种文件格式。
+基于 [shadcn/ui](https://ui.shadcn.com/) 构建。文件预览能力由 Open File Viewer 提供，覆盖 30+ 种文件格式。
 
 ## 亮点
+
+<p align="center">
+  <img src="website/public/home.png" alt="Screenshot" width="100%" />
+</p>
 
 - **1132 个 vscode-icons 文件图标** — 自动识别 599 种扩展名 + 1923 种文件名 + 524 种文件夹名，媲美 VS Code 的文件图标体验
 - **双视图模式** — 图标视图 / 列表视图自由切换，可通过 `config.json` 配置默认模式
@@ -40,6 +44,11 @@ unzip dufs-shadcn-assets.zip -d ./assets
 - **搜索** — 居中搜索栏，后端 `?q=` 查询，URL 参数持久化
 - **SPA 路由** — `pushState` + `popstate`，浏览器前进后退完整支持
 
+<p align="center">
+  <img src="website/public/view-mode-list.png" alt="列表视图" width="100%" />
+  <br><em>列表视图 — 排序、操作按钮、面包屑导航</em>
+</p>
+
 ### 文件操作
 
 | 操作 | 说明 |
@@ -66,6 +75,24 @@ unzip dufs-shadcn-assets.zip -d ./assets
 - **富媒体预览 (OFV)** — 基于 [Open File Viewer](https://github.com/shinokada/open-file-viewer)，支持 Office 文档 (.docx/.pptx/.xlsx)、PDF、图片 (.png/.jpg/.gif/.webp/.svg/.psd)、视频 (.mp4/.mkv/.mov/.avi)、音频 (.mp3/.wav/.ogg)、3D 模型 (.glb/.gltf)、CAD (.dwg/.dxf)、GIS (.geojson/.kml)、压缩包 (.zip/.tar/.7z/.gz)、电子书 (.epub)、邮件 (.eml)、XMind 思维导图 等 30+ 格式
 - **在线编辑** — 可编辑文本文件支持 Ctrl+S 保存、Esc 取消
 
+<p align="center">
+  <img src="website/public/预览-script-file.png" alt="代码预览" width="49%" />
+  <img src="website/public/在线编辑.png" alt="在线编辑" width="49%" />
+  <br><em>代码语法高亮预览 & 在线编辑</em>
+</p>
+
+<p align="center">
+  <img src="website/public/预览-word.png" alt="Word 预览" width="32%" />
+  <img src="website/public/预览-excel.png" alt="Excel 预览" width="32%" />
+  <img src="website/public/预览-ppt.png" alt="PPT 预览" width="32%" />
+  <br><em>Office 文档在线预览：Word · Excel · PowerPoint</em>
+</p>
+
+<p align="center">
+  <img src="website/public/自动渲染当前目录下的README.png" alt="README 自动渲染" width="100%" />
+  <br><em>目录下 README.md 自动渲染</em>
+</p>
+
 ### 图标系统
 
 从本地 VS Code 扩展解析 `vsicons-icon-theme.json`，构建时自动生成 1132 个图标 + 完整映射表。匹配顺序：
@@ -85,6 +112,11 @@ unzip dufs-shadcn-assets.zip -d ./assets
 - **Sidebar 独立配色** — 侧边栏与主内容区视觉分离
 - **细滚动条** — 6px 主题色滚动条，hover 加深
 - **偏好持久化** — `localStorage` 保存主题和侧边栏宽度
+
+<p align="center">
+  <img src="website/public/dark-home.png" alt="深色模式" width="100%" />
+  <br><em>深色模式 — 暗色主题 + vscode-icons 暗色适配</em>
+</p>
 
 ### 认证支持
 
