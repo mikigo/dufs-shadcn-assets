@@ -32,7 +32,7 @@
 unzip dufs-shadcn-assets.zip -d ./assets
 
 # 启动 dufs，指定 assets 目录
-./dufs ./serve-path --assets ./assets
+dufs ./serve-path --assets ./assets
 ```
 
 ## 特性一览
@@ -149,43 +149,6 @@ unzip dufs-shadcn-assets.zip -d ./assets
 - **Leaflet CSS 本地导入** — GIS 地图预览无 CDN 依赖
 - **Logo/Favicon 内联** — 构建时转为 Data URI
 - **无外部请求** — 所有资源自包含，断网环境也能完整使用
-
-## 技术栈
-
-| 类别 | 技术 |
-|------|------|
-| 框架 | React 19 + TypeScript |
-| 构建 | Vite 8 + vite-plugin-singlefile |
-| 样式 | Tailwind CSS 3 + shadcn/ui (base-nova) |
-| 基础组件 | @base-ui/react (Dialog, Sheet, Progress...) |
-| 虚拟滚动 | @tanstack/react-virtual |
-| 文件预览 | @open-file-viewer/core + pdfjs-dist + highlight.js + leaflet |
-| 图标 | vscode-icons (1132 SVG) + lucide-react |
-| 包管理 | pnpm |
-
-## 项目结构
-
-```
-src/
-├── components/
-│   ├── dialogs/       # DeleteDialog, MoveRenameDialog, UploadProgressSheet
-│   ├── dir-table/     # DirTable（列表视图）, IconView（图标视图）
-│   ├── file-preview/  # FilePreview, TextPreview, EditPreview, OfvPreview, ReadmePreview
-│   ├── file-tree/     # FileTree, TreeNode, VscFileIcon
-│   ├── layout/        # Sidebar, MainPanel, ResizablePanel, ThemeToggle
-│   ├── toolbar/       # Toolbar, Breadcrumb, SearchBar, ActionButtons, AuthButton
-│   └── ui/            # 16 个 shadcn/ui 组件，基于 @base-ui/react
-├── hooks/             # useFileTree
-├── context/           # AppContext（useReducer 全局状态）
-├── api/               # dufs API 封装（fetch、上传、断点续传、认证）
-├── types/             # TypeScript 类型定义
-├── generated/         # 自动生成：vsc-icon-map.ts, vsc-icon-modules.ts
-├── assets/            # vsc-icons: 1132 个 SVG 文件
-└── lib/               # 工具函数（格式化、编码检测、样式合并）
-scripts/
-├── generate-vsc-icon-map.mjs  # 解析 vscode-icons 映射 JSON 生成 TypeScript
-└── inject-index-data.mjs      # 构建后处理：内联资源、注入配置、复制 PDF.js 数据
-```
 
 ## 配置 (config.json)
 
