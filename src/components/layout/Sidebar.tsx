@@ -43,7 +43,13 @@ export function Sidebar({ children }: Props) {
     <div className="h-full flex flex-col bg-sidebar">
       <div className="flex items-center gap-2.5 px-4 py-3 border-b border-sidebar-border shrink-0">
         {fullLogoSrc && (
-          <img src={fullLogoSrc} alt="Logo" style={{ width: logoSize, height: logoSize }} className="rounded-md" />
+          <img
+            src={fullLogoSrc}
+            alt="Logo"
+            style={{ width: logoSize, height: logoSize }}
+            className="rounded-md"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
+          />
         )}
         {config.logo_text && (
           <span
