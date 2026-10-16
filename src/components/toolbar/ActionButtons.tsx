@@ -2,7 +2,7 @@ import { useAppState } from "@/context/AppContext"
 import { Button } from "@/components/ui/button"
 import { Upload, FolderPlus, FilePlus, Download, PanelLeft, LayoutGrid, List, RefreshCw } from "lucide-react"
 import { enqueueUpload, createFolder, createFile, fetchIndexData } from "@/api/dufs"
-import { newUrl } from "@/lib/utils"
+import { newUrl, pathsToEntries } from "@/lib/utils"
 import { useRef, type Dispatch } from "react"
 import type { AppAction } from "@/types/dufs"
 
@@ -10,25 +10,10 @@ async function refreshDir(currentPath: string, dispatch: Dispatch<AppAction>) {
   try {
     const data = await fetchIndexData(currentPath)
     if (data.paths) {
-      const dirPath = data.href.replace(/\/$/, "")
-      const nodes = data.paths
-        .sort((a, b) => {
-          const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-          const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-          if (aIsDir !== bIsDir) return bIsDir - aIsDir
-          return a.name.localeCompare(b.name)
-        })
-        .map(p => ({
-          name: p.name,
-          path: dirPath + "/" + encodeURIComponent(p.name),
-          isDir: p.path_type.endsWith("Dir"),
-          children: null,
-          loaded: false,
-        }))
-      dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
-    } else {
-      dispatch({ type: "SET_CURRENT", path: data.href, data })
+      const entries = pathsToEntries(data.paths, data.href)
+      dispatch({ type: "TREE_SET_CHILDREN", parentPath: data.href.replace(/\/$/, "") || "/", entries })
     }
+    dispatch({ type: "SET_CURRENT", path: data.href, data })
   } catch {}
 }
 
@@ -102,7 +87,7 @@ export function ActionButtons() {
     const q = params.get("q")
     const path = q ? state.currentPath + "?q=" + encodeURIComponent(q) : state.currentPath
     const data = await fetchIndexData(path)
-    dispatch({ type: "SET_TREE", path: "/", nodes: [] })
+    dispatch({ type: "TREE_REPLACE_ROOT", nodes: [] })
     dispatch({ type: "SET_CURRENT", path: state.currentPath, data })
   }
 

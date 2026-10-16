@@ -26,7 +26,7 @@ export function FilePreview() {
   const parentDir = state.selectedPath.substring(0, state.selectedPath.lastIndexOf("/") + 1) || "/"
 
   const handleClose = () => {
-    dispatch({ type: "SELECT", path: null })
+    dispatch({ type: "TREE_SELECT", path: null })
     pushHistory(parentDir)
   }
 

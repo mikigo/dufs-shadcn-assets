@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import type { FileEntry } from "@/types/dufs"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -68,4 +69,19 @@ const EDITABLE_EXTS = new Set([
 export function isEditable(filename: string): boolean {
   const ext = filename.includes(".") ? filename.split(".").pop()?.toLowerCase() || "" : filename.toLowerCase()
   return EDITABLE_EXTS.has(ext)
+}
+
+export function pathsToEntries(paths: { name: string; path_type: string }[], basePath: string): FileEntry[] {
+  return paths
+    .sort((a, b) => {
+      const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+      const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+      if (aIsDir !== bIsDir) return bIsDir - aIsDir
+      return a.name.localeCompare(b.name)
+    })
+    .map(p => ({
+      name: p.name,
+      path: basePath.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
+      isDir: p.path_type.endsWith("Dir"),
+    }))
 }

@@ -1,6 +1,6 @@
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize } from "@/lib/utils"
+import { formatFileSize, formatDirSize, pathsToEntries } from "@/lib/utils"
 import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder } from "lucide-react"
 import { VscFileIcon } from "@/components/file-tree/VscFileIcon"
 import { useState } from "react"
@@ -46,7 +46,7 @@ export function IconView() {
     } else {
       const filePath = newUrl(state.currentPath, item.name)
       pushHistory(filePath + "?view")
-      dispatch({ type: "SELECT", path: filePath })
+      dispatch({ type: "TREE_SELECT", path: filePath })
     }
   }
 
@@ -84,25 +84,10 @@ export function IconView() {
     await deletePath(url)
     const data = await fetchIndexData(state.currentPath)
     if (data.paths) {
-      const dirPath = data.href.replace(/\/$/, "")
-      const nodes = data.paths
-        .sort((a, b) => {
-          const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-          const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-          if (aIsDir !== bIsDir) return bIsDir - aIsDir
-          return a.name.localeCompare(b.name)
-        })
-        .map(p => ({
-          name: p.name,
-          path: dirPath + "/" + encodeURIComponent(p.name),
-          isDir: p.path_type.endsWith("Dir"),
-          children: null,
-          loaded: false,
-        }))
-      dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
-    } else {
-      dispatch({ type: "SET_CURRENT", path: data.href, data })
+      const entries = pathsToEntries(data.paths, data.href)
+      dispatch({ type: "TREE_SET_CHILDREN", parentPath: data.href.replace(/\/$/, "") || "/", entries })
     }
+    dispatch({ type: "SET_CURRENT", path: data.href, data })
     setDeleteTarget(null)
   }
 
@@ -203,34 +188,18 @@ export function IconView() {
           setMoveTarget(null)
           const data = await fetchIndexData(state.currentPath)
           if (data.paths) {
-            const dirPath = data.href.replace(/\/$/, "")
-            const nodes = data.paths.sort((a, b) => {
-              const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-              const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-              if (aIsDir !== bIsDir) return bIsDir - aIsDir
-              return a.name.localeCompare(b.name)
-            }).map(p => ({
-              name: p.name, path: dirPath + "/" + encodeURIComponent(p.name),
-              isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
-            }))
-            dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
+            const entries = pathsToEntries(data.paths, data.href)
+            dispatch({ type: "TREE_SET_CHILDREN", parentPath: data.href.replace(/\/$/, "") || "/", entries })
           }
+          dispatch({ type: "SET_CURRENT", path: data.href, data })
+
           const normSource = state.currentPath.replace(/\/$/, "")
           const normDest = destDir.replace(/\/$/, "")
           if (normDest !== normSource) {
             const destData = await fetchIndexData(destDir)
             if (destData.paths) {
-              const destDirPath = destData.href.replace(/\/$/, "")
-              const destNodes = destData.paths.sort((a, b) => {
-                const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-                const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-                if (aIsDir !== bIsDir) return bIsDir - aIsDir
-                return a.name.localeCompare(b.name)
-              }).map(p => ({
-                name: p.name, path: destDirPath + "/" + encodeURIComponent(p.name),
-                isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
-              }))
-              dispatch({ type: "SET_TREE", path: destDirPath || "/", nodes: destNodes })
+              const destEntries = pathsToEntries(destData.paths, destData.href)
+              dispatch({ type: "TREE_SET_CHILDREN", parentPath: destData.href.replace(/\/$/, "") || "/", entries: destEntries })
             }
           }
         }}

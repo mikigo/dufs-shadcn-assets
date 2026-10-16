@@ -13,33 +13,18 @@ import { ReadmePreview } from "@/components/file-preview/ReadmePreview"
 import { UploadProgressSheet } from "@/components/dialogs/UploadProgressSheet"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { FolderOpen } from "lucide-react"
-import type { TreeNode } from "@/types/dufs"
+import { pathsToEntries } from "@/lib/utils"
+import type { TreeStateNode, FileEntry } from "@/types/dufs"
 
 let uploadIdCounter = 0
+
+function entriesToRootNodes(entries: FileEntry[]): TreeStateNode[] {
+  return entries.map(e => ({ element: e, parent: null, children: null, stale: false, loaded: false }))
+}
 
 function AppContent() {
   const { state, dispatch } = useAppState()
   const dropRef = useRef<HTMLDivElement>(null)
-
-  const loadRootTree = useCallback(async () => {
-    try {
-      const rootData = await fetchIndexData("/")
-      if (rootData.paths) {
-        const rootNodes: TreeNode[] = rootData.paths
-          .sort((a, b) => {
-            const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-            const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-            if (aIsDir !== bIsDir) return bIsDir - aIsDir
-            return a.name.localeCompare(b.name)
-          })
-          .map(p => ({
-            name: p.name, path: "/" + encodeURIComponent(p.name),
-            isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
-          }))
-dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
-      }
-    } catch {}
-  }, [dispatch])
 
   useEffect(() => {
     async function init() {
@@ -49,9 +34,7 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
       if (!raw || raw.length < 100) return
       const data = JSON.parse(decodeBase64(raw))
 
-      // 文件预览页（kind: "View"）：拉取父目录数据填充文件树
       if (data.kind === "View") {
-        // 无尾部斜杠的路径可能是目录，尝试获取目录列表
         if (!data.href.endsWith("/")) {
           try {
             const indexData = await fetchIndexData(data.href + "/")
@@ -65,14 +48,17 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
 
         const parentDir = data.href.substring(0, data.href.lastIndexOf("/") + 1) || "/"
         let dirData
-        try {
-          dirData = await fetchIndexData(parentDir)
-        } catch {
-          // 父目录拉取失败，至少显示 FilePreview
-        }
+        try { dirData = await fetchIndexData(parentDir) } catch {}
+
         if (parentDir !== "/") {
-          await loadRootTree()
+          try {
+            const rootData = await fetchIndexData("/")
+            if (rootData.paths) {
+              dispatch({ type: "TREE_REPLACE_ROOT", nodes: entriesToRootNodes(pathsToEntries(rootData.paths, "/")) })
+            }
+          } catch {}
         }
+
         if (dirData) {
           dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
         } else {
@@ -85,7 +71,7 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
             dir_exists: true, editable: "",
           }})
         }
-        dispatch({ type: "SELECT", path: data.href })
+        dispatch({ type: "TREE_SELECT", path: data.href })
         return
       }
 
@@ -93,45 +79,31 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
       if (data.auth) {
         dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
       }
-      // 非根目录的初始加载：提前拉取根目录数据构建树
+
       if (data.href !== "/") {
         try {
           const rootData = await fetchIndexData("/")
           if (rootData.paths) {
-            const rootNodes: TreeNode[] = rootData.paths
-              .sort((a, b) => {
-                const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-                const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-                if (aIsDir !== bIsDir) return bIsDir - aIsDir
-                return a.name.localeCompare(b.name)
-              })
-              .map(p => ({
-                name: p.name, path: "/" + encodeURIComponent(p.name),
-                isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
-              }))
-            dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
+            dispatch({ type: "TREE_REPLACE_ROOT", nodes: entriesToRootNodes(pathsToEntries(rootData.paths, "/")) })
           }
         } catch {}
       }
     }
     init()
-  }, [dispatch, loadRootTree])
+  }, [dispatch])
 
-  // 从 dufs-config 读取初始配置（仅首次，localStorage 优先）
   useEffect(() => {
     try {
       const el = document.getElementById("dufs-config")
       if (!el?.textContent) return
       const cfg = JSON.parse(el.textContent)
 
-      // view_mode: localStorage 优先，否则用 config
       const savedView = localStorage.getItem("dufs-view-mode")
       const viewMode = savedView || cfg.view_mode
       if (viewMode === "list" || viewMode === "icons") {
         dispatch({ type: "SET_VIEW_MODE", mode: viewMode })
       }
 
-      // theme: localStorage 优先，否则用 config
       if (!localStorage.getItem("dufs-theme") && (cfg.theme === "dark" || cfg.theme === "light")) {
         localStorage.setItem("dufs-theme", cfg.theme)
         document.documentElement.classList.toggle("dark", cfg.theme === "dark")
@@ -139,23 +111,26 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
     } catch {}
   }, [dispatch])
 
-// 监听浏览器前进/后退，同步导航
   useEffect(() => {
     const handlePopState = async () => {
-      const path = location.pathname + location.search
-      // ?view URL → 文件预览，需要先拉取父目录数据填充树
+      const savedPath = location.pathname + location.search
+
       if (location.search === "?view") {
         const parentDir = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) || "/"
         try {
           const dirData = await fetchIndexData(parentDir)
-          if (location.search !== "?view" || location.pathname + location.search !== path) return
+          if (location.search !== "?view" || location.pathname + location.search !== savedPath) return
           if (parentDir !== "/") {
-            await loadRootTree()
+            try {
+              const rootData = await fetchIndexData("/")
+              if (rootData.paths) {
+                dispatch({ type: "TREE_REPLACE_ROOT", nodes: entriesToRootNodes(pathsToEntries(rootData.paths, "/")) })
+              }
+            } catch {}
           }
-          const href = dirData.href.endsWith("/") ? dirData.href : dirData.href + "/"
-          dispatch({ type: "SET_CURRENT", path: href, data: dirData })
-        } catch (e) {
-          if (location.pathname + location.search !== path) return
+          dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
+        } catch {
+          if (location.pathname + location.search !== savedPath) return
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
             href: parentDir, uri_prefix: "", kind: "Index" as const, paths: [],
             allow_upload: false, allow_delete: false,
@@ -163,20 +138,19 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
             auth: false, user: "", dir_exists: true, editable: "",
           }})
         }
-        dispatch({ type: "SELECT", path: location.pathname })
+        dispatch({ type: "TREE_SELECT", path: location.pathname })
         return
       }
 
-      let targetPath = path || "/"
+      let targetPath = savedPath || "/"
       try {
         let data = await fetchIndexData(targetPath)
-        if (location.pathname + location.search !== path) return
+        if (location.pathname + location.search !== savedPath) return
 
-        // 无尾部斜杠的路径可能是目录，尝试获取目录列表
         if (data.kind === "View" && !targetPath.endsWith("/")) {
           try {
             const indexData = await fetchIndexData(targetPath + "/")
-            if (location.pathname + location.search !== path) return
+            if (location.pathname + location.search !== savedPath) return
             if (indexData.kind === "Index") {
               data = indexData
               pushHistory(indexData.href)
@@ -185,18 +159,20 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
         }
 
         if (data.href !== "/") {
-          await loadRootTree()
-          dispatch({ type: "EXPAND_TREE", path: data.href.replace(/\/$/, "") })
+          try {
+            const rootData = await fetchIndexData("/")
+            if (rootData.paths) {
+              dispatch({ type: "TREE_REPLACE_ROOT", nodes: entriesToRootNodes(pathsToEntries(rootData.paths, "/")) })
+            }
+          } catch {}
         }
         dispatch({ type: "SET_CURRENT", path: data.href, data })
-      } catch (err) {
-      }
+      } catch {}
     }
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
-  }, [dispatch, loadRootTree])
+  }, [dispatch])
 
-  // Debug: expose state globally
   useEffect(() => {
     (window as any).__appState = state
   }, [state])
@@ -207,7 +183,6 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
         const user = await checkAuth(state.currentPath)
         dispatch({ type: "SET_AUTH", auth: { required: true, user } })
       } catch {
-        // 认证失败则不继续上传
         return false
       }
     }
@@ -216,29 +191,13 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
 
   const refreshDirRef = useRef<(path: string) => void>(() => {})
 
-  // 上传完成后刷新当前目录
   useEffect(() => {
     refreshDirRef.current = async (path: string) => {
       try {
         const data = await fetchIndexData(path)
         if (data.paths) {
-          const dirPath = data.href.replace(/\/$/, "")
-          const nodes = data.paths
-            .sort((a, b) => {
-              const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-              const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-              if (aIsDir !== bIsDir) return bIsDir - aIsDir
-              return a.name.localeCompare(b.name)
-            })
-            .map(p => ({
-              name: p.name,
-              path: dirPath + "/" + encodeURIComponent(p.name),
-              isDir: p.path_type.endsWith("Dir"),
-              children: null,
-              loaded: false,
-            }))
-          dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
-        } else {
+          const entries = pathsToEntries(data.paths, data.href)
+          dispatch({ type: "TREE_SET_CHILDREN", parentPath: data.href.replace(/\/$/, "") || "/", entries })
           dispatch({ type: "SET_CURRENT", path: data.href, data })
         }
       } catch {}
@@ -330,7 +289,6 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
       e.stopPropagation()
       const items = e.dataTransfer?.items
       if (!items?.length) return
-      // 文件夹递归上传
       if (typeof items[0].webkitGetAsEntry === "function") {
         const entry = items[0].webkitGetAsEntry()
         if (entry) {
@@ -351,7 +309,6 @@ dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
     return () => events.forEach(([name, fn]) => el.removeEventListener(name, fn))
   }, [startUpload, startFolderUpload])
 
-  // beforeunload 保护：上传中阻止页面离开
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (isUploading()) {

@@ -23,9 +23,23 @@ export interface DufsData {
 
 export type ViewMode = "list" | "icons"
 
+export interface FileEntry {
+  name: string
+  path: string
+  isDir: boolean
+}
+
+export interface TreeStateNode {
+  element: FileEntry
+  parent: TreeStateNode | null
+  children: TreeStateNode[] | null
+  stale: boolean
+  loaded: boolean
+}
+
 export interface AppState {
-  tree: TreeNode[]
-  treeLoading: Set<string>
+  tree: TreeStateNode[]
+  loadingPath: string | null
   currentPath: string
   currentData: DufsData | null
   selectedPath: string | null
@@ -37,14 +51,6 @@ export interface AppState {
     loading: boolean
   }
   uploads: UploadItem[]
-}
-
-export interface TreeNode {
-  name: string
-  path: string
-  isDir: boolean
-  children: TreeNode[] | null
-  loaded: boolean
 }
 
 export interface UploadItem {
@@ -59,11 +65,11 @@ export interface UploadItem {
 }
 
 export type AppAction =
-  | { type: "SET_TREE"; path: string; nodes: TreeNode[] }
-  | { type: "EXPAND_TREE"; path: string }
-  | { type: "COLLAPSE_TREE"; path: string }
+  | { type: "TREE_EXPAND"; path: string }
+  | { type: "TREE_COLLAPSE"; path: string }
+  | { type: "TREE_SET_CHILDREN"; parentPath: string; entries: FileEntry[] }
+  | { type: "TREE_SELECT"; path: string | null }
   | { type: "SET_CURRENT"; path: string; data: DufsData }
-  | { type: "SELECT"; path: string | null }
   | { type: "SET_AUTH"; auth: { required: boolean; user: string | null } }
   | { type: "SET_AUTH_LOADING"; loading: boolean }
   | { type: "ADD_UPLOAD"; item: UploadItem }
@@ -71,4 +77,5 @@ export type AppAction =
   | { type: "REMOVE_UPLOAD"; id: number }
   | { type: "TOGGLE_SIDEBAR" }
   | { type: "SET_VIEW_MODE"; mode: ViewMode }
-  | { type: "REFRESH_DIR"; path: string; data: DufsData; nodes: TreeNode[]; treePath: string }
+  | { type: "SET_LOADING"; path: string | null }
+  | { type: "TREE_REPLACE_ROOT"; nodes: TreeStateNode[] }

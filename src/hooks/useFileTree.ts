@@ -1,48 +1,36 @@
 import { useEffect, useCallback, useRef } from "react"
-import { useAppState } from "@/context/AppContext"
+import { useAppState, findNode } from "@/context/AppContext"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
-import type { TreeNode } from "@/types/dufs"
+import type { FileEntry } from "@/types/dufs"
 
-function findNode(nodes: TreeNode[], path: string): TreeNode | null {
-  for (const n of nodes) {
-    if (n.path === path) return n
-    if (n.children) {
-      const f = findNode(n.children, path)
-      if (f) return f
-    }
+function pathToFileEntry(p: { name: string; path_type: string }, parentPath: string): FileEntry {
+  return {
+    name: p.name,
+    path: parentPath.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
+    isDir: p.path_type.endsWith("Dir"),
   }
-  return null
 }
 
 export function useFileTree() {
   const { state, dispatch } = useAppState()
-  const prevPathRef = useRef(state.currentPath)
   const treeNavRef = useRef(false)
 
-  // 仅在树为空时重建（初始加载或整页刷新如搜索）。
-  // SPA 导航（树点击/popstate/表格双击）不重建，只更新右侧面板。
   useEffect(() => {
     if (state.tree.length > 0) return
     if (state.currentData?.paths) {
-      const nodes: TreeNode[] = state.currentData.paths
+      const entries: FileEntry[] = state.currentData.paths
         .sort((a, b) => {
           const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
           const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
           if (aIsDir !== bIsDir) return bIsDir - aIsDir
           return a.name.localeCompare(b.name)
         })
-        .map(p => ({
-          name: p.name,
-          path: state.currentPath.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
-          isDir: p.path_type.endsWith("Dir"),
-          children: null,
-          loaded: false,
-        }))
-      dispatch({ type: "SET_TREE", path: state.currentPath || "/", nodes })
+        .map(p => pathToFileEntry(p, state.currentPath))
+      const treePath = state.currentPath.replace(/\/$/, "") || "/"
+      dispatch({ type: "TREE_SET_CHILDREN", parentPath: treePath, entries })
     }
   }, [state.currentPath, state.currentData, state.tree.length, dispatch])
 
-  // 当 currentPath 变化时（从主内容区导航），在文件树中展开并选中对应目录
   useEffect(() => {
     if (!state.currentPath || state.currentPath === "/") return
     if (state.tree.length === 0) return
@@ -60,58 +48,46 @@ export function useFileTree() {
       partialPath += "/" + seg
       const node = findNode(state.tree, partialPath)
       if (!node) return
-      if (node.isDir && node.children === null && !node.loaded) {
-        dispatch({ type: "EXPAND_TREE", path: partialPath })
+      if (node.element.isDir && (node.children === null || node.stale)) {
+        dispatch({ type: "TREE_EXPAND", path: partialPath })
         return
       }
     }
 
-    if (isExternalNav && state.currentPath !== prevPathRef.current) {
-      dispatch({ type: "SELECT", path: normalized + "/" })
+    if (isExternalNav) {
+      dispatch({ type: "TREE_SELECT", path: normalized + "/" })
     }
   }, [state.currentPath, state.tree, dispatch])
 
-  // 跟踪 currentPath，避免树展开后选中时误判为路径变化
   useEffect(() => {
-    prevPathRef.current = state.currentPath
-  }, [state.currentPath])
-
-  useEffect(() => {
-    const loadingPaths = Array.from(state.treeLoading)
-    if (loadingPaths.length === 0) return
-    const path = loadingPaths[0]
+    if (!state.loadingPath) return
+    const path = state.loadingPath
     const dirPath = path.endsWith("/") ? path : path + "/"
     fetchIndexData(dirPath)
       .then(data => {
         if (!data.paths) return
-        const nodes: TreeNode[] = data.paths
+        const entries: FileEntry[] = data.paths
           .sort((a, b) => {
             const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
             const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
             if (aIsDir !== bIsDir) return bIsDir - aIsDir
             return a.name.localeCompare(b.name)
           })
-          .map(p => ({
-            name: p.name,
-            path: path.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
-            isDir: p.path_type.endsWith("Dir"),
-            children: null,
-            loaded: false,
-          }))
-        dispatch({ type: "SET_TREE", path, nodes })
+          .map(p => pathToFileEntry(p, path))
+        dispatch({ type: "TREE_SET_CHILDREN", parentPath: path, entries })
       })
       .catch(() => {
-        dispatch({ type: "SET_TREE", path, nodes: [] })
+        dispatch({ type: "TREE_SET_CHILDREN", parentPath: path, entries: [] })
       })
-  }, [state.treeLoading, dispatch])
+  }, [state.loadingPath, dispatch])
 
-  const handleToggle = useCallback((path: string, loaded: boolean) => {
+  const handleToggle = useCallback((path: string) => {
     const node = findNode(state.tree, path)
-    if (!node) return
-    if (node.children !== null) {
-      dispatch({ type: "COLLAPSE_TREE", path })
-    } else if (!loaded) {
-      dispatch({ type: "EXPAND_TREE", path })
+    if (!node || !node.element.isDir) return
+    if (node.children !== null && !node.stale) {
+      dispatch({ type: "TREE_COLLAPSE", path })
+    } else {
+      dispatch({ type: "TREE_EXPAND", path })
     }
   }, [state.tree, dispatch])
 
@@ -125,7 +101,7 @@ export function useFileTree() {
     } catch {
       // 静默失败
     }
-    dispatch({ type: "SELECT", path })
+    dispatch({ type: "TREE_SELECT", path })
   }, [dispatch])
 
   const handleNavigate = useCallback(async (path: string) => {
@@ -140,5 +116,5 @@ export function useFileTree() {
     }
   }, [dispatch])
 
-  return { tree: state.tree, treeLoading: state.treeLoading, selectedPath: state.selectedPath, handleToggle, handleSelect, handleNavigate }
+  return { tree: state.tree, loadingPath: state.loadingPath, selectedPath: state.selectedPath, handleToggle, handleSelect, handleNavigate }
 }

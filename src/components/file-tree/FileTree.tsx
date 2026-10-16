@@ -2,18 +2,18 @@ import { useRef, useMemo } from "react"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { TreeNodeComponent } from "./TreeNode"
 import { useFileTree } from "@/hooks/useFileTree"
-import type { TreeNode } from "@/types/dufs"
+import type { TreeStateNode } from "@/types/dufs"
 
-interface FlatNode extends TreeNode {
+interface FlatNode extends TreeStateNode {
   depth: number
 }
 
-function flattenTree(nodes: TreeNode[]): FlatNode[] {
+function flattenTree(nodes: TreeStateNode[]): FlatNode[] {
   const result: FlatNode[] = []
-  function walk(nodes: TreeNode[], depth: number) {
+  function walk(nodes: TreeStateNode[], depth: number) {
     for (const node of nodes) {
       result.push({ ...node, depth })
-      if (node.children) {
+      if (node.children && !node.stale) {
         walk(node.children, depth + 1)
       }
     }
@@ -23,7 +23,7 @@ function flattenTree(nodes: TreeNode[]): FlatNode[] {
 }
 
 export function FileTree() {
-  const { tree, treeLoading, selectedPath, handleToggle, handleSelect, handleNavigate } = useFileTree()
+  const { tree, loadingPath, selectedPath, handleToggle, handleSelect, handleNavigate } = useFileTree()
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const flatNodes = useMemo(() => flattenTree(tree), [tree])
@@ -32,7 +32,7 @@ export function FileTree() {
     count: flatNodes.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => 32,
-    getItemKey: (index) => flatNodes[index].path,
+    getItemKey: (index) => flatNodes[index].element.path,
   })
 
   return (
@@ -55,8 +55,8 @@ export function FileTree() {
                 <TreeNodeComponent
                   node={node}
                   depth={node.depth}
-                  loading={treeLoading.has(node.path)}
-                  selected={selectedPath?.replace(/\/$/, "") === node.path}
+                  loading={loadingPath === node.element.path}
+                  selected={selectedPath?.replace(/\/$/, "") === node.element.path}
                   onToggle={handleToggle}
                   onSelect={handleSelect}
                   onNavigate={handleNavigate}

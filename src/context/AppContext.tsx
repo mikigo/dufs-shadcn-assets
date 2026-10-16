@@ -1,10 +1,10 @@
 // src/context/AppContext.tsx
 import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from "react"
-import type { AppState, AppAction } from "@/types/dufs"
+import type { AppState, AppAction, TreeStateNode, FileEntry } from "@/types/dufs"
 
 const initialState: AppState = {
   tree: [],
-  treeLoading: new Set(),
+  loadingPath: null,
   currentPath: "",
   currentData: null,
   selectedPath: null,
@@ -18,85 +18,9 @@ const initialState: AppState = {
   uploads: [],
 }
 
-function reducer(state: AppState, action: AppAction): AppState {
-  switch (action.type) {
-    case "SET_TREE": {
-      const { path, nodes } = action
-      const replace = state.currentPath === path || state.tree.length === 0 || path === "/"
-      // Initial load or navigation: replace entire tree with current directory nodes
-      if (replace) {
-        return { ...state, tree: nodes }
-      }
-      // Lazy load: update children of an existing expanded node, clear loading
-      const updateChildren = (items: typeof state.tree): typeof state.tree =>
-        items.map(item => {
-          if (item.path === path) return { ...item, children: nodes, loaded: true }
-          if (item.children) return { ...item, children: updateChildren(item.children) }
-          return item
-        })
-      const nextLoading = new Set(state.treeLoading)
-      nextLoading.delete(path)
-      return { ...state, tree: updateChildren(state.tree), treeLoading: nextLoading }
-    }
-    case "EXPAND_TREE": {
-      const node = findNode(state.tree, action.path)
-      if (!node || node.loaded || state.treeLoading.has(action.path)) return state
-      const loading = new Set(state.treeLoading)
-      loading.add(action.path)
-      return { ...state, treeLoading: loading }
-    }
-    case "COLLAPSE_TREE": {
-      const collapse = (items: typeof state.tree): typeof state.tree =>
-        items.map(item => {
-          if (item.path === action.path) return { ...item, children: null, loaded: false }
-          if (item.children) return { ...item, children: collapse(item.children) }
-          return item
-        })
-      return { ...state, tree: collapse(state.tree) }
-    }
-    case "SET_CURRENT":
-      return { ...state, currentPath: action.path.endsWith("/") ? action.path : action.path + "/", currentData: action.data, selectedPath: null }
-    case "SELECT":
-      return { ...state, selectedPath: action.path }
-    case "SET_AUTH":
-      return { ...state, auth: { ...state.auth, ...action.auth, loading: false } }
-    case "SET_AUTH_LOADING":
-      return { ...state, auth: { ...state.auth, loading: action.loading } }
-    case "ADD_UPLOAD":
-      return { ...state, uploads: [...state.uploads, action.item] }
-    case "UPDATE_UPLOAD": {
-      const uploads = state.uploads.map(u =>
-        u.id === action.id ? { ...u, ...action.updates } : u
-      )
-      return { ...state, uploads }
-    }
-    case "REMOVE_UPLOAD":
-      return { ...state, uploads: state.uploads.filter(u => u.id !== action.id) }
-    case "TOGGLE_SIDEBAR":
-      return { ...state, sidebarOpen: !state.sidebarOpen }
-    case "SET_VIEW_MODE":
-      return { ...state, viewMode: action.mode }
-    case "REFRESH_DIR": {
-      // 根目录直接替换树顶层层级，子目录更新对应节点的 children
-      const newTree = action.treePath === "" || action.treePath === "/"
-        ? action.nodes
-        : (function updateChildren(items: typeof state.tree): typeof state.tree {
-            return items.map(item => {
-              if (item.path === action.treePath) return { ...item, children: action.nodes, loaded: true }
-              if (item.children) return { ...item, children: updateChildren(item.children) }
-              return item
-            })
-          })(state.tree)
-      return { ...state, currentPath: action.path, currentData: action.data, selectedPath: null, tree: newTree }
-    }
-    default:
-      return state
-  }
-}
-
-function findNode(nodes: AppState["tree"], path: string): AppState["tree"][number] | null {
+function findNode(nodes: TreeStateNode[], path: string): TreeStateNode | null {
   for (const node of nodes) {
-    if (node.path === path) return node
+    if (node.element.path === path) return node
     if (node.children) {
       const found = findNode(node.children, path)
       if (found) return found
@@ -104,6 +28,123 @@ function findNode(nodes: AppState["tree"], path: string): AppState["tree"][numbe
   }
   return null
 }
+
+function updateNode(
+  nodes: TreeStateNode[],
+  path: string,
+  updater: (node: TreeStateNode) => TreeStateNode,
+): TreeStateNode[] {
+  return nodes.map(n => {
+    if (n.element.path === path) return updater(n)
+    if (n.children) return { ...n, children: updateNode(n.children, path, updater) }
+    return n
+  })
+}
+
+function markStale(nodes: TreeStateNode[], path: string): TreeStateNode[] {
+  return nodes.map(n => {
+    if (n.element.path === path) {
+      const mark = (kids: TreeStateNode[] | null): TreeStateNode[] | null =>
+        kids ? kids.map(c => ({ ...c, stale: true, children: mark(c.children) })) : kids
+      return { ...n, stale: true, children: mark(n.children) }
+    }
+    if (n.children) return { ...n, children: markStale(n.children, path) }
+    return n
+  })
+}
+
+function reducer(state: AppState, action: AppAction): AppState {
+  switch (action.type) {
+    case "TREE_REPLACE_ROOT":
+      return { ...state, tree: action.nodes }
+
+    case "TREE_SET_CHILDREN": {
+      const { parentPath, entries } = action
+      const wrapped = (entries: FileEntry[], parent: TreeStateNode | null): TreeStateNode[] => {
+        return entries.map(entry => {
+          const existing = parent?.children?.find(c => c.element.path === entry.path)
+          if (existing) {
+            return {
+              element: entry,
+              parent,
+              children: existing.children,
+              stale: existing.stale,
+              loaded: existing.loaded || existing.children !== null,
+            }
+          }
+          return { element: entry, parent, children: null, stale: false, loaded: false }
+        })
+      }
+
+      if (parentPath === "/" || parentPath === "") {
+        const nodes = wrapped(entries, null)
+        return { ...state, tree: nodes, loadingPath: null }
+      }
+
+      const newTree = updateNode(state.tree, parentPath, node => ({
+        ...node,
+        stale: false,
+        loaded: true,
+        children: wrapped(entries, node),
+      }))
+      return { ...state, tree: newTree, loadingPath: null }
+    }
+
+    case "TREE_EXPAND": {
+      const node = findNode(state.tree, action.path)
+      if (!node || !node.element.isDir) return state
+      if (node.children !== null && !node.stale) return state
+      return { ...state, loadingPath: action.path }
+    }
+
+    case "TREE_COLLAPSE":
+      return { ...state, tree: markStale(state.tree, action.path) }
+
+    case "TREE_SELECT":
+      return { ...state, selectedPath: action.path }
+
+    case "SET_LOADING":
+      return { ...state, loadingPath: action.path }
+
+    case "SET_CURRENT":
+      return {
+        ...state,
+        currentPath: action.path.endsWith("/") ? action.path : action.path + "/",
+        currentData: action.data,
+        selectedPath: null,
+      }
+
+    case "SET_AUTH":
+      return { ...state, auth: { ...state.auth, ...action.auth, loading: false } }
+
+    case "SET_AUTH_LOADING":
+      return { ...state, auth: { ...state.auth, loading: action.loading } }
+
+    case "ADD_UPLOAD":
+      return { ...state, uploads: [...state.uploads, action.item] }
+
+    case "UPDATE_UPLOAD": {
+      const uploads = state.uploads.map(u =>
+        u.id === action.id ? { ...u, ...action.updates } : u
+      )
+      return { ...state, uploads }
+    }
+
+    case "REMOVE_UPLOAD":
+      return { ...state, uploads: state.uploads.filter(u => u.id !== action.id) }
+
+    case "TOGGLE_SIDEBAR":
+      return { ...state, sidebarOpen: !state.sidebarOpen }
+
+    case "SET_VIEW_MODE":
+      return { ...state, viewMode: action.mode }
+
+    default:
+      return state
+  }
+}
+
+export { findNode }
 
 interface AppContextValue {
   state: AppState
