@@ -93,10 +93,21 @@ function AppContent() {
   }, [dispatch])
 
   useEffect(() => {
-    try {
-      const el = document.getElementById("dufs-config")
-      if (!el?.textContent) return
-      const cfg = JSON.parse(el.textContent)
+    async function loadConfig() {
+      let cfg: Record<string, any> = {}
+
+      try {
+        const el = document.getElementById("dufs-config")
+        if (el?.textContent) cfg = JSON.parse(el.textContent)
+      } catch {}
+
+      try {
+        const res = await fetch("/dufs_shadcn_assets_config.json", { cache: "no-store" })
+        if (res.ok) {
+          const runtimeCfg = await res.json()
+          cfg = { ...cfg, ...runtimeCfg }
+        }
+      } catch {}
 
       if (cfg.footer != null) {
         dispatch({ type: "SET_FOOTER", text: typeof cfg.footer === "string" ? cfg.footer : String(cfg.footer) })
@@ -115,7 +126,8 @@ function AppContent() {
         localStorage.setItem("dufs-theme", cfg.theme)
         document.documentElement.classList.toggle("dark", cfg.theme === "dark")
       }
-    } catch {}
+    }
+    loadConfig()
   }, [dispatch])
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { resolve } from 'path'
 const distDir = resolve(import.meta.dirname, '..', 'dist')
 const htmlPath = resolve(distDir, 'index.html')
 const publicDir = resolve(import.meta.dirname, '..', 'public')
-const configSrc = resolve(publicDir, 'config.json')
+const configSrc = resolve(publicDir, 'dufs_shadcn_assets_config.json')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
 const defaultConfig = {
@@ -27,7 +27,7 @@ if (existsSync(configSrc)) {
   }
   if (merged) {
     writeFileSync(configSrc, JSON.stringify(config, null, 2), 'utf-8')
-    console.log('✓ Merged new fields into config.json')
+    console.log('✓ Merged new fields into dufs_shadcn_assets_config.json')
   }
 } else {
   config = { ...defaultConfig }
