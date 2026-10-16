@@ -72,7 +72,7 @@ export function isEditable(filename: string): boolean {
 }
 
 export function pathsToEntries(paths: { name: string; path_type: string }[], basePath: string): FileEntry[] {
-  const SYSTEM_DIRS = new Set([".dufs_shadcn_assets_config"])
+  const SYSTEM_DIRS = new Set([".dufs_shadcn_assets"])
   return paths
     .filter(p => !SYSTEM_DIRS.has(p.name))
     .sort((a, b) => {

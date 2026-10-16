@@ -8,7 +8,7 @@ interface DufsConfig {
   logo_text_font_size?: string
 }
 
-const CONFIG_PATH = "/.dufs_shadcn_assets_config"
+const CONFIG_PATH = "/.dufs_shadcn_assets"
 
 function getBuildConfig(): DufsConfig {
   try {

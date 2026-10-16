@@ -102,7 +102,7 @@ function AppContent() {
       } catch {}
 
       try {
-        const res = await fetch("/.dufs_shadcn_assets_config/config.json", { cache: "no-store" })
+        const res = await fetch("/.dufs_shadcn_assets/config.json", { cache: "no-store" })
         if (res.ok) {
           const runtimeCfg = await res.json()
           cfg = { ...cfg, ...runtimeCfg }

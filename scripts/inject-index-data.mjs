@@ -5,7 +5,7 @@ import { resolve } from 'path'
 const distDir = resolve(import.meta.dirname, '..', 'dist')
 const htmlPath = resolve(distDir, 'index.html')
 const publicDir = resolve(import.meta.dirname, '..', 'public')
-const configDir = '.dufs_shadcn_assets_config'
+const configDir = '.dufs_shadcn_assets'
 const configSrc = resolve(publicDir, configDir, 'config.json')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
