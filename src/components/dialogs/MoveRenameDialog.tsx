@@ -33,10 +33,10 @@ export function MoveRenameDialog({ open, item, currentPath, onDone, onCancel }: 
     if (!item || !newPath) return
     try {
       const fromUrl = newUrl(currentPath, item.name)
-      const toUrl = new URL(fromUrl).origin + new URL(fromUrl).pathname.replace(
-        decodeURIComponent(new URL(fromUrl).pathname).split("/").slice(-1)[0],
-        ""
-      ) + newPath.split("/").map(encodeURIComponent).join("/")
+      // 以 "/" 开头视为绝对路径，否则相对于当前目录
+      const toUrl = newPath.startsWith("/")
+        ? newPath.split("/").map(encodeURIComponent).join("/")
+        : newUrl(currentPath, newPath)
       await movePath(fromUrl, toUrl)
       onDone()
     } catch (err: any) {
@@ -56,7 +56,7 @@ export function MoveRenameDialog({ open, item, currentPath, onDone, onCancel }: 
         <Input
           value={newPath}
           onChange={(e) => { setNewPath(e.target.value); setError(null) }}
-          placeholder="new/path/name"
+          placeholder="new/path/name or /absolute/path/name"
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
         {error && <p className="text-sm text-destructive">{error}</p>}

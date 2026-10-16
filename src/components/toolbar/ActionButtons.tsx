@@ -3,7 +3,34 @@ import { Button } from "@/components/ui/button"
 import { Upload, FolderPlus, FilePlus, Download, PanelLeft, LayoutGrid, List, RefreshCw } from "lucide-react"
 import { enqueueUpload, createFolder, createFile, fetchIndexData } from "@/api/dufs"
 import { newUrl } from "@/lib/utils"
-import { useRef } from "react"
+import { useRef, type Dispatch } from "react"
+import type { AppAction } from "@/types/dufs"
+
+async function refreshDir(currentPath: string, dispatch: Dispatch<AppAction>) {
+  try {
+    const data = await fetchIndexData(currentPath)
+    if (data.paths) {
+      const dirPath = data.href.replace(/\/$/, "")
+      const nodes = data.paths
+        .sort((a, b) => {
+          const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+          const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+          if (aIsDir !== bIsDir) return bIsDir - aIsDir
+          return a.name.localeCompare(b.name)
+        })
+        .map(p => ({
+          name: p.name,
+          path: dirPath + "/" + encodeURIComponent(p.name),
+          isDir: p.path_type.endsWith("Dir"),
+          children: null,
+          loaded: false,
+        }))
+      dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
+    } else {
+      dispatch({ type: "SET_CURRENT", path: data.href, data })
+    }
+  } catch {}
+}
 
 export function ActionButtons() {
   const { state, dispatch } = useAppState()
@@ -11,6 +38,7 @@ export function ActionButtons() {
   const uploadId = useRef(0)
 
   const handleUpload = (files: FileList) => {
+    let completed = 0
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       if (file.size === 0) continue
@@ -30,9 +58,15 @@ export function ActionButtons() {
         },
         onComplete: (id: number) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "done" } })
+          if (++completed === files.length) {
+            refreshDir(state.currentPath, dispatch)
+          }
         },
         onError: (id: number, error: string) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "error", errorMessage: error } })
+          if (++completed === files.length) {
+            refreshDir(state.currentPath, dispatch)
+          }
         },
       })
     }

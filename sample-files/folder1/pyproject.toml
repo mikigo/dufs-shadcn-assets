@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=80", "setuptools-scm[simple]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dogtail"
+dynamic = ["version"]
+description = "GUI test tool and automation framework that uses Accessibility (AT-SPI) technologies to communicate with desktop applications."
+license = "GPL-2.0"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "Zack Cerza", email = "zcerza@redhat.com"},
+    {name = "Ed Rousseau", email = "rousseau@redhat.com"},
+    {name = "David Malcolm", email = "dmalcolm@redhat.com"},
+    {name = "Vitezslav Humpa", email = "vhumpa@redhat.com"},
+    {name = "Michal Odehnal", email = "modehnal@redhat.com"}
+]
+urls = { "Homepage" = "https://gitlab.com/dogtail/dogtail" }
+
+[tool.setuptools.packages.find]
+include = ["dogtail", "dogtail.accessibles", "dogtail.scripts", "tests"]
+
+[project.scripts]
+dogtail-create-config = "dogtail.scripts.dogtail_create_config:main"
+dogtail-get-config = "dogtail.scripts.dogtail_get_config:main"
+dogtail-headless = "dogtail.scripts.dogtail_headless:main"
+
+[tool.setuptools_scm]
+# can be empty if no extra settings are needed, presence enables setuptools-scm
+#tag_regex = "^DOGTAIL_(?P<version>[0-9]+_[0-9]+_[0-9]+)$"
+fallback_version = "v2.0.dev0"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+write_to = "dogtail/_version.py"
+

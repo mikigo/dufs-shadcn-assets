@@ -93,7 +93,26 @@ export function DirTable() {
     const url = newUrl(state.currentPath, deleteTarget.name)
     await deletePath(url)
     const data = await fetchIndexData(state.currentPath)
-    dispatch({ type: "SET_CURRENT", path: state.currentPath, data })
+    if (data.paths) {
+      const dirPath = data.href.replace(/\/$/, "")
+      const nodes = data.paths
+        .sort((a, b) => {
+          const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+          const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+          if (aIsDir !== bIsDir) return bIsDir - aIsDir
+          return a.name.localeCompare(b.name)
+        })
+        .map(p => ({
+          name: p.name,
+          path: dirPath + "/" + encodeURIComponent(p.name),
+          isDir: p.path_type.endsWith("Dir"),
+          children: null,
+          loaded: false,
+        }))
+      dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
+    } else {
+      dispatch({ type: "SET_CURRENT", path: data.href, data })
+    }
     setDeleteTarget(null)
   }
 
@@ -182,7 +201,19 @@ export function DirTable() {
         onDone={async () => {
           setMoveTarget(null)
           const data = await fetchIndexData(state.currentPath)
-          dispatch({ type: "SET_CURRENT", path: state.currentPath, data })
+          if (data.paths) {
+            const dirPath = data.href.replace(/\/$/, "")
+            const nodes = data.paths.sort((a, b) => {
+              const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+              const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+              if (aIsDir !== bIsDir) return bIsDir - aIsDir
+              return a.name.localeCompare(b.name)
+            }).map(p => ({
+              name: p.name, path: dirPath + "/" + encodeURIComponent(p.name),
+              isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
+            }))
+            dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
+          }
         }}
         onCancel={() => setMoveTarget(null)}
       />

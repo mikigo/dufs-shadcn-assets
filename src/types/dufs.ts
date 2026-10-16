@@ -71,3 +71,4 @@ export type AppAction =
   | { type: "REMOVE_UPLOAD"; id: number }
   | { type: "TOGGLE_SIDEBAR" }
   | { type: "SET_VIEW_MODE"; mode: ViewMode }
+  | { type: "REFRESH_DIR"; path: string; data: DufsData; nodes: TreeNode[]; treePath: string }

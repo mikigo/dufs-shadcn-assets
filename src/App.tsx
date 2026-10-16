@@ -165,9 +165,41 @@ function AppContent() {
     return true
   }, [state.auth.required, state.auth.user, state.currentPath, dispatch])
 
+  const refreshDirRef = useRef<(path: string) => void>(() => {})
+
+  // 上传完成后刷新当前目录
+  useEffect(() => {
+    refreshDirRef.current = async (path: string) => {
+      try {
+        const data = await fetchIndexData(path)
+        if (data.paths) {
+          const dirPath = data.href.replace(/\/$/, "")
+          const nodes = data.paths
+            .sort((a, b) => {
+              const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+              const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+              if (aIsDir !== bIsDir) return bIsDir - aIsDir
+              return a.name.localeCompare(b.name)
+            })
+            .map(p => ({
+              name: p.name,
+              path: dirPath + "/" + encodeURIComponent(p.name),
+              isDir: p.path_type.endsWith("Dir"),
+              children: null,
+              loaded: false,
+            }))
+          dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
+        } else {
+          dispatch({ type: "SET_CURRENT", path: data.href, data })
+        }
+      } catch {}
+    }
+  }, [dispatch])
+
   const startUpload = useCallback(async (files: FileList | File[], baseDir?: string) => {
     if (!await ensureAuth()) return
     const dirPath = baseDir || state.currentPath
+    let completed = 0
     for (let i = 0; i < files.length; i++) {
       const file = files[i as unknown as number]
       if (!file || file.size === 0) continue
@@ -188,9 +220,15 @@ function AppContent() {
         },
         onComplete: (id) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "done" } })
+          if (++completed === files.length) {
+            refreshDirRef.current(dirPath)
+          }
         },
         onError: (id, error) => {
           dispatch({ type: "UPDATE_UPLOAD", id, updates: { status: "error", errorMessage: error } })
+          if (++completed === files.length) {
+            refreshDirRef.current(dirPath)
+          }
         },
       })
     }

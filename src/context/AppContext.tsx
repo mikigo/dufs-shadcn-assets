@@ -75,6 +75,19 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, sidebarOpen: !state.sidebarOpen }
     case "SET_VIEW_MODE":
       return { ...state, viewMode: action.mode }
+    case "REFRESH_DIR": {
+      // 根目录直接替换树顶层层级，子目录更新对应节点的 children
+      const newTree = action.treePath === "" || action.treePath === "/"
+        ? action.nodes
+        : (function updateChildren(items: typeof state.tree): typeof state.tree {
+            return items.map(item => {
+              if (item.path === action.treePath) return { ...item, children: action.nodes, loaded: true }
+              if (item.children) return { ...item, children: updateChildren(item.children) }
+              return item
+            })
+          })(state.tree)
+      return { ...state, currentPath: action.path, currentData: action.data, selectedPath: null, tree: newTree }
+    }
     default:
       return state
   }
