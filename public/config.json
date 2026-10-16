@@ -6,5 +6,5 @@
   "logo_text_font_size": "20px",
   "view_mode": "list",
   "theme": "light",
-  "footer": "Powered By @mikigo"
+  "footer": "Powered By @<a style=\"text-decoration: underline\" href=\"https://github.com/mikigo\" target=\"_blank\">mikigo</a>"
 }
