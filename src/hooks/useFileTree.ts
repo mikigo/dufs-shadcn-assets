@@ -50,8 +50,6 @@ export function useFileTree() {
     const isExternalNav = !treeNavRef.current
     treeNavRef.current = false
 
-    if (state.currentPath === prevPathRef.current) return
-
     const normalized = state.currentPath.replace(/\/$/, "")
     if (!normalized) return
 
@@ -68,7 +66,7 @@ export function useFileTree() {
       }
     }
 
-    if (isExternalNav) {
+    if (isExternalNav && state.currentPath !== prevPathRef.current) {
       dispatch({ type: "SELECT", path: normalized + "/" })
     }
   }, [state.currentPath, state.tree, dispatch])
