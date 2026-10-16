@@ -10,6 +10,7 @@ const initialState: AppState = {
   selectedPath: null,
   sidebarOpen: true,
   viewMode: "icons",
+  lockedFiles: [],
   footerText: null,
   auth: {
     required: false,
@@ -142,6 +143,9 @@ function reducer(state: AppState, action: AppAction): AppState {
 
     case "SET_FOOTER":
       return { ...state, footerText: action.text }
+
+    case "SET_LOCKED_FILES":
+      return { ...state, lockedFiles: action.paths }
 
     default:
       return state

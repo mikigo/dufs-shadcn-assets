@@ -45,6 +45,7 @@ export interface AppState {
   selectedPath: string | null
   sidebarOpen: boolean
   viewMode: ViewMode
+  lockedFiles: string[]
   footerText: string | null
   auth: {
     required: boolean
@@ -81,3 +82,4 @@ export type AppAction =
   | { type: "SET_LOADING"; path: string | null }
   | { type: "TREE_REPLACE_ROOT"; nodes: TreeStateNode[] }
   | { type: "SET_FOOTER"; text: string | null }
+  | { type: "SET_LOCKED_FILES"; paths: string[] }

@@ -46,7 +46,7 @@ export function FilePreview() {
           >
             <RefreshCw className="size-3.5" />
           </button>
-          {editable && isTextLike && !editing && (
+          {editable && isTextLike && !editing && !state.lockedFiles.includes(state.selectedPath) && (
             <button
               onClick={() => setEditing(true)}
               className="p-0.5 rounded-sm hover:bg-muted transition-colors shrink-0"

@@ -101,6 +101,9 @@ function AppContent() {
       if (cfg.footer != null) {
         dispatch({ type: "SET_FOOTER", text: typeof cfg.footer === "string" ? cfg.footer : String(cfg.footer) })
       }
+      if (Array.isArray(cfg.lock_edit_files)) {
+        dispatch({ type: "SET_LOCKED_FILES", paths: cfg.lock_edit_files })
+      }
 
       const savedView = localStorage.getItem("dufs-view-mode")
       const viewMode = savedView || cfg.view_mode
