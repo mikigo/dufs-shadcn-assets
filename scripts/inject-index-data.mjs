@@ -43,16 +43,8 @@ if (!html.includes('__INDEX_DATA__')) {
   console.log('✓ __INDEX_DATA__ placeholder already present')
 }
 
-// Inline favicon SVG
-const faviconSrc = resolve(publicDir, 'favicon.svg')
-let faviconData
-if (existsSync(faviconSrc)) {
-  faviconData = readFileSync(faviconSrc, 'utf-8')
-} else {
-  faviconData = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="#18181b"/><g transform="translate(4,4)"><path d="M8 16h.02" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.21 12.58a2 2 0 00-.21.9V18a2 2 0 002 2h16a2 2 0 002-2v-4.53a2 2 0 00-.21-.9L18.55 6.11A2 2 0 0016.76 5H7.24a2 2 0 00-1.79 1.11z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.95 13H2.05" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 16h.02" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`
-}
-html = html.replace('type="image/x-icon" href="favicon.ico"', `href="data:image/svg+xml,${encodeURIComponent(faviconData)}"`)
-console.log('✓ Inlined favicon')
+html = html.replace('type="image/x-icon" href="favicon.ico"',
+  `href="/.dufs_shadcn_assets/favicon.svg" type="image/svg+xml"`)
 
 // Embed runtime config as default (no base64 logos — served via HTTP from config dir)
 const runtimeConfig = { ...config }
