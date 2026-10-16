@@ -44,14 +44,8 @@ export function useFileTree() {
 
   // 当 currentPath 变化时（从主内容区导航），在文件树中展开并选中对应目录
   useEffect(() => {
-    if (!state.currentPath || state.currentPath === "/") {
-      console.log("[track] skip: currentPath=", state.currentPath)
-      return
-    }
-    if (state.tree.length === 0) {
-      console.log("[track] skip: tree empty")
-      return
-    }
+    if (!state.currentPath || state.currentPath === "/") return
+    if (state.tree.length === 0) return
 
     const isExternalNav = !treeNavRef.current
     treeNavRef.current = false
@@ -65,20 +59,14 @@ export function useFileTree() {
     for (const seg of segments) {
       partialPath += "/" + seg
       const node = findNode(state.tree, partialPath)
-      if (!node) {
-        console.log("[track] node not found for", partialPath, "tree roots:", state.tree.map(n => n.path))
-        return
-      }
+      if (!node) return
       if (node.isDir && node.children === null && !node.loaded) {
-        console.log("[track] EXPAND_TREE", partialPath, "children:", node.children, "loaded:", node.loaded)
         dispatch({ type: "EXPAND_TREE", path: partialPath })
         return
       }
-      console.log("[track] node", partialPath, "children:", node.children ? node.children.length : null, "loaded:", node.loaded)
     }
 
     if (isExternalNav && state.currentPath !== prevPathRef.current) {
-      console.log("[track] SELECT", normalized + "/")
       dispatch({ type: "SELECT", path: normalized + "/" })
     }
   }, [state.currentPath, state.tree, dispatch])

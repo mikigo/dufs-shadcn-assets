@@ -25,7 +25,6 @@ function AppContent() {
     try {
       const rootData = await fetchIndexData("/")
       if (rootData.paths) {
-        console.log("[loadRootTree] dispatching SET_TREE with", rootData.paths.length, "root items")
         const rootNodes: TreeNode[] = rootData.paths
           .sort((a, b) => {
             const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
@@ -37,13 +36,9 @@ function AppContent() {
             name: p.name, path: "/" + encodeURIComponent(p.name),
             isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
           }))
-        dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
-      } else {
-        console.log("[loadRootTree] no paths in root data")
+dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
       }
-    } catch (e) {
-      console.log("[loadRootTree] error:", e)
-    }
+    } catch {}
   }, [dispatch])
 
   useEffect(() => {
@@ -151,15 +146,14 @@ function AppContent() {
       // ?view URL → 文件预览，需要先拉取父目录数据填充树
       if (location.search === "?view") {
         const parentDir = location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) || "/"
-        console.log("[popstate] view, parentDir=", parentDir, "path=", location.pathname)
         try {
           const dirData = await fetchIndexData(parentDir)
           if (location.search !== "?view" || location.pathname + location.search !== path) return
           if (parentDir !== "/") {
             await loadRootTree()
           }
-          console.log("[popstate] view SET_CURRENT", dirData.href)
-          dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
+          const href = dirData.href.endsWith("/") ? dirData.href : dirData.href + "/"
+          dispatch({ type: "SET_CURRENT", path: href, data: dirData })
         } catch (e) {
           if (location.pathname + location.search !== path) return
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
@@ -190,10 +184,8 @@ function AppContent() {
           } catch {}
         }
 
-        console.log("[popstate] non-view, target=", targetPath, "data.href=", data.href)
         if (data.href !== "/") {
           await loadRootTree()
-          console.log("[popstate] dispatching EXPAND_TREE for", data.href.replace(/\/$/, ""), "then SET_CURRENT", data.href)
           dispatch({ type: "EXPAND_TREE", path: data.href.replace(/\/$/, "") })
         }
         dispatch({ type: "SET_CURRENT", path: data.href, data })
