@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logo.svg" alt="Logo" width="64" />
+  <img src="public/.dufs_shadcn_assets/logo.svg" alt="Logo" width="64" />
 </p>
 
 # dufs-shadcn-assets
