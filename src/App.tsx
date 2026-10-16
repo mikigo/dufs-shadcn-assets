@@ -214,14 +214,16 @@ function AppContent() {
           } catch {}
         }
 
-        dispatch({ type: "SET_TREE", path: "/", nodes: [] })
         dispatch({ type: "SET_CURRENT", path: data.href, data })
+        if (data.href !== "/") {
+          await loadRootTree()
+        }
       } catch (err) {
       }
     }
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
-  }, [dispatch])
+  }, [dispatch, loadRootTree])
 
   // Debug: expose state globally
   useEffect(() => {
