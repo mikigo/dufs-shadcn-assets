@@ -127,40 +127,62 @@ dufs ./serve-path --assets ./assets
 
 ### Logo / 品牌定制
 
-通过 `config.json` 配置：
+将所有配置和资源文件放在 `.dufs_shadcn_assets/` 目录下，放到数据目录根路径（即 dufs 服务的目录）下即可生效，无需重新构建：
 
-```json
-{
-  "logo_text": "My Server",
-  "logo": "./logo.svg",
-  "dark_logo": "./dark-logo.svg",
-  "logo_size": "32px",
-  "logo_text_font_size": "18px",
-  "view_mode": "icons"
-}
+```
+serve-path/
+├── .dufs_shadcn_assets/
+│   ├── config.json
+│   ├── logo.svg
+│   ├── logo-dark.svg
+│   └── favicon.svg
+├── your-files...
+└── config.json              ← dufs 原生配置（仅 theme 字段，消除 404）
 ```
 
-支持深浅色双 Logo 自动切换，构建时内联为 Base64，运行时可通过 XHR 覆盖。浏览器标签页标题自动同步。
+> **注意**：`.dufs_shadcn_assets/` 目录不会出现在文件树和文件列表中，已系统级屏蔽。
 
-### 离线支持
+## 配置
 
-- **单文件构建** — `vite-plugin-singlefile` 将所有 JS/CSS/Font/Icon 内联为单个 HTML
-- **PDF.js 资源本地化** — cmaps 和 standard_fonts 随构建复制到 dist/
-- **Leaflet CSS 本地导入** — GIS 地图预览无 CDN 依赖
-- **Logo/Favicon 内联** — 构建时转为 Data URI
-- **无外部请求** — 所有资源自包含，断网环境也能完整使用
-
-## 配置 (config.json)
+### 自定义配置 (`.dufs_shadcn_assets/config.json`)
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
 | `logo_text` | string | (空) | 侧边栏标题 / 浏览器标签页标题 |
-| `logo` | string | (空) | 浅色模式 Logo 路径 |
+| `logo` | string | (空) | 浅色模式 Logo 路径（相对于 `.dufs_shadcn_assets/`，如 `./logo.svg`） |
 | `dark_logo` | string | (空) | 深色模式 Logo 路径 |
 | `logo_size` | string | `28px` | Logo 图片尺寸 |
 | `logo_text_font_size` | string | `20px` | 标题文字大小 |
 | `view_mode` | string | `icons` | 默认视图模式 (`icons` / `list`) |
 | `theme` | string | `light` | 默认主题 (`light` / `dark`) |
+| `footer` | string | (空) | 文件区域底部文字，支持 HTML 标签 |
+| `lock_edit_files` | string[] | `[]` | 禁止编辑的文件路径列表，如 `["/README.md"]` |
+
+### 示例
+
+```json
+{
+  "logo_text": "My Server",
+  "logo": "./logo.svg",
+  "dark_logo": "./logo-dark.svg",
+  "view_mode": "list",
+  "theme": "dark",
+  "footer": "Powered By @<a style=\"text-decoration: underline\" href=\"https://github.com/mikigo\" target=\"_blank\">mikigo</a>",
+  "lock_edit_files": [
+    "/README.md"
+  ]
+}
+```
+
+### Dufs 原生配置 (`config.json`)
+
+dufs 原生 UI 需要一个 `config.json` 放在数据目录根部，仅支持 `theme` 字段：
+
+```json
+{ "theme": "light" }
+```
+
+放置后可消除 `GET /config.json` 的 404 日志，不影响自定义配置。
 
 ## License
 
