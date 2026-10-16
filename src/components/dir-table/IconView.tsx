@@ -217,7 +217,7 @@ export function IconView() {
           }
           const normSource = state.currentPath.replace(/\/$/, "")
           const normDest = destDir.replace(/\/$/, "")
-          if (normDest && normDest !== normSource) {
+          if (normDest !== normSource) {
             const destData = await fetchIndexData(destDir)
             if (destData.paths) {
               const destDirPath = destData.href.replace(/\/$/, "")
@@ -230,7 +230,7 @@ export function IconView() {
                 name: p.name, path: destDirPath + "/" + encodeURIComponent(p.name),
                 isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
               }))
-              dispatch({ type: "REFRESH_DIR", path: destData.href, data: destData, nodes: destNodes, treePath: destDirPath })
+              dispatch({ type: "SET_TREE", path: destDirPath || "/", nodes: destNodes })
             }
           }
         }}
