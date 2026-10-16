@@ -22,7 +22,7 @@ function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "SET_TREE": {
       const { path, nodes } = action
-      const replace = state.currentPath === path || state.tree.length === 0
+      const replace = state.currentPath === path || state.tree.length === 0 || path === "/"
       // Initial load or navigation: replace entire tree with current directory nodes
       if (replace) {
         return { ...state, tree: nodes }

@@ -198,7 +198,7 @@ export function DirTable() {
         open={!!moveTarget}
         item={moveTarget}
         currentPath={state.currentPath}
-        onDone={async () => {
+        onDone={async (destDir: string) => {
           setMoveTarget(null)
           const data = await fetchIndexData(state.currentPath)
           if (data.paths) {
@@ -213,6 +213,24 @@ export function DirTable() {
               isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
             }))
             dispatch({ type: "REFRESH_DIR", path: data.href, data, nodes, treePath: dirPath })
+          }
+          const normSource = state.currentPath.replace(/\/$/, "")
+          const normDest = destDir.replace(/\/$/, "")
+          if (normDest && normDest !== normSource) {
+            const destData = await fetchIndexData(destDir)
+            if (destData.paths) {
+              const destDirPath = destData.href.replace(/\/$/, "")
+              const destNodes = destData.paths.sort((a, b) => {
+                const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+                const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+                if (aIsDir !== bIsDir) return bIsDir - aIsDir
+                return a.name.localeCompare(b.name)
+              }).map(p => ({
+                name: p.name, path: destDirPath + "/" + encodeURIComponent(p.name),
+                isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
+              }))
+              dispatch({ type: "REFRESH_DIR", path: destData.href, data: destData, nodes: destNodes, treePath: destDirPath })
+            }
           }
         }}
         onCancel={() => setMoveTarget(null)}

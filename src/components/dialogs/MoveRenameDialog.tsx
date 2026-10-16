@@ -16,7 +16,7 @@ interface Props {
   open: boolean
   item: PathItem | null
   currentPath: string
-  onDone: () => void
+  onDone: (destDir: string) => void
   onCancel: () => void
 }
 
@@ -38,7 +38,8 @@ export function MoveRenameDialog({ open, item, currentPath, onDone, onCancel }: 
         ? newPath.split("/").map(encodeURIComponent).join("/")
         : newUrl(currentPath, newPath)
       await movePath(fromUrl, toUrl)
-      onDone()
+      const destDir = toUrl.substring(0, toUrl.lastIndexOf("/") + 1) || "/"
+      onDone(destDir)
     } catch (err: any) {
       setError(err.message)
     }
