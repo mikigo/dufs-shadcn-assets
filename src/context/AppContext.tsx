@@ -23,6 +23,7 @@ function reducer(state: AppState, action: AppAction): AppState {
     case "SET_TREE": {
       const { path, nodes } = action
       const replace = state.currentPath === path || state.tree.length === 0 || path === "/"
+      console.log("[SET_TREE] path=", path, "nodes=", nodes.length, "currentPath=", state.currentPath, "replace=", replace, "treeLen=", state.tree.length)
       // Initial load or navigation: replace entire tree with current directory nodes
       if (replace) {
         return { ...state, tree: nodes }
@@ -40,6 +41,7 @@ function reducer(state: AppState, action: AppAction): AppState {
     }
     case "EXPAND_TREE": {
       const node = findNode(state.tree, action.path)
+      console.log("[EXPAND_TREE] path=", action.path, "found=", !!node, "loaded=", node?.loaded, "inLoading=", state.treeLoading.has(action.path))
       if (!node || node.loaded || state.treeLoading.has(action.path)) return state
       const loading = new Set(state.treeLoading)
       loading.add(action.path)
