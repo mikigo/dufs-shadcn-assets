@@ -136,8 +136,7 @@ serve-path/
 │   ├── logo.svg
 │   ├── logo-dark.svg
 │   └── favicon.svg
-├── your-files...
-└── config.json              ← dufs 原生配置（仅 theme 字段，消除 404）
+└── your-files...
 ```
 
 > **注意**：`.dufs_shadcn_assets/` 目录不会出现在文件树和文件列表中，已系统级屏蔽。
