@@ -70,6 +70,9 @@ function AppContent() {
         } catch {
           // 父目录拉取失败，至少显示 FilePreview
         }
+        if (parentDir !== "/") {
+          await loadRootTree()
+        }
         if (dirData) {
           dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
         } else {
@@ -83,9 +86,6 @@ function AppContent() {
           }})
         }
         dispatch({ type: "SELECT", path: data.href })
-        if (parentDir !== "/") {
-          await loadRootTree()
-        }
         return
       }
 
@@ -149,24 +149,10 @@ function AppContent() {
         try {
           const dirData = await fetchIndexData(parentDir)
           if (location.search !== "?view" || location.pathname + location.search !== path) return
-          dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
           if (parentDir !== "/") {
-            const rootData = await fetchIndexData("/")
-            if (rootData.paths) {
-              const rootNodes: TreeNode[] = rootData.paths
-                .sort((a, b) => {
-                  const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-                  const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-                  if (aIsDir !== bIsDir) return bIsDir - aIsDir
-                  return a.name.localeCompare(b.name)
-                })
-                .map(p => ({
-                  name: p.name, path: "/" + encodeURIComponent(p.name),
-                  isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
-                }))
-              dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
-            }
+            await loadRootTree()
           }
+          dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
         } catch (e) {
           if (location.pathname + location.search !== path) return
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
@@ -175,23 +161,6 @@ function AppContent() {
             allow_search: false, allow_archive: false,
             auth: false, user: "", dir_exists: true, editable: "",
           }})
-          if (parentDir !== "/") {
-            const rootData = await fetchIndexData("/")
-            if (rootData.paths) {
-              const rootNodes: TreeNode[] = rootData.paths
-                .sort((a, b) => {
-                  const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-                  const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-                  if (aIsDir !== bIsDir) return bIsDir - aIsDir
-                  return a.name.localeCompare(b.name)
-                })
-                .map(p => ({
-                  name: p.name, path: "/" + encodeURIComponent(p.name),
-                  isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
-                }))
-              dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
-            }
-          }
         }
         dispatch({ type: "SELECT", path: location.pathname })
         return
@@ -214,10 +183,11 @@ function AppContent() {
           } catch {}
         }
 
-        dispatch({ type: "SET_CURRENT", path: data.href, data })
         if (data.href !== "/") {
           await loadRootTree()
+          dispatch({ type: "EXPAND_TREE", path: data.href.replace(/\/$/, "") })
         }
+        dispatch({ type: "SET_CURRENT", path: data.href, data })
       } catch (err) {
       }
     }
