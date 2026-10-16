@@ -18,9 +18,11 @@ export function MainPanel({ toolbar, content }: Props) {
         {content}
       </div>
       {state.footerText && (
-        <div className="shrink-0 px-4 py-2 text-xs text-muted-foreground text-center border-t border-border bg-background">
-          {state.footerText}
-        </div>
+        <div
+          className="shrink-0 px-4 py-2 text-xs text-center border-t border-border bg-background"
+          style={{ color: "var(--color-muted-foreground, rgba(120,120,120,0.5))" }}
+          dangerouslySetInnerHTML={{ __html: state.footerText }}
+        />
       )}
     </div>
   )
