@@ -1,4 +1,4 @@
-import { type ReactNode } from "react"
+import { type ReactNode, useState, useEffect } from "react"
 
 interface DufsConfig {
   logo_text?: string
@@ -6,11 +6,11 @@ interface DufsConfig {
   dark_logo?: string
   logo_size?: string
   logo_text_font_size?: string
-  _logoData?: string
-  _darkLogoData?: string
 }
 
-function getConfig(): DufsConfig {
+const CONFIG_PATH = "/.dufs_shadcn_assets_config"
+
+function getBuildConfig(): DufsConfig {
   try {
     const el = document.getElementById("dufs-config")
     if (el?.textContent) return JSON.parse(el.textContent)
@@ -23,17 +23,27 @@ interface Props {
 }
 
 export function Sidebar({ children }: Props) {
-  const config = getConfig()
-  const logoSize = config.logo_size || "28px"
+  const [config, setConfig] = useState<DufsConfig>(getBuildConfig)
   const isDark = document.documentElement.classList.contains("dark")
-  const logoData = isDark ? config._darkLogoData : config._logoData
-  const logoSrc = logoData || (isDark ? config.dark_logo : config.logo)
+
+  useEffect(() => {
+    fetch(CONFIG_PATH + "/config.json", { cache: "no-store" })
+      .then(r => { if (r.ok) return r.json() })
+      .then(runtimeCfg => {
+        if (runtimeCfg) setConfig(prev => ({ ...prev, ...runtimeCfg }))
+      })
+      .catch(() => {})
+  }, [])
+
+  const logoSize = config.logo_size || "28px"
+  const logoSrc = isDark ? (config.dark_logo ?? config.logo) : config.logo
+  const fullLogoSrc = logoSrc?.startsWith(".") ? CONFIG_PATH + logoSrc.slice(1) : logoSrc
 
   return (
     <div className="h-full flex flex-col bg-sidebar">
       <div className="flex items-center gap-2.5 px-4 py-3 border-b border-sidebar-border shrink-0">
-        {logoSrc && (
-          <img src={logoSrc} alt="Logo" style={{ width: logoSize, height: logoSize }} className="rounded-md" />
+        {fullLogoSrc && (
+          <img src={fullLogoSrc} alt="Logo" style={{ width: logoSize, height: logoSize }} className="rounded-md" />
         )}
         {config.logo_text && (
           <span

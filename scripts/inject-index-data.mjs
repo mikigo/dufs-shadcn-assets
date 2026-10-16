@@ -5,7 +5,8 @@ import { resolve } from 'path'
 const distDir = resolve(import.meta.dirname, '..', 'dist')
 const htmlPath = resolve(distDir, 'index.html')
 const publicDir = resolve(import.meta.dirname, '..', 'public')
-const configSrc = resolve(publicDir, 'dufs_shadcn_assets_config.json')
+const configDir = '.dufs_shadcn_assets_config'
+const configSrc = resolve(publicDir, configDir, 'config.json')
 const indexDataMarker = '<script id="index-data" type="application/json">__INDEX_DATA__</script>'
 
 const defaultConfig = {
@@ -27,12 +28,10 @@ if (existsSync(configSrc)) {
   }
   if (merged) {
     writeFileSync(configSrc, JSON.stringify(config, null, 2), 'utf-8')
-    console.log('✓ Merged new fields into dufs_shadcn_assets_config.json')
+    console.log('✓ Merged new fields into ' + configDir + '/config.json')
   }
 } else {
   config = { ...defaultConfig }
-  writeFileSync(configSrc, JSON.stringify(config, null, 2), 'utf-8')
-  console.log('✓ Created default config.json')
 }
 
 let html = readFileSync(htmlPath, 'utf-8')
@@ -55,36 +54,30 @@ if (existsSync(faviconSrc)) {
 html = html.replace('type="image/x-icon" href="favicon.ico"', `href="data:image/svg+xml,${encodeURIComponent(faviconData)}"`)
 console.log('✓ Inlined favicon')
 
-// Inline logo SVGs into runtime config (only if config has logo/dark_logo set)
-const logoSrc = resolve(publicDir, 'logo.svg')
-const darkLogoSrc = resolve(publicDir, 'logo-dark.svg')
+// Embed runtime config as default (no base64 logos — served via HTTP from config dir)
 const runtimeConfig = { ...config }
-if (config.logo && existsSync(logoSrc)) {
-  runtimeConfig._logoData = 'data:image/svg+xml;base64,' + readFileSync(logoSrc).toString('base64')
-  console.log('✓ Inlined logo.svg')
-}
-if (config.dark_logo && existsSync(darkLogoSrc)) {
-  runtimeConfig._darkLogoData = 'data:image/svg+xml;base64,' + readFileSync(darkLogoSrc).toString('base64')
-  console.log('✓ Inlined logo-dark.svg')
-}
-
-// Embed runtime config as default; index.html's XHR can override it at runtime
+delete runtimeConfig._logoData
+delete runtimeConfig._darkLogoData
 const configScript = `<script id="dufs-config" type="application/json">${JSON.stringify(runtimeConfig)}</script>`
 html = html.replace('<meta name="viewport"', configScript + '\n    <meta name="viewport"')
 
 writeFileSync(htmlPath, html, 'utf-8')
 
-// 离线环境：将 PDF.js cmaps 和 standard_fonts 复制到 dist/ 和 sample-files/
+// Copy entire config directory to sample-files/ for dufs HTTP serving
+const sampleDir = resolve(import.meta.dirname, '..', 'sample-files')
+const configDirSrc = resolve(publicDir, configDir)
+const configDirSampleDest = resolve(sampleDir, configDir)
+if (existsSync(configDirSrc)) {
+  cpSync(configDirSrc, configDirSampleDest, { recursive: true })
+  console.log('✓ Copied ' + configDir + '/ to sample-files/')
+}
+
+// Copy PDF.js cmaps and standard_fonts to dist/
 const nodeModules = resolve(import.meta.dirname, '..', 'node_modules')
 const cmapsSrc = resolve(nodeModules, 'pdfjs-dist/cmaps')
 const fontsSrc = resolve(nodeModules, 'pdfjs-dist/standard_fonts')
-const sampleDir = resolve(import.meta.dirname, '..', 'sample-files')
 const cmapsDest = resolve(distDir, 'cmaps')
 const fontsDest = resolve(distDir, 'standard_fonts')
 if (existsSync(cmapsSrc)) { cpSync(cmapsSrc, cmapsDest, { recursive: true }) }
 if (existsSync(fontsSrc)) { cpSync(fontsSrc, fontsDest, { recursive: true }) }
 console.log('✓ Copied PDF.js cmaps & standard_fonts (for dist/)')
-
-// 提示：PDF 离线预览的 cmaps/standard_fonts 需要手动复制到 serve-path
-// 例如: cp -r dist/cmaps sample-files/cmaps
-// 否则 PDF 中的 CJK 字符和标准字体可能无法正确渲染

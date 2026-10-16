@@ -1,15 +1,7 @@
 import { useEffect, useCallback, useRef } from "react"
 import { useAppState, findNode } from "@/context/AppContext"
 import { fetchIndexData, pushHistory } from "@/api/dufs"
-import type { FileEntry } from "@/types/dufs"
-
-function pathToFileEntry(p: { name: string; path_type: string }, parentPath: string): FileEntry {
-  return {
-    name: p.name,
-    path: parentPath.replace(/\/$/, "") + "/" + encodeURIComponent(p.name),
-    isDir: p.path_type.endsWith("Dir"),
-  }
-}
+import { pathsToEntries } from "@/lib/utils"
 
 export function useFileTree() {
   const { state, dispatch } = useAppState()
@@ -18,14 +10,7 @@ export function useFileTree() {
   useEffect(() => {
     if (state.tree.length > 0) return
     if (state.currentData?.paths) {
-      const entries: FileEntry[] = state.currentData.paths
-        .sort((a, b) => {
-          const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-          const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-          if (aIsDir !== bIsDir) return bIsDir - aIsDir
-          return a.name.localeCompare(b.name)
-        })
-        .map(p => pathToFileEntry(p, state.currentPath))
+      const entries = pathsToEntries(state.currentData.paths, state.currentPath)
       const treePath = state.currentPath.replace(/\/$/, "") || "/"
       dispatch({ type: "TREE_SET_CHILDREN", parentPath: treePath, entries })
     }
@@ -66,15 +51,7 @@ export function useFileTree() {
     fetchIndexData(dirPath)
       .then(data => {
         if (!data.paths) return
-        const entries: FileEntry[] = data.paths
-          .sort((a, b) => {
-            const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
-            const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
-            if (aIsDir !== bIsDir) return bIsDir - aIsDir
-            return a.name.localeCompare(b.name)
-          })
-          .map(p => pathToFileEntry(p, path))
-        dispatch({ type: "TREE_SET_CHILDREN", parentPath: path, entries })
+        dispatch({ type: "TREE_SET_CHILDREN", parentPath: path, entries: pathsToEntries(data.paths, path) })
       })
       .catch(() => {
         dispatch({ type: "TREE_SET_CHILDREN", parentPath: path, entries: [] })
