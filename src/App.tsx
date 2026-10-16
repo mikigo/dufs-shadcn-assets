@@ -98,6 +98,10 @@ function AppContent() {
       if (!el?.textContent) return
       const cfg = JSON.parse(el.textContent)
 
+      if (cfg.footer != null) {
+        dispatch({ type: "SET_FOOTER", text: typeof cfg.footer === "string" ? cfg.footer : String(cfg.footer) })
+      }
+
       const savedView = localStorage.getItem("dufs-view-mode")
       const viewMode = savedView || cfg.view_mode
       if (viewMode === "list" || viewMode === "icons") {

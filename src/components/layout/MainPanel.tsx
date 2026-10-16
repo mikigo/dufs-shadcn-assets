@@ -1,4 +1,5 @@
 import { type ReactNode } from "react"
+import { useAppState } from "@/context/AppContext"
 
 interface Props {
   toolbar: ReactNode
@@ -6,6 +7,7 @@ interface Props {
 }
 
 export function MainPanel({ toolbar, content }: Props) {
+  const { state } = useAppState()
   return (
     <div className="flex flex-col flex-1 min-w-0 h-full">
       <div className="flex items-center gap-3 px-5 py-2.5 bg-background sticky top-0 z-10 flex-wrap relative"
@@ -15,6 +17,11 @@ export function MainPanel({ toolbar, content }: Props) {
       <div className="flex-1 min-h-0 overflow-auto">
         {content}
       </div>
+      {state.footerText && (
+        <div className="shrink-0 px-4 py-2 text-xs text-muted-foreground text-center border-t border-border bg-background">
+          {state.footerText}
+        </div>
+      )}
     </div>
   )
 }

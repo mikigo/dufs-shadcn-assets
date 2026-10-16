@@ -45,6 +45,7 @@ export interface AppState {
   selectedPath: string | null
   sidebarOpen: boolean
   viewMode: ViewMode
+  footerText: string | null
   auth: {
     required: boolean
     user: string | null
@@ -79,3 +80,4 @@ export type AppAction =
   | { type: "SET_VIEW_MODE"; mode: ViewMode }
   | { type: "SET_LOADING"; path: string | null }
   | { type: "TREE_REPLACE_ROOT"; nodes: TreeStateNode[] }
+  | { type: "SET_FOOTER"; text: string | null }

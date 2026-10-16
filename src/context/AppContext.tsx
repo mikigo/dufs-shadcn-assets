@@ -10,6 +10,7 @@ const initialState: AppState = {
   selectedPath: null,
   sidebarOpen: true,
   viewMode: "icons",
+  footerText: null,
   auth: {
     required: false,
     user: null,
@@ -138,6 +139,9 @@ function reducer(state: AppState, action: AppAction): AppState {
 
     case "SET_VIEW_MODE":
       return { ...state, viewMode: action.mode }
+
+    case "SET_FOOTER":
+      return { ...state, footerText: action.text }
 
     default:
       return state
