@@ -39,9 +39,10 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, tree: updateChildren(state.tree), treeLoading: nextLoading }
     }
     case "EXPAND_TREE": {
-      const loading = new Set(state.treeLoading)
       const node = findNode(state.tree, action.path)
-      if (node && !node.loaded) loading.add(action.path)
+      if (!node || node.loaded || state.treeLoading.has(action.path)) return state
+      const loading = new Set(state.treeLoading)
+      loading.add(action.path)
       return { ...state, treeLoading: loading }
     }
     case "COLLAPSE_TREE": {
