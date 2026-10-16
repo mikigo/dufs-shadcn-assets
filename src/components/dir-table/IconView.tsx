@@ -26,7 +26,8 @@ export function IconView() {
 
   if (!state.currentData || !state.currentData.paths?.length) return null
 
-  const sorted = [...state.currentData.paths].sort((a, b) => {
+  const SYS_DIR = ".dufs_shadcn_assets"
+  const sorted = [...state.currentData.paths].filter(p => p.name !== SYS_DIR).sort((a, b) => {
     const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
     const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
     if (aIsDir !== bIsDir) return bIsDir - aIsDir
