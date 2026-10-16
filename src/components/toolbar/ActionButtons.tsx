@@ -102,6 +102,7 @@ export function ActionButtons() {
     const q = params.get("q")
     const path = q ? state.currentPath + "?q=" + encodeURIComponent(q) : state.currentPath
     const data = await fetchIndexData(path)
+    dispatch({ type: "SET_TREE", path: "/", nodes: [] })
     dispatch({ type: "SET_CURRENT", path: state.currentPath, data })
   }
 

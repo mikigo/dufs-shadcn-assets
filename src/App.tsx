@@ -13,12 +13,33 @@ import { ReadmePreview } from "@/components/file-preview/ReadmePreview"
 import { UploadProgressSheet } from "@/components/dialogs/UploadProgressSheet"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 import { FolderOpen } from "lucide-react"
+import type { TreeNode } from "@/types/dufs"
 
 let uploadIdCounter = 0
 
 function AppContent() {
   const { state, dispatch } = useAppState()
   const dropRef = useRef<HTMLDivElement>(null)
+
+  const loadRootTree = useCallback(async () => {
+    try {
+      const rootData = await fetchIndexData("/")
+      if (rootData.paths) {
+        const rootNodes: TreeNode[] = rootData.paths
+          .sort((a, b) => {
+            const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+            const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+            if (aIsDir !== bIsDir) return bIsDir - aIsDir
+            return a.name.localeCompare(b.name)
+          })
+          .map(p => ({
+            name: p.name, path: "/" + encodeURIComponent(p.name),
+            isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
+          }))
+        dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
+      }
+    } catch {}
+  }, [dispatch])
 
   useEffect(() => {
     async function init() {
@@ -62,6 +83,9 @@ function AppContent() {
           }})
         }
         dispatch({ type: "SELECT", path: data.href })
+        if (parentDir !== "/") {
+          await loadRootTree()
+        }
         return
       }
 
@@ -69,9 +93,29 @@ function AppContent() {
       if (data.auth) {
         dispatch({ type: "SET_AUTH", auth: { required: true, user: data.user || null } })
       }
+      // 非根目录的初始加载：提前拉取根目录数据构建树
+      if (data.href !== "/") {
+        try {
+          const rootData = await fetchIndexData("/")
+          if (rootData.paths) {
+            const rootNodes: TreeNode[] = rootData.paths
+              .sort((a, b) => {
+                const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+                const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+                if (aIsDir !== bIsDir) return bIsDir - aIsDir
+                return a.name.localeCompare(b.name)
+              })
+              .map(p => ({
+                name: p.name, path: "/" + encodeURIComponent(p.name),
+                isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
+              }))
+            dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
+          }
+        } catch {}
+      }
     }
     init()
-  }, [dispatch])
+  }, [dispatch, loadRootTree])
 
   // 从 dufs-config 读取初始配置（仅首次，localStorage 优先）
   useEffect(() => {
@@ -105,17 +149,49 @@ function AppContent() {
         try {
           const dirData = await fetchIndexData(parentDir)
           if (location.search !== "?view" || location.pathname + location.search !== path) return
-          dispatch({ type: "SET_TREE", path: "/", nodes: [] })
           dispatch({ type: "SET_CURRENT", path: dirData.href, data: dirData })
+          if (parentDir !== "/") {
+            const rootData = await fetchIndexData("/")
+            if (rootData.paths) {
+              const rootNodes: TreeNode[] = rootData.paths
+                .sort((a, b) => {
+                  const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+                  const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+                  if (aIsDir !== bIsDir) return bIsDir - aIsDir
+                  return a.name.localeCompare(b.name)
+                })
+                .map(p => ({
+                  name: p.name, path: "/" + encodeURIComponent(p.name),
+                  isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
+                }))
+              dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
+            }
+          }
         } catch (e) {
           if (location.pathname + location.search !== path) return
-          dispatch({ type: "SET_TREE", path: "/", nodes: [] })
           dispatch({ type: "SET_CURRENT", path: parentDir, data: {
             href: parentDir, uri_prefix: "", kind: "Index" as const, paths: [],
             allow_upload: false, allow_delete: false,
             allow_search: false, allow_archive: false,
             auth: false, user: "", dir_exists: true, editable: "",
           }})
+          if (parentDir !== "/") {
+            const rootData = await fetchIndexData("/")
+            if (rootData.paths) {
+              const rootNodes: TreeNode[] = rootData.paths
+                .sort((a, b) => {
+                  const aIsDir = a.path_type.endsWith("Dir") ? 1 : 0
+                  const bIsDir = b.path_type.endsWith("Dir") ? 1 : 0
+                  if (aIsDir !== bIsDir) return bIsDir - aIsDir
+                  return a.name.localeCompare(b.name)
+                })
+                .map(p => ({
+                  name: p.name, path: "/" + encodeURIComponent(p.name),
+                  isDir: p.path_type.endsWith("Dir"), children: null, loaded: false,
+                }))
+              dispatch({ type: "SET_TREE", path: "/", nodes: rootNodes })
+            }
+          }
         }
         dispatch({ type: "SELECT", path: location.pathname })
         return

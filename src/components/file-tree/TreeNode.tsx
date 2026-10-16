@@ -74,22 +74,6 @@ export function TreeNodeComponent({ node, depth, loading, selected, onToggle, on
           )}
         </button>
       </div>
-      {expanded && node.children && (
-        <div>
-          {node.children.map(child => (
-            <TreeNodeComponent
-              key={child.path}
-              node={child}
-              depth={depth + 1}
-              loading={false}
-              selected={false}
-              onToggle={onToggle}
-              onSelect={onSelect}
-              onNavigate={onNavigate}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 }
