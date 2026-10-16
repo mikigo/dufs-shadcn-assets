@@ -130,6 +130,7 @@ export function IconView() {
               key={item.name}
               className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border
                          hover:bg-muted/50 cursor-pointer transition-colors group relative"
+              onClick={() => handleClick(item)}
               onDoubleClick={() => handleClick(item)}
             >
               {/* Actions on hover */}
@@ -159,7 +160,6 @@ export function IconView() {
               {/* Name */}
               <span
                 className="text-sm text-center leading-tight break-all line-clamp-2 text-primary hover:underline"
-                onClick={(e) => { e.stopPropagation(); handleClick(item) }}
               >
                 {item.name}
               </span>

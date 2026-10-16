@@ -135,11 +135,12 @@ export function DirTable() {
               <TableRow
                 key={item.name}
                 className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleRowClick(item)}
                 onDoubleClick={() => handleRowClick(item)}
               >
                 <TableCell>{getIcon(item.path_type, item.name)}</TableCell>
                 <TableCell className="font-medium">
-                  <span className="text-primary hover:underline" onClick={(e) => { e.stopPropagation(); handleRowClick(item) }}>
+                  <span className="text-primary hover:underline">
                     {item.name}
                   </span>
                 </TableCell>
