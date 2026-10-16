@@ -5,7 +5,7 @@ import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
 } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
-import { Upload, Check, RefreshCw } from "lucide-react"
+import { Activity, Check, RefreshCw } from "lucide-react"
 import { retryUpload } from "@/api/dufs"
 
 export function UploadProgressSheet() {
@@ -39,7 +39,7 @@ export function UploadProgressSheet() {
     <Sheet>
       <SheetTrigger>
         <Button variant="ghost" size="icon" className="relative">
-          <Upload data-icon />
+          <Activity data-icon />
           {activeUploads.length > 0 && (
             <Badge className="absolute -top-1 -right-1 size-4 p-0 flex items-center justify-center text-[10px]">
               {activeUploads.length}
