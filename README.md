@@ -25,11 +25,11 @@
 
 ## 快速开始
 
-从 [Releases](../../releases) 页面下载最新的 `dufs-shadcn-assets.zip`，解压后直接使用：
+从 [Releases](../../releases) 页面下载最新的 `assets.zip`，解压后直接使用：
 
 ```bash
 # 解压到任意目录，例如 ./assets
-unzip dufs-shadcn-assets.zip -d ./assets
+unzip assets.zip -d ./assets
 
 # 启动 dufs，指定 assets 目录
 dufs ./serve-path --assets ./assets

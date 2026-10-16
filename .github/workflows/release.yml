@@ -36,13 +36,13 @@ jobs:
       - name: Package dist
         run: |
           cd dist
-          zip -r ../dufs-shadcn-assets.zip .
+          zip -r ../assets.zip .
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ github.ref_name }}
-          files: dufs-shadcn-assets.zip
+          files: assets.zip
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
