@@ -34,7 +34,7 @@ interface Props {
 
 const plugins = [
   officePlugin(),
-  pdfPlugin({ workerSrc, legacyWorkerSrc, cMapUrl, standardFontDataUrl, compatibilityMode: "legacy" }),
+  pdfPlugin({ workerSrc, legacyWorkerSrc, cMapUrl, standardFontDataUrl, compatibilityMode: "auto" }),
   videoPlugin(),
   audioPlugin(),
   imagePlugin(),

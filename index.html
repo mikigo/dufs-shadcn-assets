@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <script>
+      // 为旧浏览器/WebView2 补充 Iterator 支持（pdfjs-dist modern build 依赖 Iterator.prototype.join）
+      if (typeof Iterator === 'undefined') {
+        var IteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]()));
+        globalThis.Iterator = IteratorPrototype.constructor;
+      }
+      if (typeof Iterator.prototype.join !== 'function') {
+        Iterator.prototype.join = function(separator) {
+          return Array.from(this).join(separator !== undefined ? separator : ',');
+        };
+      }
+    </script>
+    <script>
       const theme = localStorage.getItem("dufs-theme")
       if (theme === "dark" || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
