@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button"
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
 import { formatFileSize, formatDirSize, formatMtime, pathsToEntries } from "@/lib/utils"
-import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder } from "lucide-react"
+import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder, Copy } from "lucide-react"
 import { VscFileIcon } from "@/components/file-tree/VscFileIcon"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
+import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator } from "@/components/ui/context-menu"
+import { fileLinkUrl, copyText } from "@/lib/utils"
 import type { PathItem } from "@/types/dufs"
 
 function getIcon(pathType: string, filename?: string) {
@@ -63,6 +65,10 @@ export function DirTable() {
 
   const handleDownload = async (e: React.MouseEvent, item: PathItem) => {
     e.stopPropagation()
+    await downloadItem(item)
+  }
+
+  const downloadItem = async (item: PathItem) => {
     const fileUrl = newUrl(state.currentPath, item.name)
     const isDir = item.path_type.endsWith("Dir")
     const url = fileUrl + (isDir ? "?zip" : "")
@@ -87,6 +93,10 @@ export function DirTable() {
     a.href = url
     a.download = ""
     a.click()
+  }
+
+  const handleCopyLink = async (item: PathItem) => {
+    await copyText(fileLinkUrl(state.currentPath, item))
   }
 
   const handleDelete = async () => {
@@ -133,42 +143,68 @@ export function DirTable() {
             const isDir = item.path_type.endsWith("Dir")
             const sizeDisplay = isDir ? formatDirSize(item.size) : formatFileSize(item.size).join(" ")
             return (
-              <TableRow
-                key={item.name}
-                className="cursor-pointer hover:bg-muted/50"
-                onClick={() => handleRowClick(item)}
-                onDoubleClick={() => handleRowClick(item)}
-              >
-                <TableCell>{getIcon(item.path_type, item.name)}</TableCell>
-                <TableCell className="font-medium">
-                  <span className="text-primary hover:underline">
-                    {item.name}
-                  </span>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground tabular-nums">
-                  {formatMtime(item.mtime)}
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground text-right tabular-nums">
-                  {sizeDisplay}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-0.5 justify-end">
-                    {state.currentData?.allow_upload && (
-                      <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
-                        <ArrowRightLeft data-icon />
+              <ContextMenu key={item.name}>
+                <ContextMenuTrigger
+                  render={<TableRow className="cursor-pointer hover:bg-muted/50" />}
+                  onClick={() => handleRowClick(item)}
+                  onDoubleClick={() => handleRowClick(item)}
+                >
+                  <TableCell>{getIcon(item.path_type, item.name)}</TableCell>
+                  <TableCell className="font-medium">
+                    <span className="text-primary hover:underline">
+                      {item.name}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground tabular-nums">
+                    {formatMtime(item.mtime)}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground text-right tabular-nums">
+                    {sizeDisplay}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-0.5 justify-end">
+                      {state.currentData?.allow_upload && (
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
+                          <ArrowRightLeft data-icon />
+                        </Button>
+                      )}
+                      {state.currentData?.allow_delete && (
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }} title="Delete">
+                          <Trash2 data-icon />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="icon" onClick={(e) => handleDownload(e, item)} title="Download">
+                        <Download data-icon />
                       </Button>
-                    )}
-                    {state.currentData?.allow_delete && (
-                      <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }} title="Delete">
-                        <Trash2 data-icon />
-                      </Button>
-                    )}
-                    <Button variant="ghost" size="icon" onClick={(e) => handleDownload(e, item)} title="Download">
-                      <Download data-icon />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
+                    </div>
+                  </TableCell>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => handleCopyLink(item)}>
+                    <Copy />
+                    Copy Link
+                  </ContextMenuItem>
+                  <ContextMenuItem onClick={() => downloadItem(item)}>
+                    <Download />
+                    Download
+                  </ContextMenuItem>
+                  {state.currentData?.allow_upload && (
+                    <ContextMenuItem onClick={() => setMoveTarget(item)}>
+                      <ArrowRightLeft />
+                      Move / Rename
+                    </ContextMenuItem>
+                  )}
+                  {state.currentData?.allow_delete && (
+                    <>
+                      <ContextMenuSeparator />
+                      <ContextMenuItem variant="destructive" onClick={() => setDeleteTarget(item)}>
+                        <Trash2 />
+                        Delete
+                      </ContextMenuItem>
+                    </>
+                  )}
+                </ContextMenuContent>
+              </ContextMenu>
             )
           })}
         </TableBody>

@@ -58,6 +58,7 @@ dufs ./serve-path --assets ./assets
 | 新建 | 创建文件夹 (MKCOL) / 创建文件 (PUT) |
 | 删除 | 确认对话框，操作后自动刷新 |
 | 移动/重命名 | 对话框输入新路径，MOVE 方法 + 目标确认 |
+| 复制链接 | 右键菜单 → Copy Link，复制文件或目录的完整 URL 到剪贴板 |
 | 刷新 | 工具栏一键刷新当前目录 |
 
 ### 上传增强
@@ -147,7 +148,8 @@ serve-path/
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `logo_text` | string | (空) | 侧边栏标题 / 浏览器标签页标题 |
+| `site_title` | string | (空) | 浏览器标签页标题，未设置时回退到 `logo_text` |
+| `logo_text` | string | (空) | 侧边栏标题 |
 | `logo` | string | (空) | 浅色模式 Logo 路径（相对于 `.dufs_shadcn_assets/`，如 `./logo.svg`） |
 | `dark_logo` | string | (空) | 深色模式 Logo 路径 |
 | `logo_size` | string | `28px` | Logo 图片尺寸 |
@@ -161,6 +163,7 @@ serve-path/
 
 ```json
 {
+  "site_title": "My Server",
   "logo_text": "My Server",
   "logo": "./logo.svg",
   "dark_logo": "./logo-dark.svg",

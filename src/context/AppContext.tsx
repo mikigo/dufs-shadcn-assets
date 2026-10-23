@@ -55,6 +55,14 @@ function markStale(nodes: TreeStateNode[], path: string): TreeStateNode[] {
   })
 }
 
+function markAllStale(nodes: TreeStateNode[]): TreeStateNode[] {
+  return nodes.map(n => ({
+    ...n,
+    stale: true,
+    children: n.children ? markAllStale(n.children) : n.children,
+  }))
+}
+
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "TREE_REPLACE_ROOT":
@@ -62,6 +70,14 @@ function reducer(state: AppState, action: AppAction): AppState {
 
     case "TREE_SET_CHILDREN": {
       const { parentPath, entries } = action
+
+      // 如果目标节点已被手动收起（stale=true），跳过子节点更新，
+      // 只清除 loadingPath。防止 pending fetch 完成后覆盖用户的收起操作。
+      const targetNode = findNode(state.tree, parentPath)
+      if (targetNode && targetNode.stale) {
+        return { ...state, loadingPath: null }
+      }
+
       const wrapped = (entries: FileEntry[], parent: TreeStateNode | null): TreeStateNode[] => {
         return entries.map(entry => {
           const existing = parent?.children?.find(c => c.element.path === entry.path)
@@ -96,11 +112,24 @@ function reducer(state: AppState, action: AppAction): AppState {
       const node = findNode(state.tree, action.path)
       if (!node || !node.element.isDir) return state
       if (node.children !== null && !node.stale) return state
-      return { ...state, loadingPath: action.path }
+      // 先清除 stale 标记，表示用户主动展开。这样后续 TREE_SET_CHILDREN
+      // 在 stale 检查时能区分"主动展开后的加载"和"被收起的节点被旧请求覆盖"
+      const newTree = updateNode(state.tree, action.path, n => ({
+        ...n,
+        stale: false,
+      }))
+      return { ...state, tree: newTree, loadingPath: action.path }
     }
 
-    case "TREE_COLLAPSE":
-      return { ...state, tree: markStale(state.tree, action.path) }
+    case "TREE_COLLAPSE": {
+      // 如果正在加载该路径的数据，清除 loadingPath 防止 pending fetch
+      // 完成后覆盖用户的收起操作（内网慢速环境下尤其重要）
+      const newLoadingPath = state.loadingPath === action.path ? null : state.loadingPath
+      return { ...state, tree: markStale(state.tree, action.path), loadingPath: newLoadingPath }
+    }
+
+    case "TREE_COLLAPSE_ALL":
+      return { ...state, tree: markAllStale(state.tree), loadingPath: null }
 
     case "TREE_SELECT":
       return { ...state, selectedPath: action.path }

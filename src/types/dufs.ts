@@ -69,6 +69,7 @@ export interface UploadItem {
 export type AppAction =
   | { type: "TREE_EXPAND"; path: string }
   | { type: "TREE_COLLAPSE"; path: string }
+  | { type: "TREE_COLLAPSE_ALL" }
   | { type: "TREE_SET_CHILDREN"; parentPath: string; entries: FileEntry[] }
   | { type: "TREE_SELECT"; path: string | null }
   | { type: "SET_CURRENT"; path: string; data: DufsData }

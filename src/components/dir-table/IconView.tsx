@@ -1,12 +1,13 @@
 import { useAppState } from "@/context/AppContext"
 import { fetchIndexData, deletePath, newUrl, pushHistory } from "@/api/dufs"
-import { formatFileSize, formatDirSize, pathsToEntries } from "@/lib/utils"
-import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder } from "lucide-react"
+import { formatFileSize, formatDirSize, pathsToEntries, fileLinkUrl, copyText } from "@/lib/utils"
+import { Download, Trash2, ArrowRightLeft, FolderSymlink, FileSymlink, Folder, Copy } from "lucide-react"
 import { VscFileIcon } from "@/components/file-tree/VscFileIcon"
 import { useState } from "react"
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog"
 import { MoveRenameDialog } from "@/components/dialogs/MoveRenameDialog"
 import { Button } from "@/components/ui/button"
+import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuSeparator } from "@/components/ui/context-menu"
 import type { PathItem } from "@/types/dufs"
 
 function getLargeIcon(pathType: string, filename?: string) {
@@ -53,6 +54,10 @@ export function IconView() {
 
   const handleDownload = async (e: React.MouseEvent, item: PathItem) => {
     e.stopPropagation()
+    await downloadItem(item)
+  }
+
+  const downloadItem = async (item: PathItem) => {
     const fileUrl = newUrl(state.currentPath, item.name)
     const isDir = item.path_type.endsWith("Dir")
     const url = fileUrl + (isDir ? "?zip" : "")
@@ -77,6 +82,10 @@ export function IconView() {
     a.href = url
     a.download = ""
     a.click()
+  }
+
+  const handleCopyLink = async (item: PathItem) => {
+    await copyText(fileLinkUrl(state.currentPath, item))
   }
 
   const handleDelete = async () => {
@@ -127,49 +136,75 @@ export function IconView() {
         {sorted.map(item => {
           const isDir = item.path_type.endsWith("Dir")
           return (
-            <div
-              key={item.name}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border
-                         hover:bg-muted/50 cursor-pointer transition-colors group relative"
-              onClick={() => handleClick(item)}
-              onDoubleClick={() => handleClick(item)}
-            >
-              {/* Actions on hover */}
-              <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5">
-                {state.currentData?.allow_upload && (
-                  <Button variant="ghost" size="icon" className="size-6"
-                    onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
-                    <ArrowRightLeft className="size-3" />
+            <ContextMenu key={item.name}>
+              <ContextMenuTrigger
+                className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border
+                           hover:bg-muted/50 cursor-pointer transition-colors group relative"
+                onClick={() => handleClick(item)}
+                onDoubleClick={() => handleClick(item)}
+              >
+                {/* Actions on hover */}
+                <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5">
+                  {state.currentData?.allow_upload && (
+                    <Button variant="ghost" size="icon" className="size-6"
+                      onClick={(e) => { e.stopPropagation(); setMoveTarget(item) }} title="Move / Rename">
+                      <ArrowRightLeft className="size-3" />
+                    </Button>
+                  )}
+                  {state.currentData?.allow_delete && (
+                    <Button variant="ghost" size="icon" className="size-6"
+                      onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }} title="Delete">
+                      <Trash2 className="size-3" />
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="icon" className="size-6" onClick={(e) => handleDownload(e, item)} title="Download">
+                    <Download className="size-3" />
                   </Button>
+                </div>
+
+                {/* Icon */}
+                <div className="mt-3 text-muted-foreground">
+                  {getLargeIcon(item.path_type, item.name)}
+                </div>
+
+                {/* Name */}
+                <span
+                  className="text-sm text-center leading-tight break-all line-clamp-2 text-primary hover:underline"
+                >
+                  {item.name}
+                </span>
+
+                {/* Meta info */}
+                <span className="text-[11px] text-muted-foreground text-center">
+                  {isDir ? formatDirSize(item.size) : formatFileSize(item.size).join(" ")}
+                </span>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem onClick={() => handleCopyLink(item)}>
+                  <Copy />
+                  Copy Link
+                </ContextMenuItem>
+                <ContextMenuItem onClick={() => downloadItem(item)}>
+                  <Download />
+                  Download
+                </ContextMenuItem>
+                {state.currentData?.allow_upload && (
+                  <ContextMenuItem onClick={() => setMoveTarget(item)}>
+                    <ArrowRightLeft />
+                    Move / Rename
+                  </ContextMenuItem>
                 )}
                 {state.currentData?.allow_delete && (
-                  <Button variant="ghost" size="icon" className="size-6"
-                    onClick={(e) => { e.stopPropagation(); setDeleteTarget(item) }} title="Delete">
-                    <Trash2 className="size-3" />
-                  </Button>
+                  <>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem variant="destructive" onClick={() => setDeleteTarget(item)}>
+                      <Trash2 />
+                      Delete
+                    </ContextMenuItem>
+                  </>
                 )}
-                <Button variant="ghost" size="icon" className="size-6" onClick={(e) => handleDownload(e, item)} title="Download">
-                  <Download className="size-3" />
-                </Button>
-              </div>
-
-              {/* Icon */}
-              <div className="mt-3 text-muted-foreground">
-                {getLargeIcon(item.path_type, item.name)}
-              </div>
-
-              {/* Name */}
-              <span
-                className="text-sm text-center leading-tight break-all line-clamp-2 text-primary hover:underline"
-              >
-                {item.name}
-              </span>
-
-              {/* Meta info */}
-              <span className="text-[11px] text-muted-foreground text-center">
-                {isDir ? formatDirSize(item.size) : formatFileSize(item.size).join(" ")}
-              </span>
-            </div>
+              </ContextMenuContent>
+            </ContextMenu>
           )
         })}
       </div>

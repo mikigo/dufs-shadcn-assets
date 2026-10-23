@@ -116,6 +116,11 @@ function AppContent() {
         dispatch({ type: "SET_LOCKED_FILES", paths: cfg.lock_edit_files })
       }
 
+      // 运行时更新浏览器标签页标题：优先 site_title，回退到 logo_text
+      if (cfg.site_title != null || cfg.logo_text != null) {
+        document.title = cfg.site_title || cfg.logo_text || "Dufs"
+      }
+
       const savedView = localStorage.getItem("dufs-view-mode")
       const viewMode = savedView || cfg.view_mode
       if (viewMode === "list" || viewMode === "icons") {

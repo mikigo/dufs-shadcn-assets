@@ -1,4 +1,5 @@
 {
+  "site_title": "dufs-shadcn-assets",
   "logo_text": "dufs-shadcn-assets",
   "logo": "./logo.svg",
   "dark_logo": "./dark-logo.svg",
@@ -6,7 +7,7 @@
   "logo_text_font_size": "20px",
   "view_mode": "list",
   "theme": "light",
-  "footer": "Powered By @<a style=\"text-decoration: underline\" href=\"https://github.com/mikigo\" target=\"_blank\">mikigo</a> · <a style=\"text-decoration: underline\" href=\"https://mikigo.github.io/dufs-shadcn-assets/\" target=\"_blank\">website</a>",
+  "footer": "Powered By @<a style=\"text-decoration: underline\" href=\"https://github.com/mikigo\" target=\"_blank\">mikigo</a> · <a style=\"text-decoration: underline\" href=\"https://mikigo.github.io/dufs-shadcn-assets/\" target=\"_blank\">about</a>",
   "lock_edit_files": [
     "/README.md"
   ]

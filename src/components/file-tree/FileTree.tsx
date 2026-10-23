@@ -1,5 +1,6 @@
 import { useRef, useMemo } from "react"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import { FoldVertical } from "lucide-react"
 import { TreeNodeComponent } from "./TreeNode"
 import { useFileTree } from "@/hooks/useFileTree"
 import type { TreeStateNode } from "@/types/dufs"
@@ -23,7 +24,7 @@ function flattenTree(nodes: TreeStateNode[]): FlatNode[] {
 }
 
 export function FileTree() {
-  const { tree, loadingPath, selectedPath, handleToggle, handleSelect, handleNavigate } = useFileTree()
+  const { tree, loadingPath, selectedPath, handleToggle, handleSelect, handleNavigate, handleCollapseAll } = useFileTree()
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const flatNodes = useMemo(() => flattenTree(tree), [tree])
@@ -37,8 +38,18 @@ export function FileTree() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-widest select-none shrink-0">
-        Explorer
+      <div className="flex items-center justify-between px-4 py-2.5 shrink-0">
+        <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest select-none">
+          Explorer
+        </span>
+        <button
+          onClick={handleCollapseAll}
+          title="Collapse Folders in Explorer"
+          aria-label="Collapse Folders in Explorer"
+          className="text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-white/10 rounded p-1 transition-colors"
+        >
+          <FoldVertical className="size-4" />
+        </button>
       </div>
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
         <div className="px-2 pt-1 pb-3 relative" style={{ height: virtualizer.getTotalSize() + 16 }}>

@@ -28,7 +28,7 @@
                 embedded.textContent = JSON.stringify(cfg)
               } catch (_) {}
             }
-            document.title = (cfg && cfg.logo_text) || ''
+            document.title = (cfg && (cfg.site_title || cfg.logo_text)) || ''
           }
         } catch (_) {}
       }

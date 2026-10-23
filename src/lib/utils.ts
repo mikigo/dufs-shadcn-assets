@@ -49,6 +49,36 @@ export function newUrl(base: string, name: string): string {
   return url
 }
 
+/** 根据当前目录和文件/目录项，生成可直接在浏览器打开的绝对链接 */
+export function fileLinkUrl(currentPath: string, item: { name: string; path_type: string }): string {
+  const path = newUrl(currentPath, item.name)
+  const fullPath = item.path_type.endsWith("Dir") ? path + "/" : path
+  return new URL(fullPath, window.location.origin).toString()
+}
+
+/** 复制文本到剪贴板，兼容非安全上下文（HTTP）环境 */
+export async function copyText(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+    // HTTP 等非安全上下文下 navigator.clipboard 不可用，回退到 execCommand
+    const textarea = document.createElement("textarea")
+    textarea.value = text
+    textarea.style.position = "fixed"
+    textarea.style.opacity = "0"
+    document.body.appendChild(textarea)
+    textarea.focus()
+    textarea.select()
+    const ok = document.execCommand("copy")
+    document.body.removeChild(textarea)
+    return ok
+  } catch {
+    return false
+  }
+}
+
 /** 可在线编辑的纯文本文件扩展名 */
 const EDITABLE_EXTS = new Set([
   "md", "mdx", "txt", "log",
